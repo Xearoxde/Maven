@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -98,7 +99,7 @@ public class UtilClass {
 				e.printStackTrace();
 			}
 		}else{
-			System.out.println("The file "+file.getName().toString()+" doeas already exist. No operation needed!");
+			System.out.println("The file "+file.getName().toString()+" does already exist. No operation needed!");
 		}
 	}
 	
@@ -176,6 +177,10 @@ public class UtilClass {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String Format(String format){
+		return ChatColor.translateAlternateColorCodes('$', format);
 	}
 	
 	
