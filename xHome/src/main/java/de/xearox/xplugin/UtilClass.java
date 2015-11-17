@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class UtilClass {
 	
+	SetLanguageClass langClass = new SetLanguageClass();
 	/**
 	 * 
 	 * @param fileName String
@@ -135,11 +136,45 @@ public class UtilClass {
 		return YamlConfiguration.loadConfiguration(file);
 	}
 	
-	public File getfile(Plugin plugin, String filePath, String fileName, String fileType ){
-		return new File(plugin.getDataFolder()+File.separator+filePath+fileName+fileType);
+	public File getFile(Plugin plugin, String filePath, String fileName, String fileType ){
+		return new File(plugin.getDataFolder()+File.separator+filePath+fileName+"."+fileType);
 	}
 	
-	
+	public void createLanguageFiles(Plugin plugin){
+		String fileName;
+		String filePath = "/locate/";
+		String fileType = "yml";
+		File file;
+		
+		Languages[] languages = Languages.values();
+		
+		for(int i=0; i<languages.length; i++){
+			fileName = languages[i].toString();
+			file = getFile(plugin, filePath, fileName, fileType);
+			createFile(file);
+			YamlConfiguration yamlFile = yamlCon(file);
+			
+			yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
+			yamlFile.addDefault("Message.HomeSet.MainHome", "Your home was set");
+			yamlFile.addDefault("Message.HomeSet.DifferentHome", "Your home %home% was set");
+			yamlFile.addDefault("Message.Teleport.ToMainHome", "You was teleported to home");
+			yamlFile.addDefault("Message.Teleport.ToDifferentHome", "You was teleported to %home%");
+			yamlFile.addDefault("Message.Plugin.Enabled", "The plugin was enabled!");
+			yamlFile.addDefault("Message.Plugin.Disabled", "The plugin was disabled!");
+			yamlFile.addDefault("Message.Plugin.Reloaded", "The plugin was reloaded!");
+			yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "The teleport to your home cost %home%");
+			yamlFile.addDefault("Message.TeleportCosts.ToDifferentHome", "The teleport to a different home cost %home%");
+			yamlFile.addDefault("Message.Error.TPDiffHomeNotFound", "Your home %home% was not found!");
+			yamlFile.addDefault("Message.Error.DeleteDiffHome", "Your home %home% can not be deleted, because it could not found!");
+			yamlFile.options().copyDefaults(true);
+			try {
+				yamlFile.save(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	
 	

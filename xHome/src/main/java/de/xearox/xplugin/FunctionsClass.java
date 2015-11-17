@@ -9,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 public class FunctionsClass {
 	
 	UtilClass utclass = new UtilClass();
+	SetLanguageClass langClass = new SetLanguageClass();
 	
 	public void listHome(Plugin plugin, Player player){
 		
@@ -20,7 +21,6 @@ public class FunctionsClass {
 			utclass.createFile(homefile);
 		}
 		YamlConfiguration yamlFile = utclass.yamlCon(homefile);
-		
 		player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());		
 	}
 	
