@@ -106,7 +106,7 @@ public class UtilClass {
 	 * @param p Player
 	 * @return the Language of the players client
 	 */
-	private String getPlayerLanguage(Player p){		
+	public String getPlayerLanguage(Player p){		
 		try {
 			Object obj = getMethod("getHandle", p.getClass()).invoke(p, (Object[]) null);
 			Field f = obj.getClass().getDeclaredField("locale");
@@ -135,7 +135,9 @@ public class UtilClass {
 		return YamlConfiguration.loadConfiguration(file);
 	}
 	
-	
+	public File getfile(Plugin plugin, String filePath, String fileName, String fileType ){
+		return new File(plugin.getDataFolder()+File.separator+filePath+fileName+fileType);
+	}
 	
 	
 	
