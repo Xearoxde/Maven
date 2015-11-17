@@ -14,15 +14,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MainClass extends JavaPlugin{
 	
-	UtilClass utclass = new UtilClass(this);
-	FunctionsClass functionClass = new FunctionsClass(this);
-	SetLanguageClass langClass = new SetLanguageClass(this);
-	CreateConfigClass configClass = new CreateConfigClass(this);
+	private UtilClass utClass;
+	private FunctionsClass functionClass;
+	private SetLanguageClass langClass;
+	private CreateConfigClass configClass;
+	
 	
 	@Override
 	public void onEnable(){
 		try{
-			utclass.createLanguageFiles();
+			this.utClass = new UtilClass(this);
+		    this.functionClass = new FunctionsClass(this);
+		    this.langClass = new SetLanguageClass(this);
+		    this.configClass = new CreateConfigClass(this);
+		    utClass.createLanguageFiles();
 			configClass.createConfig();	
 		}catch (Exception e){
 			e.printStackTrace();
@@ -42,8 +47,8 @@ public class MainClass extends JavaPlugin{
 			String fileName = "homelist";
 			String fileType = "yml";
 			File homeFile;
-			homeFile = utclass.getFile(this, filePath, fileName, fileType);
-			YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+			homeFile = utClass.getFile(filePath, fileName, fileType);
+			YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 			if(!(sender instanceof Player)){
 				if(args[0].equalsIgnoreCase("rl")){
 					try {

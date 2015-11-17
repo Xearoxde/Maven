@@ -16,8 +16,8 @@ public class FunctionsClass {
 		FunctionsClass.plugin = plugin;
 	}
 	
-	UtilClass utclass;// = new UtilClass();
-	SetLanguageClass langClass;// = new SetLanguageClass();
+	UtilClass utclass = new UtilClass(plugin);
+	SetLanguageClass langClass = new SetLanguageClass(plugin);
 	
 	private String filePath = "/data/";
 	private String fileName = "homelist";
@@ -26,7 +26,7 @@ public class FunctionsClass {
 	
 	public void listHome(Player player){
 		
-		homeFile = utclass.getFile(plugin, filePath, fileName, fileType);
+		homeFile = utclass.getFile(filePath, fileName, fileType);
 		if(!utclass.fileExist(homeFile)){
 			utclass.createFile(homeFile);
 		}
@@ -36,7 +36,7 @@ public class FunctionsClass {
 	
 	public void setMainHome(Location pLoc, Player p){
 		
-		homeFile = utclass.getFile(plugin, filePath, fileName, fileType);
+		homeFile = utclass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PlayerName", p.getDisplayName());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.World", pLoc.getWorld().getName());
@@ -54,7 +54,7 @@ public class FunctionsClass {
 	}
 	
 	public void setDiffHome(Location pLoc, Player p, String args1, String args2){
-		homeFile = utclass.getFile(plugin, filePath, fileName, fileType);
+		homeFile = utclass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
 		if(args1.equalsIgnoreCase("set")){
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PlayerName", p.getDisplayName());
@@ -74,7 +74,7 @@ public class FunctionsClass {
 	}
 	
 	public void delHome(Player p, String args1){
-		homeFile = utclass.getFile(plugin, filePath, fileName, fileType);
+		homeFile = utclass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
 		if(yamlFile.contains("Player."+ p.getUniqueId().toString()+"."+args1)){
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args1, null);
@@ -88,7 +88,7 @@ public class FunctionsClass {
 	}
 	
 	public void tpHome(Location pLoc, Player p){
-		homeFile = utclass.getFile(plugin, filePath, fileName, fileType);
+		homeFile = utclass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
 		int posX; int posY; int posZ; String world; Vector direction;
 		if(yamlFile.contains("Player."+ p.getUniqueId().toString()+".MainHome")){
@@ -105,7 +105,7 @@ public class FunctionsClass {
 	}
 	
 	public void tpDiffHome(Location pLoc, Player p, String args1){
-		homeFile = utclass.getFile(plugin, filePath, fileName, fileType);
+		homeFile = utclass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
 		int posX; int posY; int posZ; String world; Vector direction;
 		if(yamlFile.contains("Player."+ p.getUniqueId().toString()+"."+args1)){

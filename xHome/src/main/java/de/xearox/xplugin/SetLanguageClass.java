@@ -24,11 +24,7 @@ public class SetLanguageClass {
 	static String MsgHomeTeleportCostsToDiffHome;
 	static String MsgHomePluginReloaded;
 	static String MsgHomeErrorTPDiffHomeNotFound;
-	static String MsgHomeErrorDeleteDiffHome;
-	
-	UtilClass utclass;
-	
-	
+	static String MsgHomeErrorDeleteDiffHome;	
 	
 	public String getLanguageFileName(String language){
 		
@@ -51,11 +47,12 @@ public class SetLanguageClass {
 	
 	public void setMessageLanguage(Player player){
 		
+		UtilClass utclass = new UtilClass(plugin);
 		String msgLanguage;
 		String playerLanguage = "de_de";//utclass.getPlayerLanguage(player);
 		playerLanguage = playerLanguage.substring(0, playerLanguage.indexOf("_"));
 		msgLanguage = getLanguageFileName(playerLanguage).toLowerCase();
-		YamlConfiguration yamlLangFile = utclass.yamlCon(utclass.getFile(plugin, "locate", msgLanguage, "yml"));
+		YamlConfiguration yamlLangFile = utclass.yamlCon(utclass.getFile("locate", msgLanguage, "yml"));
 		
 		MsgHomeSetMainHome = yamlLangFile.getString("Message.HomeSet.MainHome");
 		MsgHomeSetDiffHome = yamlLangFile.getString("Message.HomeSet.DifferentHome");

@@ -13,14 +13,14 @@ public class CreateConfigClass {
 		CreateConfigClass.plugin = plugin;
 	}
 	
-	UtilClass utclass;// = new UtilClass();
+	UtilClass utclass = new UtilClass(plugin);
 	
 	public void createConfig(){
 		String filePath = "/config/";
 		String fileName = "config";
 		String fileType = "yml";
 		YamlConfiguration yamlFile;
-		File file = utclass.getFile(plugin, filePath, fileName, fileType);
+		File file = utclass.getFile(filePath, fileName, fileType);
 		StringBuilder sb = new StringBuilder();
 		utclass.createFile(file);
 		yamlFile = utclass.yamlCon(file);

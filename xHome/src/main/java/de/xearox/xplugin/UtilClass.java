@@ -22,9 +22,10 @@ public class UtilClass {
 	private static Plugin plugin;	
 	public UtilClass(Plugin plugin){
 		UtilClass.plugin = plugin;
+		System.out.println("###############"+plugin+"##########");
 	}
 	
-	SetLanguageClass langClass;// = new SetLanguageClass();
+	SetLanguageClass langClass = new SetLanguageClass(plugin);
 	/**
 	 * 
 	 * @param fileName String
@@ -142,8 +143,12 @@ public class UtilClass {
 		return YamlConfiguration.loadConfiguration(file);
 	}
 	
-	public File getFile(Plugin plugin, String filePath, String fileName, String fileType ){
-		return new File(plugin.getDataFolder()+File.separator+filePath+fileName+"."+fileType);
+	public File getFile(String filePath, String fileName, String fileType ){
+		File file;
+		System.out.println(filePath);System.out.println(fileName);System.out.println(fileType);System.out.println(plugin);
+		file = new File(plugin.getDataFolder()+File.separator+filePath+fileName+"."+fileType);
+		System.out.println(file);
+		return file;
 	}
 	
 	public void createLanguageFiles(){
@@ -158,7 +163,7 @@ public class UtilClass {
 		for(int i=0; i<languages.length; i++){
 			fileName = languages[i].toString();
 			tempString = langClass.getLanguageFileName(fileName);
-			file = getFile(plugin, filePath, tempString, fileType);
+			file = getFile(filePath, tempString, fileType);
 			createFile(file);
 			YamlConfiguration yamlFile = yamlCon(file);
 			
