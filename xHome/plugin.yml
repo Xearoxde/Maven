@@ -1,0 +1,4 @@
+name: xHome
+main: src.main.java.de.xearox.xplugin.MainClass
+version: 0.1.0
+author: Xearox
