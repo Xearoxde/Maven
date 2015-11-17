@@ -47,7 +47,7 @@ public class SetLanguageClass {
 	public void setMessageLanguage(Player player, Plugin plugin){
 		
 		String msgLanguage;
-		String playerLanguage = utclass.getPlayerLanguage(player);
+		String playerLanguage = "de_de";//utclass.getPlayerLanguage(player);
 		playerLanguage = playerLanguage.substring(0, playerLanguage.indexOf("_"));
 		msgLanguage = getLanguageFileName(playerLanguage).toLowerCase();
 		YamlConfiguration yamlLangFile = utclass.yamlCon(utclass.getFile(plugin, "locate", msgLanguage, "yml"));
