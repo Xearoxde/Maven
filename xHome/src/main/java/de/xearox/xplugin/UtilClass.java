@@ -62,19 +62,7 @@ public class UtilClass {
 		return player.getUniqueId().toString();
 	}
 	
-	public void listHome(Plugin plugin, Player player){
 	
-		String filePath = "/data/";
-		String fileName = "homelist";
-		String fileType = ".yml";
-		File homefile = new File(plugin.getDataFolder()+File.separator+filePath+fileName+fileType);
-		if(!fileExist(homefile)){
-			createFile(homefile);
-		}
-		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(homefile);
-		player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());
-		
-	}
 	/**
 	 *  
 	 * @param plugin
