@@ -9,6 +9,11 @@ import org.bukkit.plugin.Plugin;
 
 public class SetLanguageClass {
 
+	private static Plugin plugin;	
+	public SetLanguageClass(Plugin plugin){
+		SetLanguageClass.plugin = plugin;
+	}
+	
 	static String MsgHomeSetMainHome;
 	static String MsgHomeSetDiffHome;
 	static String MsgHomeTeleportToMainHome;
@@ -44,7 +49,7 @@ public class SetLanguageClass {
 		}
 	}
 	
-	public void setMessageLanguage(Player player, Plugin plugin){
+	public void setMessageLanguage(Player player){
 		
 		String msgLanguage;
 		String playerLanguage = "de_de";//utclass.getPlayerLanguage(player);

@@ -19,7 +19,12 @@ import org.bukkit.plugin.Plugin;
  */
 public class UtilClass {
 	
-	SetLanguageClass langClass = new SetLanguageClass();
+	private static Plugin plugin;	
+	public UtilClass(Plugin plugin){
+		UtilClass.plugin = plugin;
+	}
+	
+	SetLanguageClass langClass;// = new SetLanguageClass();
 	/**
 	 * 
 	 * @param fileName String
@@ -141,7 +146,7 @@ public class UtilClass {
 		return new File(plugin.getDataFolder()+File.separator+filePath+fileName+"."+fileType);
 	}
 	
-	public void createLanguageFiles(Plugin plugin){
+	public void createLanguageFiles(){
 		String fileName;
 		String filePath = "/locate/";
 		String fileType = "yml";

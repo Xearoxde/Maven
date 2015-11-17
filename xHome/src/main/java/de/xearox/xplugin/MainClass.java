@@ -14,16 +14,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MainClass extends JavaPlugin{
 	
-	UtilClass utclass = new UtilClass();
-	FunctionsClass functionClass = new FunctionsClass();
-	SetLanguageClass langClass = new SetLanguageClass();
-	CreateConfigClass configClass = new CreateConfigClass();
+	UtilClass utclass = new UtilClass(this);
+	FunctionsClass functionClass = new FunctionsClass(this);
+	SetLanguageClass langClass = new SetLanguageClass(this);
+	CreateConfigClass configClass = new CreateConfigClass(this);
 	
 	@Override
 	public void onEnable(){
 		try{
-			utclass.createLanguageFiles(this);
-			configClass.createConfig(this);	
+			utclass.createLanguageFiles();
+			configClass.createConfig();	
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -67,25 +67,25 @@ public class MainClass extends JavaPlugin{
 			}else{
 				player = (Player) sender; 
 				pLoc = player.getLocation();
-				langClass.setMessageLanguage(player, this);
+				langClass.setMessageLanguage(player);
 			}
 			if(args.length==0){
-				functionClass.tpHome(pLoc, player, this);
+				functionClass.tpHome(pLoc, player);
 				return true;
 			}
 			//##########################################################################################
 			if(args.length==1){			
 				if(args[0].equalsIgnoreCase("set")){
 					if(args.length==1){
-						functionClass.setMainHome(pLoc, player, this);
+						functionClass.setMainHome(pLoc, player);
 						return true;
 					}
 				}if(args[0].equalsIgnoreCase("list")){
-					functionClass.listHome(this, player);
+					functionClass.listHome(player);
 					return true;
 				}else{
 					try{
-						functionClass.tpDiffHome(pLoc, player, this, args[0]);
+						functionClass.tpDiffHome(pLoc, player, args[0]);
 						return true;
 					}catch (Exception e){
 						player.sendMessage("Your home was not found. Make sure you entered the correct home");
@@ -97,7 +97,7 @@ public class MainClass extends JavaPlugin{
 			if(args.length==2){
 				if(args[0].equalsIgnoreCase("del")){				
 					try{
-						functionClass.delHome(player, args[1], this);
+						functionClass.delHome(player, args[1]);
 						player.sendMessage("Your home "+args[1]+" was deleted");
 						return true;
 					}catch (Exception e){
@@ -105,7 +105,7 @@ public class MainClass extends JavaPlugin{
 						return true;
 					}
 				}if(args[0].equalsIgnoreCase("set")){
-					functionClass.setDiffHome(pLoc, player, this, args[0], args[1]);
+					functionClass.setDiffHome(pLoc, player, args[0], args[1]);
 					return true;
 				}
 			}

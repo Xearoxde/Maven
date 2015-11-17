@@ -8,9 +8,14 @@ import org.bukkit.plugin.Plugin;
 
 public class CreateConfigClass {
 
-	UtilClass utclass = new UtilClass();
+	private static Plugin plugin;	
+	public CreateConfigClass(Plugin plugin){
+		CreateConfigClass.plugin = plugin;
+	}
 	
-	public void createConfig(Plugin plugin){
+	UtilClass utclass;// = new UtilClass();
+	
+	public void createConfig(){
 		String filePath = "/config/";
 		String fileName = "config";
 		String fileType = "yml";
