@@ -10,8 +10,6 @@ public class FunctionsClass {
 	
 	UtilClass utclass = new UtilClass();
 	
-	
-	
 	public void listHome(Plugin plugin, Player player){
 		
 		String filePath = "/data/";
@@ -21,9 +19,9 @@ public class FunctionsClass {
 		if(!utclass.fileExist(homefile)){
 			utclass.createFile(homefile);
 		}
-		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(homefile);
-		player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());
+		YamlConfiguration yamlFile = utclass.yamlCon(homefile);
 		
+		player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());		
 	}
 	
 	
