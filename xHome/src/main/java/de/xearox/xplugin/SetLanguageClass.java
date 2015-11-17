@@ -21,7 +21,7 @@ public class SetLanguageClass {
 	static String MsgHomeErrorTPDiffHomeNotFound;
 	static String MsgHomeErrorDeleteDiffHome;
 	
-	UtilClass utclass = new UtilClass();
+	UtilClass utclass;
 	
 	
 	

@@ -145,12 +145,14 @@ public class UtilClass {
 		String filePath = "/locate/";
 		String fileType = "yml";
 		File file;
+		String tempString;
 		
 		Languages[] languages = Languages.values();
 		
 		for(int i=0; i<languages.length; i++){
 			fileName = languages[i].toString();
-			file = getFile(plugin, filePath, fileName, fileType);
+			tempString = langClass.getLanguageFileName(fileName);
+			file = getFile(plugin, filePath, tempString, fileType);
 			createFile(file);
 			YamlConfiguration yamlFile = yamlCon(file);
 			

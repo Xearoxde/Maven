@@ -8,15 +8,15 @@ import org.bukkit.plugin.Plugin;
 
 public class FunctionsClass {
 	
-	UtilClass utclass = new UtilClass();
-	SetLanguageClass langClass = new SetLanguageClass();
+	UtilClass utclass;// = new UtilClass();
+	SetLanguageClass langClass;// = new SetLanguageClass();
 	
 	public void listHome(Plugin plugin, Player player){
 		
 		String filePath = "/data/";
 		String fileName = "homelist";
-		String fileType = ".yml";
-		File homefile = new File(plugin.getDataFolder()+File.separator+filePath+fileName+fileType);
+		String fileType = "yml";
+		File homefile = utclass.getFile(plugin, filePath, fileName, fileType);
 		if(!utclass.fileExist(homefile)){
 			utclass.createFile(homefile);
 		}
