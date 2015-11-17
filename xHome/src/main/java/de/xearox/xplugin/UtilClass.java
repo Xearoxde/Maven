@@ -131,6 +131,10 @@ public class UtilClass {
 		return null;
 	}
 	
+	public YamlConfiguration yamlCon(File file){
+		return YamlConfiguration.loadConfiguration(file);
+	}
+	
 	
 	
 	

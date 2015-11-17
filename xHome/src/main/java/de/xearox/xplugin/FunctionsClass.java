@@ -10,9 +10,7 @@ public class FunctionsClass {
 	
 	UtilClass utclass = new UtilClass();
 	
-	public YamlConfiguration yamlCon(File file){
-		return YamlConfiguration.loadConfiguration(file);
-	}
+	
 	
 	public void listHome(Plugin plugin, Player player){
 		
