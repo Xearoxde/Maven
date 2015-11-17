@@ -13,8 +13,5 @@ public class MainClass extends JavaPlugin {
 	public void onDisable(){
 		
 	}
-	
-	public void sendMessageToConsole(){
-		System.out.println("Aufruf aus einer anderen Jar heraus");
-	}
+
 }
