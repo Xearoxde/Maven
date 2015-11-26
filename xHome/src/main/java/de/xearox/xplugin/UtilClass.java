@@ -20,11 +20,16 @@ import org.bukkit.plugin.Plugin;
 public class UtilClass {
 	
 	private MainClass plugin;
+	
+	private SetLanguageClass langClass;
+	
 	public UtilClass(MainClass plugin){
 		this.plugin = plugin;
+		this.langClass = plugin.getLangClass();
+		System.out.println("plugin= "+plugin);
+		System.out.println("plugin.getLangClass()= "+plugin.getLangClass());
 	}
 	
-	SetLanguageClass langClass = new SetLanguageClass(plugin);
 	/**
 	 * 
 	 * @param fileName String
@@ -161,6 +166,7 @@ public class UtilClass {
 		
 		for(int i=0; i<languages.length; i++){
 			fileName = languages[i].toString();
+			System.out.println("FILENAME= "+fileName);
 			tempString = langClass.getLanguageFileName(fileName);
 			file = getFile(filePath, tempString, fileType);
 			createFile(file);

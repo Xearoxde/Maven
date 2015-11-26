@@ -38,12 +38,17 @@ public class MainClass extends JavaPlugin{
 	
 	@Override
 	public void onEnable(){
+				
 		try{
 			this.utClass = new UtilClass(this);
 		    this.functionClass = new FunctionsClass(this);
 		    this.langClass = new SetLanguageClass(this);
 		    this.configClass = new CreateConfigClass(this);
-		    utClass.createLanguageFiles();
+		    System.out.println("configClass= "+configClass);
+			System.out.println("langClass= "+langClass);
+			System.out.println("functionClass= "+functionClass);
+			System.out.println("utClass= "+utClass);
+			utClass.createLanguageFiles();
 			configClass.createConfig();	
 		}catch (Exception e){
 			e.printStackTrace();

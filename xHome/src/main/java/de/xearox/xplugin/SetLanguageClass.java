@@ -9,11 +9,14 @@ import org.bukkit.plugin.Plugin;
 
 public class SetLanguageClass {
 	
-	private UtilClass utClass;
 	private MainClass plugin;
+	
+	private UtilClass utClass;
+	
+	
 	public SetLanguageClass(MainClass plugin){
-		this.plugin = plugin;
 		this.utClass = plugin.getUtilClass();
+		this.plugin = plugin;
 	}
 	
 	static String MsgHomeSetMainHome;
@@ -50,7 +53,7 @@ public class SetLanguageClass {
 	public void setMessageLanguage(Player player){
 		
 		String msgLanguage;
-		String playerLanguage = "de_de";//utclass.getPlayerLanguage(player);
+		String playerLanguage = utClass.getPlayerLanguage(player);
 		playerLanguage = playerLanguage.substring(0, playerLanguage.indexOf("_"));
 		msgLanguage = getLanguageFileName(playerLanguage).toLowerCase();
 		YamlConfiguration yamlLangFile = utClass.yamlCon(utClass.getFile("locate", msgLanguage, "yml"));
