@@ -19,10 +19,9 @@ import org.bukkit.plugin.Plugin;
  */
 public class UtilClass {
 	
-	private static Plugin plugin;	
-	public UtilClass(Plugin plugin){
-		UtilClass.plugin = plugin;
-		System.out.println("###############"+plugin+"##########");
+	private MainClass plugin;
+	public UtilClass(MainClass plugin){
+		this.plugin = plugin;
 	}
 	
 	SetLanguageClass langClass = new SetLanguageClass(plugin);

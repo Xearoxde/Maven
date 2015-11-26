@@ -19,6 +19,22 @@ public class MainClass extends JavaPlugin{
 	private SetLanguageClass langClass;
 	private CreateConfigClass configClass;
 	
+	//Getter
+	public UtilClass getUtilClass(){
+		return utClass;
+	}
+	
+	public FunctionsClass getFunctionClass(){
+		return functionClass;
+	}
+	
+	public SetLanguageClass getLangClass(){
+		return langClass;
+	}
+	
+	public CreateConfigClass configClass(){
+		return configClass;
+	}
 	
 	@Override
 	public void onEnable(){
@@ -41,7 +57,9 @@ public class MainClass extends JavaPlugin{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){		
-		Player player = null;Location pLoc = null;
+		Player player = null;
+		Location pLoc = null;
+		
 		if(label.equalsIgnoreCase("home")){
 			String filePath = "/data/";
 			String fileName = "homelist";

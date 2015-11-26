@@ -8,22 +8,22 @@ import org.bukkit.plugin.Plugin;
 
 public class CreateConfigClass {
 
-	private static Plugin plugin;	
-	public CreateConfigClass(Plugin plugin){
-		CreateConfigClass.plugin = plugin;
+	private UtilClass utClass;
+	
+	public CreateConfigClass(MainClass plugin){
+		this.utClass = plugin.getUtilClass();
 	}
 	
-	UtilClass utclass = new UtilClass(plugin);
-	
 	public void createConfig(){
+		
 		String filePath = "/config/";
 		String fileName = "config";
 		String fileType = "yml";
 		YamlConfiguration yamlFile;
-		File file = utclass.getFile(filePath, fileName, fileType);
+		File file = utClass.getFile(filePath, fileName, fileType);
 		StringBuilder sb = new StringBuilder();
-		utclass.createFile(file);
-		yamlFile = utclass.yamlCon(file);
+		utClass.createFile(file);
+		yamlFile = utClass.yamlCon(file);
 		
 		sb.append("                            This is the config file.\n");
 		sb.append(" ---------------------------------------------------------------------------------\n");

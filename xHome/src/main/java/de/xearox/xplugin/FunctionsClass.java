@@ -11,13 +11,17 @@ import org.bukkit.util.Vector;
 
 public class FunctionsClass {
 	
-	private static Plugin plugin;	
-	public FunctionsClass(Plugin plugin){
-		FunctionsClass.plugin = plugin;
-	}
+	private MainClass plugin;
 	
-	UtilClass utclass = new UtilClass(plugin);
-	SetLanguageClass langClass = new SetLanguageClass(plugin);
+	private UtilClass utClass; 
+	
+	public FunctionsClass(MainClass plugin){
+		this.utClass = plugin.getUtilClass();
+		this.plugin = plugin;
+		
+	}	
+	
+	//SetLanguageClass langClass = new SetLanguageClass(plugin);
 	
 	private String filePath = "/data/";
 	private String fileName = "homelist";
@@ -26,25 +30,25 @@ public class FunctionsClass {
 	
 	public void listHome(Player player){
 		
-		homeFile = utclass.getFile(filePath, fileName, fileType);
-		if(!utclass.fileExist(homeFile)){
-			utclass.createFile(homeFile);
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		if(!utClass.fileExist(homeFile)){
+			utClass.createFile(homeFile);
 		}
-		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());		
 	}
 	
 	public void setMainHome(Location pLoc, Player p){
 		
-		homeFile = utclass.getFile(filePath, fileName, fileType);
-		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PlayerName", p.getDisplayName());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.World", pLoc.getWorld().getName());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosX", pLoc.getBlockX());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosY", pLoc.getBlockY());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosZ", pLoc.getBlockZ());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.Direction", pLoc.getDirection());
-		p.sendMessage(utclass.Format(SetLanguageClass.MsgHomeSetMainHome));
+		p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeSetMainHome));
 		try {
 			yamlFile.save(homeFile);
 		} catch (IOException e) {
@@ -54,8 +58,9 @@ public class FunctionsClass {
 	}
 	
 	public void setDiffHome(Location pLoc, Player p, String args1, String args2){
-		homeFile = utclass.getFile(filePath, fileName, fileType);
-		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+		
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		if(args1.equalsIgnoreCase("set")){
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PlayerName", p.getDisplayName());
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".World", pLoc.getWorld().getName());
@@ -63,7 +68,7 @@ public class FunctionsClass {
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PosY", pLoc.getBlockY());
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PosZ", pLoc.getBlockZ());
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".Direction", pLoc.getDirection());
-			p.sendMessage(utclass.Format(SetLanguageClass.MsgHomeSetDiffHome.replace("%home%", args2)));
+			p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeSetDiffHome.replace("%home%", args2)));
 			try {
 				yamlFile.save(homeFile);
 			} catch (IOException e) {
@@ -74,8 +79,9 @@ public class FunctionsClass {
 	}
 	
 	public void delHome(Player p, String args1){
-		homeFile = utclass.getFile(filePath, fileName, fileType);
-		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+		
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		if(yamlFile.contains("Player."+ p.getUniqueId().toString()+"."+args1)){
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args1, null);
 			try {
@@ -88,8 +94,9 @@ public class FunctionsClass {
 	}
 	
 	public void tpHome(Location pLoc, Player p){
-		homeFile = utclass.getFile(filePath, fileName, fileType);
-		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+		
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		int posX; int posY; int posZ; String world; Vector direction;
 		if(yamlFile.contains("Player."+ p.getUniqueId().toString()+".MainHome")){
 			posX = yamlFile.getInt("Player."+ p.getUniqueId().toString()+".MainHome.PosX");
@@ -100,13 +107,14 @@ public class FunctionsClass {
 			pLoc.setX(posX);pLoc.setY(posY);pLoc.setZ(posZ);pLoc.setWorld(plugin.getServer().getWorld(world));
 			pLoc.setDirection(direction);
 			p.teleport(pLoc);
-			p.sendMessage(utclass.Format(SetLanguageClass.MsgHomeTeleportToMainHome));
+			p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeTeleportToMainHome));
 		}		
 	}
 	
 	public void tpDiffHome(Location pLoc, Player p, String args1){
-		homeFile = utclass.getFile(filePath, fileName, fileType);
-		YamlConfiguration yamlFile = utclass.yamlCon(homeFile);
+		
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		int posX; int posY; int posZ; String world; Vector direction;
 		if(yamlFile.contains("Player."+ p.getUniqueId().toString()+"."+args1)){
 			posX = yamlFile.getInt("Player."+ p.getUniqueId().toString()+"."+args1+".PosX");
@@ -117,7 +125,7 @@ public class FunctionsClass {
 			pLoc.setX(posX);pLoc.setY(posY);pLoc.setZ(posZ);pLoc.setWorld(plugin.getServer().getWorld(world));
 			pLoc.setDirection(direction);
 			p.teleport(pLoc);			
-			p.sendMessage(utclass.Format(SetLanguageClass.MsgHomeTeleportToDiffHome.replace("%home%", args1)));
+			p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeTeleportToDiffHome.replace("%home%", args1)));
 		}
 		
 		
