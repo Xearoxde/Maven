@@ -40,9 +40,9 @@ public class MainClass extends JavaPlugin{
 	public void onEnable(){
 				
 		try{
-			this.utClass = new UtilClass(this);
 		    this.functionClass = new FunctionsClass(this);
 		    this.langClass = new SetLanguageClass(this);
+		    this.utClass = new UtilClass(this);
 		    this.configClass = new CreateConfigClass(this);
 		    System.out.println("configClass= "+configClass);
 			System.out.println("langClass= "+langClass);

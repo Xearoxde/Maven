@@ -53,7 +53,8 @@ public class SetLanguageClass {
 	public void setMessageLanguage(Player player){
 		
 		String msgLanguage;
-		String playerLanguage = utClass.getPlayerLanguage(player);
+		String playerLanguage;
+		playerLanguage = utClass.getPlayerLanguage(player);
 		playerLanguage = playerLanguage.substring(0, playerLanguage.indexOf("_"));
 		msgLanguage = getLanguageFileName(playerLanguage).toLowerCase();
 		YamlConfiguration yamlLangFile = utClass.yamlCon(utClass.getFile("locate", msgLanguage, "yml"));
