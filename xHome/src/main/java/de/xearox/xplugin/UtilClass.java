@@ -26,8 +26,6 @@ public class UtilClass {
 	public UtilClass(MainClass plugin){
 		this.plugin = plugin;
 		this.langClass = plugin.getLangClass();
-		System.out.println("plugin= "+plugin);
-		System.out.println("plugin.getLangClass()= "+plugin.getLangClass());
 	}
 	
 	/**
@@ -149,9 +147,7 @@ public class UtilClass {
 	
 	public File getFile(String filePath, String fileName, String fileType ){
 		File file;
-		System.out.println(filePath);System.out.println(fileName);System.out.println(fileType);System.out.println(plugin);
 		file = new File(plugin.getDataFolder()+File.separator+filePath+fileName+"."+fileType);
-		System.out.println(file);
 		return file;
 	}
 	
@@ -166,7 +162,6 @@ public class UtilClass {
 		
 		for(int i=0; i<languages.length; i++){
 			fileName = languages[i].toString();
-			System.out.println("FILENAME= "+fileName);
 			tempString = langClass.getLanguageFileName(fileName);
 			file = getFile(filePath, tempString, fileType);
 			createFile(file);

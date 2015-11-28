@@ -44,10 +44,6 @@ public class MainClass extends JavaPlugin{
 		    this.langClass = new SetLanguageClass(this);
 		    this.utClass = new UtilClass(this);
 		    this.configClass = new CreateConfigClass(this);
-		    System.out.println("configClass= "+configClass);
-			System.out.println("langClass= "+langClass);
-			System.out.println("functionClass= "+functionClass);
-			System.out.println("utClass= "+utClass);
 			utClass.createLanguageFiles();
 			configClass.createConfig();	
 		}catch (Exception e){
