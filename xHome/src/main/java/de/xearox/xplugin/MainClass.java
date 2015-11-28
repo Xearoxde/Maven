@@ -95,7 +95,7 @@ public class MainClass extends JavaPlugin{
 							return true;
 						}
 					}
-			}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
+			/*}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
 				if(args[0].equalsIgnoreCase("rl")){
 					try {
 						yamlFile.load(homeFile);
@@ -115,7 +115,7 @@ public class MainClass extends JavaPlugin{
 						e.printStackTrace();
 						return true;
 					}
-				}
+				}*/
 			}else{
 				player = (Player) sender; 
 				pLoc = player.getLocation();
