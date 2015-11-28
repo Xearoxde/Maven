@@ -60,6 +60,7 @@ public class CreateConfigClass {
 		yamlFile.addDefault("Config.TeleportPremiumFlatrate", false);
 		yamlFile.addDefault("Config.CustomUserAnwserMessage", true);
 		yamlFile.addDefault("Config.CustomUserLanguage", "null");
+		yamlFile.addDefault("Config.CanOpReloadYamlFiles", false);
 		yamlFile.options().copyDefaults(true);
 		
 		try {

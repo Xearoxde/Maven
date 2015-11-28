@@ -86,6 +86,7 @@ public class FunctionsClass {
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args1, null);
 			try {
 				yamlFile.save(homeFile);
+				p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDeleteHome.replace("%home%", args1)));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

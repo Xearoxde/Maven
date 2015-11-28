@@ -174,11 +174,15 @@ public class UtilClass {
 			yamlFile.addDefault("Message.Teleport.ToDifferentHome", "You was teleported to %home%");
 			yamlFile.addDefault("Message.Plugin.Enabled", "The plugin was enabled!");
 			yamlFile.addDefault("Message.Plugin.Disabled", "The plugin was disabled!");
-			yamlFile.addDefault("Message.Plugin.Reloaded", "The plugin was reloaded!");
+			yamlFile.addDefault("Message.Plugin.Reloaded", "$3The plugin was reloaded!");
 			yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "The teleport to your home cost %home%");
 			yamlFile.addDefault("Message.TeleportCosts.ToDifferentHome", "The teleport to a different home cost %home%");
+			yamlFile.addDefault("Message.Delete.Sucessfully", "$2Your home %home% was successfully deleted!");
 			yamlFile.addDefault("Message.Error.TPDiffHomeNotFound", "Your home %home% was not found!");
 			yamlFile.addDefault("Message.Error.DeleteDiffHome", "Your home %home% can not be deleted, because it could not found!");
+			yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
+			yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
+			yamlFile.addDefault("Message.Permission.Error", "$4Sorry but you don't have the permission to do that!");
 			yamlFile.options().copyDefaults(true);
 			try {
 				yamlFile.save(file);

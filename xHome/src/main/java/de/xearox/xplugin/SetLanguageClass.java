@@ -23,9 +23,12 @@ public class SetLanguageClass {
 	static String MsgHomePluginDisabled;
 	static String MsgHomeTeleportCostsToMainHome;
 	static String MsgHomeTeleportCostsToDiffHome;
+	static String MsgHomeDeleteHome;
 	static String MsgHomePluginReloaded;
 	static String MsgHomeErrorTPDiffHomeNotFound;
-	static String MsgHomeErrorDeleteDiffHome;
+	static String MsgHomeErrorDeleteHome;
+	static String MsgHomeErrorHomeNotFound;
+	static String MsgHomeDontHavePermission;
 	
 	
 	public String getLanguageFileName(String language){
@@ -69,7 +72,10 @@ public class SetLanguageClass {
 			MsgHomeTeleportCostsToMainHome = yamlLangFile.getString("Message.TeleportCosts.ToMainHome");
 			MsgHomeTeleportCostsToDiffHome = yamlLangFile.getString("Message.TeleportCosts.ToDifferentHome");
 			MsgHomeErrorTPDiffHomeNotFound = yamlLangFile.getString("Message.Error.TPDiffHomeNotFound");
-			MsgHomeErrorDeleteDiffHome = yamlLangFile.getString("Message.Error.DeleteDiffHome");
+			MsgHomeDeleteHome = yamlLangFile.getString("Message.Delete.Sucessfully");
+			MsgHomeErrorDeleteHome = yamlLangFile.getString("Message.Error.DeleteDiffHome");
+			MsgHomeErrorHomeNotFound = yamlLangFile.getString("Message.Error.ListHomeNotFound");
+			MsgHomeDontHavePermission = yamlLangFile.getString("Message.Permission.Error");
 		
 		}catch (Exception e){
 			e.printStackTrace();

@@ -62,17 +62,45 @@ public class MainClass extends JavaPlugin{
 		Location pLoc = null;
 		
 		if(label.equalsIgnoreCase("home")){
-			String filePath = "/data/";
-			String fileName = "homelist";
-			String fileType = "yml";
+			String yamlFilePath = "/data/";
+			String yamlFileName = "homelist";
+			String yamlFileType = "yml";
+			String configFilePath = "/config/";
+			String configFileName = "config";
+			String configFileType = "yml";
 			File homeFile;
-			homeFile = utClass.getFile(filePath, fileName, fileType);
+			File configFile;
+			homeFile = utClass.getFile(yamlFilePath, yamlFileName, yamlFileType);
+			configFile = utClass.getFile(configFilePath, configFileName, configFileType);
+			YamlConfiguration yamlConfigFile = utClass.yamlCon(configFile);
 			YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
-			if(!(sender instanceof Player)){
+			if((!(sender instanceof Player))&&(!yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles"))){
+					if(args[0].equalsIgnoreCase("rl")){
+						try {
+							yamlFile.load(homeFile);
+							yamlConfigFile.load(configFile);
+							sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
+							return true;
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return true;
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return true;
+						} catch (InvalidConfigurationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							return true;
+						}
+					}
+			}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
 				if(args[0].equalsIgnoreCase("rl")){
 					try {
 						yamlFile.load(homeFile);
-						System.out.println("HomeFile was reloaded");
+						yamlConfigFile.load(configFile);
+						sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
 						return true;
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -94,25 +122,46 @@ public class MainClass extends JavaPlugin{
 				langClass.setMessageLanguage(player);
 			}
 			if(args.length==0){
-				functionClass.tpHome(pLoc, player);
-				return true;
+				if(player.hasPermission("home.teleport.mainhome")){
+					functionClass.tpHome(pLoc, player);
+					return true;
+				}else{
+					player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+					return true;
+				}
 			}
 			//##########################################################################################
 			if(args.length==1){			
 				if(args[0].equalsIgnoreCase("set")){
 					if(args.length==1){
-						functionClass.setMainHome(pLoc, player);
-						return true;
+						if(player.hasPermission("home.set.mainhome")){
+							functionClass.setMainHome(pLoc, player);
+							return true;
+						}else{
+							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+							return true;
+						}
+							
 					}
 				}if(args[0].equalsIgnoreCase("list")){
-					functionClass.listHome(player);
-					return true;
+					if(player.hasPermission("home.list")){
+						functionClass.listHome(player);
+						return true;
+					}else{
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
+					}
 				}else{
 					try{
-						functionClass.tpDiffHome(pLoc, player, args[0]);
-						return true;
+						if(player.hasPermission("home.teleport.diffhome")){
+							functionClass.tpDiffHome(pLoc, player, args[0]);
+							return true;
+						}else{
+							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+							return true;
+						}
 					}catch (Exception e){
-						player.sendMessage("Your home was not found. Make sure you entered the correct home");
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorHomeNotFound));
 						return true;
 					}
 				}
@@ -120,17 +169,24 @@ public class MainClass extends JavaPlugin{
 			//##########################################################################################
 			if(args.length==2){
 				if(args[0].equalsIgnoreCase("del")){				
-					try{
-						functionClass.delHome(player, args[1]);
-						player.sendMessage("Your home "+args[1]+" was deleted");
-						return true;
-					}catch (Exception e){
-						player.sendMessage("Make sure that you have entered the correct home");
-						return true;
+					if(player.hasPermission("home.del")){
+						try{
+							functionClass.delHome(player, args[1]);
+							return true;
+						}catch (Exception e){
+							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorDeleteHome));
+							return true;
+						}
+					}else{
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 					}
 				}if(args[0].equalsIgnoreCase("set")){
-					functionClass.setDiffHome(pLoc, player, args[0], args[1]);
-					return true;
+					if(player.hasPermission("home.set.diffhome")){
+						functionClass.setDiffHome(pLoc, player, args[0], args[1]);
+						return true;
+					}else{
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+					}
 				}
 			}
 			//##########################################################################################
