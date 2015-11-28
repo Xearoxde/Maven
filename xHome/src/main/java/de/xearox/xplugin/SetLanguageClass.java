@@ -49,6 +49,8 @@ public class SetLanguageClass {
 			
 			case "fr":		return "francais";
 			
+			case "nl":		return "nederlands";
+			
 			default:		return "english";		
 		}
 	}

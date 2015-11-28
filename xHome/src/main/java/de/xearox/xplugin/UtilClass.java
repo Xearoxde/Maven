@@ -166,24 +166,43 @@ public class UtilClass {
 			file = getFile(filePath, tempString, fileType);
 			createFile(file);
 			YamlConfiguration yamlFile = yamlCon(file);
-			
-			yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
-			yamlFile.addDefault("Message.HomeSet.MainHome", "Your home was set");
-			yamlFile.addDefault("Message.HomeSet.DifferentHome", "Your home %home% was set");
-			yamlFile.addDefault("Message.Teleport.ToMainHome", "You was teleported to home");
-			yamlFile.addDefault("Message.Teleport.ToDifferentHome", "You was teleported to %home%");
-			yamlFile.addDefault("Message.Plugin.Enabled", "The plugin was enabled!");
-			yamlFile.addDefault("Message.Plugin.Disabled", "The plugin was disabled!");
-			yamlFile.addDefault("Message.Plugin.Reloaded", "$3The plugin was reloaded!");
-			yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "The teleport to your home cost %home%");
-			yamlFile.addDefault("Message.TeleportCosts.ToDifferentHome", "The teleport to a different home cost %home%");
-			yamlFile.addDefault("Message.Delete.Sucessfully", "$2Your home %home% was successfully deleted!");
-			yamlFile.addDefault("Message.Error.TPDiffHomeNotFound", "Your home %home% was not found!");
-			yamlFile.addDefault("Message.Error.DeleteDiffHome", "Your home %home% can not be deleted, because it could not found!");
-			yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
-			yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
-			yamlFile.addDefault("Message.Permission.Error", "$4Sorry but you don't have the permission to do that!");
-			yamlFile.options().copyDefaults(true);
+			if(languages[i].toString().equalsIgnoreCase("nl")){
+				yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
+				yamlFile.addDefault("Message.HomeSet.MainHome", "Je huis is ingesteld");
+				yamlFile.addDefault("Message.HomeSet.DifferentHome", "Je huis %home% is ingesteld");
+				yamlFile.addDefault("Message.Teleport.ToMainHome", "Je bent geteleporteerd naar je huis");
+				yamlFile.addDefault("Message.Teleport.ToDifferentHome", "Je bent geteleporteerd naar %home%");
+				yamlFile.addDefault("Message.Plugin.Enabled", "De plugin is geactiveerd!");
+				yamlFile.addDefault("Message.Plugin.Disabled", "De plugin is gedeactiveerd!");
+				yamlFile.addDefault("Message.Plugin.Reloaded", "$3De plugin is herladen!");
+				yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "De teleportatie naar je huis kostte %home%");
+				yamlFile.addDefault("Message.TeleportCosts.ToDifferentHome", "De teleportatie naar een ander huis kost %home%");
+				yamlFile.addDefault("Message.Delete.Sucessfully", "$2Je huis %home% was succesvol verwijderd!");
+				yamlFile.addDefault("Message.Error.TPDiffHomeNotFound", "Je huis %home% is kon niet worden gevonden!");
+				yamlFile.addDefault("Message.Error.DeleteDiffHome", "Je huis %home% kon niet worden verwijderd, omdat het niet gevonden kon worden!");
+				yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Je huis kon niet worden gevonden. Wees er zeker van dat je het correct hebt gespeld!");
+				yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Je huis kon niet worden gevonden. Wees er zeker van dat je het correct hebt gespeld!");
+				yamlFile.addDefault("Message.Permission.Error", "$4Sorry, maar je hebt geen permissie om dat te doen!");
+				yamlFile.options().copyDefaults(true);
+			}else{
+				yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
+				yamlFile.addDefault("Message.HomeSet.MainHome", "Your home was set");
+				yamlFile.addDefault("Message.HomeSet.DifferentHome", "Your home %home% was set");
+				yamlFile.addDefault("Message.Teleport.ToMainHome", "You was teleported to home");
+				yamlFile.addDefault("Message.Teleport.ToDifferentHome", "You was teleported to %home%");
+				yamlFile.addDefault("Message.Plugin.Enabled", "The plugin was enabled!");
+				yamlFile.addDefault("Message.Plugin.Disabled", "The plugin was disabled!");
+				yamlFile.addDefault("Message.Plugin.Reloaded", "$3The plugin was reloaded!");
+				yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "The teleport to your home cost %home%");
+				yamlFile.addDefault("Message.TeleportCosts.ToDifferentHome", "The teleport to a different home cost %home%");
+				yamlFile.addDefault("Message.Delete.Sucessfully", "$2Your home %home% was successfully deleted!");
+				yamlFile.addDefault("Message.Error.TPDiffHomeNotFound", "Your home %home% was not found!");
+				yamlFile.addDefault("Message.Error.DeleteDiffHome", "Your home %home% can not be deleted, because it could not found!");
+				yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
+				yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
+				yamlFile.addDefault("Message.Permission.Error", "$4Sorry but you don't have the permission to do that!");
+				yamlFile.options().copyDefaults(true);
+			}
 			try {
 				yamlFile.save(file);
 			} catch (IOException e) {
