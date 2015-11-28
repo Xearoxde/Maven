@@ -27,6 +27,14 @@ public class FunctionsClass {
 	private String fileType = "yml";
 	private File homeFile;
 	
+	public void createHomeFile(){
+		UtilClass utClass = plugin.getUtilClass();
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		if(!utClass.fileExist(homeFile)){
+			utClass.createFile(homeFile);
+		}
+	}
+	
 	public void listHome(Player player){
 		UtilClass utClass = plugin.getUtilClass();
 		homeFile = utClass.getFile(filePath, fileName, fileType);
@@ -34,7 +42,12 @@ public class FunctionsClass {
 			utClass.createFile(homeFile);
 		}
 		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
-		player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());		
+		System.out.println(player);
+		try{
+			player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void setMainHome(Location pLoc, Player p){
@@ -49,6 +62,8 @@ public class FunctionsClass {
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosY", pLoc.getBlockY());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosZ", pLoc.getBlockZ());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.Direction", pLoc.getDirection());
+		System.out.println(p);
+		System.out.println(SetLanguageClass.MsgHomeSetMainHome);
 		p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeSetMainHome));
 		try {
 			yamlFile.save(homeFile);

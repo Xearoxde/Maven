@@ -1,6 +1,6 @@
 name: xHome
 main: de.xearox.xplugin.MainClass
-version: 0.8.0
+version: 0.8.1
 author: Xearox
 
 commands:

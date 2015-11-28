@@ -48,7 +48,8 @@ public class MainClass extends JavaPlugin{
 		    this.utClass = new UtilClass(this);
 		    this.configClass = new CreateConfigClass(this);
 			utClass.createLanguageFiles();
-			configClass.createConfig();	
+			configClass.createConfig();
+			functionClass.createHomeFile();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -77,6 +78,8 @@ public class MainClass extends JavaPlugin{
 			configFile = utClass.getFile(configFilePath, configFileName, configFileType);
 			YamlConfiguration yamlConfigFile = utClass.yamlCon(configFile);
 			YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
+			player = (Player) sender; 
+			pLoc = player.getLocation();
 			if((!(sender instanceof Player))&&(!yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles"))){
 				if(args[0].equalsIgnoreCase("rl")){
 					try {
@@ -97,6 +100,10 @@ public class MainClass extends JavaPlugin{
 						e.printStackTrace();
 						return true;
 					}
+				}else{
+					player = (Player) sender; 
+					pLoc = player.getLocation();
+					langClass.setMessageLanguage(player);
 				}
 			}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
 				if(args[0].equalsIgnoreCase("rl")){
@@ -122,7 +129,11 @@ public class MainClass extends JavaPlugin{
 					player = (Player) sender; 
 					pLoc = player.getLocation();
 					langClass.setMessageLanguage(player);
-			}
+				}
+			}else{
+				player = (Player) sender; 
+				pLoc = player.getLocation();
+				langClass.setMessageLanguage(player);
 			}
 			if(args.length==0){
 				if(player.hasPermission("home.teleport.mainhome")){
@@ -147,6 +158,7 @@ public class MainClass extends JavaPlugin{
 							
 					}
 				}if(args[0].equalsIgnoreCase("list")){
+					System.out.println(player);
 					if(player.hasPermission("home.list")){
 						functionClass.listHome(player);
 						return true;
