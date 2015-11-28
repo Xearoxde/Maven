@@ -7,3 +7,28 @@ commands:
   home:
     description: MyHomes to set homes or multiple homes
     usage: /<command> ,[set], [set] [homename], [del] [homename], [list]
+    
+permissions:
+  home.*:
+    description: Access to all home commands
+    children:
+      home.rl: true
+      home.set: true
+      home.set.diffhome: true
+      home.list: true
+      home.del: true
+  home.rl:
+    description: Access to reload yaml files
+    default: op
+  home.set:
+    description: Access to set main home
+    default: true
+  home.set.diffhome:
+    description: Access to set different home
+    default: op
+  home.list:
+    description: Access to list all home
+    default: true
+  home.del:
+    description: Access to remove home
+    default: true
