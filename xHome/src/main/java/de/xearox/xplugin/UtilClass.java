@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright 2015 Xearox - Christopher Hahnen
  */
 package de.xearox.xplugin;
 

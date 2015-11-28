@@ -1,10 +1,12 @@
+/**
+ * Copyright 2015 Xearox - Christopher Hahnen
+ */
 package de.xearox.xplugin;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 public class CreateConfigClass {
 
