@@ -75,27 +75,6 @@ public class MainClass extends JavaPlugin{
 			YamlConfiguration yamlConfigFile = utClass.yamlCon(configFile);
 			YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 			if((!(sender instanceof Player))&&(!yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles"))){
-					if(args[0].equalsIgnoreCase("rl")){
-						try {
-							yamlFile.load(homeFile);
-							yamlConfigFile.load(configFile);
-							sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
-							return true;
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							return true;
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							return true;
-						} catch (InvalidConfigurationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							return true;
-						}
-					}
-			/*}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
 				if(args[0].equalsIgnoreCase("rl")){
 					try {
 						yamlFile.load(homeFile);
@@ -115,11 +94,32 @@ public class MainClass extends JavaPlugin{
 						e.printStackTrace();
 						return true;
 					}
-				}*/
-			}else{
-				player = (Player) sender; 
-				pLoc = player.getLocation();
-				langClass.setMessageLanguage(player);
+				}
+			}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
+				if(args[0].equalsIgnoreCase("rl")){
+					try {
+						yamlFile.load(homeFile);
+						yamlConfigFile.load(configFile);
+						sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
+						return true;
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return true;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return true;
+					} catch (InvalidConfigurationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return true;
+					}
+				}else{
+					player = (Player) sender; 
+					pLoc = player.getLocation();
+					langClass.setMessageLanguage(player);
+			}
 			}
 			if(args.length==0){
 				if(player.hasPermission("home.teleport.mainhome")){
