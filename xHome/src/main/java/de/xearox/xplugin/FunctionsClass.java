@@ -109,6 +109,8 @@ public class FunctionsClass {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else{
+			p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorDeleteHome.replace("%home%", args1)));
 		}
 	}
 	
@@ -151,8 +153,6 @@ public class FunctionsClass {
 		
 		
 	}
-	
-	
 	
 	
 	

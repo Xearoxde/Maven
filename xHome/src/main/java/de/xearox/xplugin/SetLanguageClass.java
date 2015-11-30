@@ -24,6 +24,7 @@ public class SetLanguageClass {
 	static String MsgHomeTeleportToDiffHome;
 	static String MsgHomePluginEnabled;
 	static String MsgHomePluginDisabled;
+	static String MsgHomePluginHelp;
 	static String MsgHomeTeleportCostsToMainHome;
 	static String MsgHomeTeleportCostsToDiffHome;
 	static String MsgHomeDeleteHome;
@@ -74,6 +75,7 @@ public class SetLanguageClass {
 			MsgHomePluginEnabled = yamlLangFile.getString("Message.Plugin.Enabled");
 			MsgHomePluginDisabled = yamlLangFile.getString("Message.Plugin.Disabled");
 			MsgHomePluginReloaded = yamlLangFile.getString("Message.Plugin.Reloaded");
+			MsgHomePluginHelp = yamlLangFile.getString("Message.Plugin.Help");
 			MsgHomeTeleportCostsToMainHome = yamlLangFile.getString("Message.TeleportCosts.ToMainHome");
 			MsgHomeTeleportCostsToDiffHome = yamlLangFile.getString("Message.TeleportCosts.ToDifferentHome");
 			MsgHomeErrorTPDiffHomeNotFound = yamlLangFile.getString("Message.Error.TPDiffHomeNotFound");
@@ -81,6 +83,7 @@ public class SetLanguageClass {
 			MsgHomeErrorDeleteHome = yamlLangFile.getString("Message.Error.DeleteDiffHome");
 			MsgHomeErrorHomeNotFound = yamlLangFile.getString("Message.Error.ListHomeNotFound");
 			MsgHomeDontHavePermission = yamlLangFile.getString("Message.Permission.Error");
+			
 		
 		}catch (Exception e){
 			e.printStackTrace();

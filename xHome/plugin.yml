@@ -1,12 +1,12 @@
 name: xHome
 main: de.xearox.xplugin.MainClass
-version: 0.8.1
+version: 0.9.0
 author: Xearox
 
 commands:
   home:
     description: MyHomes to set homes or multiple homes
-    usage: /<command> ,[set], [set] [homename], [del] [homename], [list]
+    usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help]
     
 permissions:
   home.*:

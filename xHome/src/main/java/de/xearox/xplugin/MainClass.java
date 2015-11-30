@@ -157,6 +157,7 @@ public class MainClass extends JavaPlugin{
 						}
 							
 					}
+					
 				}if(args[0].equalsIgnoreCase("list")){
 					System.out.println(player);
 					if(player.hasPermission("home.list")){
@@ -166,6 +167,16 @@ public class MainClass extends JavaPlugin{
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 						return true;
 					}
+					
+				}if(args[0].equalsIgnoreCase("help")){
+					if(player.hasPermission("home.help")){
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginHelp));
+						return true;
+					}else{
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
+					}
+									
 				}else{
 					try{
 						if(player.hasPermission("home.teleport.diffhome")){
