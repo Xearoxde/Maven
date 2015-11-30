@@ -20,6 +20,7 @@ permissions:
       home.teleport.mainhome: true
       home.teleport.diffhome: true
       home.update: true
+      home.getOPMessage: true
   home.rl:
     description: Access to reload yaml files
     default: op
@@ -43,4 +44,7 @@ permissions:
     default: op
   home.update:
     description: Access to update the plugin
+    default: op
+  home.getOPMessage:
+    description: Access to get messages from server
     default: op

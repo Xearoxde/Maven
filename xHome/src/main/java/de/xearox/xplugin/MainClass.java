@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -57,6 +58,9 @@ public class MainClass extends JavaPlugin{
 			configClass.createConfig();
 			functionClass.createHomeFile();
 			checkUpdates.createDownloadFolder();
+			if(getConfigFile().getBoolean("Config.Update.automatically")){
+				updateChecker(this);
+			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -65,6 +69,32 @@ public class MainClass extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		//
+	}
+	
+	public YamlConfiguration getConfigFile(){
+		String configFilePath = "/config/";
+		String configFileName = "config";
+		String configFileType = "yml";
+		File configFile;
+		configFile = utClass.getFile(configFilePath, configFileName, configFileType);
+		YamlConfiguration yamlConfigFile = utClass.yamlCon(configFile);
+		return yamlConfigFile;
+		
+	}
+	
+	public void updateChecker(MainClass plugin){
+		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if(checkUpdates.checkForUpdates()){
+					for(int i = 0; i<Bukkit.getServer().getOnlinePlayers().size();i++){
+						Bukkit.getServer().broadcast(utClass.Format("$axHome - INFO - There is a new update"), "home.getOPMessage");
+					}
+				}
+			}
+		}, 0, getConfigFile().getLong("Config.Update.checkInterval")*20*60);
 	}
 	
 	@Override
@@ -224,10 +254,15 @@ public class MainClass extends JavaPlugin{
 				}if(args[0].equalsIgnoreCase("update")&&(args[1].equalsIgnoreCase("apply"))){
 					if(player.hasPermission("home.update")){
 						if(checkUpdates.applyUpdate()){
-							player.sendMessage(utClass.Format("$axHome update successfully"));
-							return true;
+							player.sendMessage(utClass.Format("$axHome - INFO - update successfully"));
+							if(getConfigFile().getBoolean("Config.Update.reloadAfterApply")){
+								this.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
+								return true;
+							}else{ 
+								return true;
+							}
 						}else{
-							player.sendMessage(utClass.Format("$4xHome update failed"));
+							player.sendMessage(utClass.Format("$4xHome - INFO - update failed"));
 							return true;
 						}
 					}else{
@@ -237,9 +272,8 @@ public class MainClass extends JavaPlugin{
 					
 				}if(args[0].equalsIgnoreCase("update")&&(args[1].equalsIgnoreCase("check"))){
 					if(player.hasPermission("home.update")){
-						if(checkUpdates.checkForUpdates()){
+						if(checkUpdates.checkForUpdatesCMD()){
 							player.sendMessage(utClass.Format("$axHome - INFO - Update available"));
-							//Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
 							return true;
 						}else{
 							player.sendMessage(utClass.Format("$dxHome - INFO - Plugin is UpToDate"));

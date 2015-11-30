@@ -63,6 +63,11 @@ public class CreateConfigClass {
 		yamlFile.addDefault("Config.CustomUserAnwserMessage", true);
 		yamlFile.addDefault("Config.CustomUserLanguage", "null");
 		yamlFile.addDefault("Config.CanOpReloadYamlFiles", false);
+		yamlFile.addDefault("Config.Update.automatically", true);
+		yamlFile.addDefault("Config.Update.download", true);
+		yamlFile.addDefault("Config.Update.version", "stable");
+		yamlFile.addDefault("Config.Update.checkInterval", 30);
+		yamlFile.addDefault("Config.Update.reloadAfterApply", false);
 		yamlFile.options().copyDefaults(true);
 		
 		try {

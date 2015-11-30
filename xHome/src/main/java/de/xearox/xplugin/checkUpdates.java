@@ -23,6 +23,35 @@ public class checkUpdates {
 	}
 	
 	public boolean checkForUpdates(){
+		if(plugin.getConfigFile().getBoolean("Config.Update.download")){
+			downloadPlugin();
+		}else{
+			return false;
+		}
+		String rootDir;
+		String localFileMD5;
+		String newFileMD5;
+		rootDir = plugin.getServer().getWorldContainer().getAbsolutePath();
+		rootDir = rootDir.substring(0, rootDir.length() -1);
+		try{
+			FileInputStream localFile = new FileInputStream(new File(rootDir+"plugins/xHome.jar"));
+			FileInputStream newFile = new FileInputStream(new File(plugin.getDataFolder()+"/download/xHome.jar"));
+			
+			localFileMD5 = DigestUtils.md5Hex(localFile);
+			newFileMD5 = DigestUtils.md5Hex(newFile);
+			
+			if(localFileMD5.equals(newFileMD5)){
+				return false;
+			}else{
+				return true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean checkForUpdatesCMD(){
 		downloadPlugin();
 		String rootDir;
 		String localFileMD5;
@@ -36,9 +65,6 @@ public class checkUpdates {
 			localFileMD5 = DigestUtils.md5Hex(localFile);
 			newFileMD5 = DigestUtils.md5Hex(newFile);
 			
-			System.out.println(localFileMD5);
-			System.out.println(newFileMD5);
-			
 			if(localFileMD5.equals(newFileMD5)){
 				return false;
 			}else{
@@ -50,21 +76,35 @@ public class checkUpdates {
 		}
 	}
 	
+	@SuppressWarnings("resource")
 	private void downloadPlugin(){
-		try(
-				ReadableByteChannel in=Channels.newChannel(
-						new URL("http://minecraft.xearox.de/data/documents/xHome.jar").openStream());
-				FileChannel out=new FileOutputStream(
-						plugin.getDataFolder()+"/download/xHome.jar").getChannel() ) {
-	
-			  out.transferFrom(in, 0, Long.MAX_VALUE);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try{	
+					ReadableByteChannel in = null;
+					if(plugin.getConfigFile().getString("Config.Update.version").equalsIgnoreCase(Versions.stable.toString())){
+						in=Channels.newChannel(new URL("http://minecraft.xearox.de/data/documents/stable/xHome.jar").openStream());
+					}else if(plugin.getConfigFile().getString("Config.Update.version").equalsIgnoreCase(Versions.devbuild.toString())){
+						in=Channels.newChannel(new URL("http://minecraft.xearox.de/data/documents/devbuild/xHome.jar").openStream());
+					}else if(plugin.getConfigFile().getString("Config.Update.version").equalsIgnoreCase(Versions.lastbuild.toString())){
+						in=Channels.newChannel(new URL("http://minecraft.xearox.de/data/documents/lastbuild/xHome.jar").openStream());
+					}else if(plugin.getConfigFile().getString("Config.Update.version").equalsIgnoreCase(Versions.snapshot.toString())){
+						in=Channels.newChannel(new URL("http://minecraft.xearox.de/data/documents/snapshot/xHome.jar").openStream());
+					}					
+					FileChannel out=new FileOutputStream(plugin.getDataFolder()+"/download/xHome.jar").getChannel();	
+						out.transferFrom(in, 0, Long.MAX_VALUE);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				}
 			}
+		});
 	}
 	
 	public void createDownloadFolder(){
