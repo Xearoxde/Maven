@@ -36,5 +36,11 @@
         <version>1.8.8-R0.1-SNAPSHOT</version>
         <scope>provided</scope>
     </dependency>
+    <dependency>
+		<groupId>commons-codec</groupId>
+		<artifactId>commons-codec</artifactId>
+		<version>1.10</version>
+</dependency>
+    
   </dependencies>
 </project>

@@ -92,7 +92,7 @@ public class UtilClass {
 			}
 			
 		}else{
-			System.out.println("The file "+fileName+" does already exist. No operation needed!");
+			System.out.println("xHome - INFO - The file "+fileName+" does already exist. No operation needed!");
 		}
 		
 	}
@@ -107,7 +107,7 @@ public class UtilClass {
 				e.printStackTrace();
 			}
 		}else{
-			System.out.println("The file "+file.getName().toString()+" does already exist. No operation needed!");
+			System.out.println("xHome - INFO - The file "+file.getName().toString()+" does already exist. No operation needed!");
 		}
 	}
 	
@@ -194,16 +194,19 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Plugin.Enabled", "Das Plugin wurde aktiviert!");
 				yamlFile.addDefault("Message.Plugin.Disabled", "Das Plugin wurde deaktiviert!");
 				yamlFile.addDefault("Message.Plugin.Reloaded", "$3Die YAML Dateien wurden neu geladen!");
-				yamlFile.addDefault("Message.Plugin.Help", "xHome Help\n"
+				yamlFile.addDefault("Message.Plugin.Help", "$exHome Help\n"
 						+ "########Setz dein Zuhause###########################\n"
 						+ "/home set > Hier kannst du dein Zuhause setzen\n"
 						+ "/home set HomeName > Hier kannst du ein Zuhause mit namen setzen\n"
-						+ "########Teleportiert dich nach Hause################"
+						+ " \n"
+						+ "########Teleportiert dich nach Hause################\n"
 						+ "/home > Du wirst nach Hause teleportiert\n"
 						+ "/home HomeName > Du wirst nach einem Bestimmten zu Hause teleportiert\n"
+						+ " \n"
 						+ "#####Löscht dein Zuhause############################\n"
-						+ "/home del > Dein Zuhause wird geloescht!\n"
+						+ "/home del > Dein Zuhause wird gelöscht!\n"
 						+ "/home del HomeName > Dein Zuhause mit einem Namen wird geloescht!\n"
+						+ " \n"
 						+ "#####Zeigt die Hilfe an#############################\n"
 						+ "/home help > Zeigt die Hilfe an");
 				yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "Das teleportieren nach Hause kostet %cost%!");
@@ -224,16 +227,19 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Plugin.Enabled", "The plugin was enabled!");
 				yamlFile.addDefault("Message.Plugin.Disabled", "The plugin was disabled!");
 				yamlFile.addDefault("Message.Plugin.Reloaded", "$3The plugin was reloaded!");
-				yamlFile.addDefault("Message.Plugin.Help", "xHome Help\n"
-						+ "$e########Set your home###############################\n"
+				yamlFile.addDefault("Message.Plugin.Help", "$exHome Help\n"
+						+ "########Set your home###############################\n"
 						+ "/home set > Here you can set your home\n"
 						+ "/home set HomeName > Here you can set a named home\n"
-						+ "########Teleport you to home########################"
+						+ " \n"
+						+ "########Teleport you to home########################\n"
 						+ "/home > You will telport to home\n"
 						+ "/home HomeName > You will teleport to NamedHome\n"
+						+ " \n"
 						+ "#####Delete your home###############################\n"
 						+ "/home del > You can delete your home\n"
 						+ "/home del HomeName > You can delete your NamedHome\n"
+						+ " \n"
 						+ "#####Display the help###############################\n"
 						+ "/home help > Display the help");
 				yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "The teleport to your home cost %home%");
@@ -258,6 +264,8 @@ public class UtilClass {
 	public String Format(String format){
 		return ChatColor.translateAlternateColorCodes('$', format);
 	}
+	
+	
 	
 	
 	

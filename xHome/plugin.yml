@@ -6,7 +6,7 @@ author: Xearox
 commands:
   home:
     description: MyHomes to set homes or multiple homes
-    usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help]
+    usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help], [update]
     
 permissions:
   home.*:
@@ -19,6 +19,7 @@ permissions:
       home.del: true
       home.teleport.mainhome: true
       home.teleport.diffhome: true
+      home.update: true
   home.rl:
     description: Access to reload yaml files
     default: op
@@ -40,4 +41,6 @@ permissions:
   home.teleport.diffhome:
     description: Access to teleport to different home
     default: op
-    
+  home.update:
+    description: Access to update the plugin
+    default: op

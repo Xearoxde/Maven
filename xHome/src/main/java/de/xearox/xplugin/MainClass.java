@@ -21,6 +21,7 @@ public class MainClass extends JavaPlugin{
 	private FunctionsClass functionClass;
 	private SetLanguageClass langClass;
 	private CreateConfigClass configClass;
+	private checkUpdates checkUpdates;
 	
 	//Getter
 	public UtilClass getUtilClass(){
@@ -39,10 +40,15 @@ public class MainClass extends JavaPlugin{
 		return configClass;
 	}
 	
+	public checkUpdates getCheckUpdates(){
+		return checkUpdates;
+	}
+	
 	@Override
 	public void onEnable(){
 				
 		try{
+			this.checkUpdates = new checkUpdates(this);
 		    this.functionClass = new FunctionsClass(this);
 		    this.langClass = new SetLanguageClass(this);
 		    this.utClass = new UtilClass(this);
@@ -50,6 +56,7 @@ public class MainClass extends JavaPlugin{
 			utClass.createLanguageFiles();
 			configClass.createConfig();
 			functionClass.createHomeFile();
+			checkUpdates.createDownloadFolder();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -175,8 +182,7 @@ public class MainClass extends JavaPlugin{
 					}else{
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 						return true;
-					}
-									
+					}								
 				}else{
 					try{
 						if(player.hasPermission("home.teleport.diffhome")){
@@ -206,12 +212,42 @@ public class MainClass extends JavaPlugin{
 					}else{
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 					}
+					
 				}if(args[0].equalsIgnoreCase("set")){
 					if(player.hasPermission("home.set.diffhome")){
 						functionClass.setDiffHome(pLoc, player, args[0], args[1]);
 						return true;
 					}else{
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+					}
+					
+				}if(args[0].equalsIgnoreCase("update")&&(args[1].equalsIgnoreCase("apply"))){
+					if(player.hasPermission("home.update")){
+						if(checkUpdates.applyUpdate()){
+							player.sendMessage(utClass.Format("$axHome update successfully"));
+							return true;
+						}else{
+							player.sendMessage(utClass.Format("$4xHome update failed"));
+							return true;
+						}
+					}else{
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
+					}
+					
+				}if(args[0].equalsIgnoreCase("update")&&(args[1].equalsIgnoreCase("check"))){
+					if(player.hasPermission("home.update")){
+						if(checkUpdates.checkForUpdates()){
+							player.sendMessage(utClass.Format("$axHome - INFO - Update available"));
+							//Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
+							return true;
+						}else{
+							player.sendMessage(utClass.Format("$dxHome - INFO - Plugin is UpToDate"));
+							return true;
+						}
+					}else{
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
 					}
 				}
 			}
