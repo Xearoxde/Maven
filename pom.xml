@@ -9,6 +9,7 @@
   	<module>xChatExtender</module>
 
   	<module>xHome</module>
+  	<module>xEconomy</module>
   </modules>
   <build>
     <plugins>
