@@ -58,6 +58,7 @@ public class MainClass extends JavaPlugin{
 			configClass.createConfig();
 			functionClass.createHomeFile();
 			checkUpdates.createDownloadFolder();
+			checkUpdates.downloadPlugin();
 			if(getConfigFile().getBoolean("Config.Update.automatically")){
 				updateChecker(this);
 			}

@@ -77,7 +77,7 @@ public class checkUpdates {
 	}
 	
 	@SuppressWarnings("resource")
-	private void downloadPlugin(){
+	public void downloadPlugin(){
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
 			
 			@Override
