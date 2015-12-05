@@ -11,6 +11,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.bukkit.Bukkit;
 
 import com.google.common.io.Files;
 
@@ -31,10 +32,13 @@ public class checkUpdates {
 		String rootDir;
 		String localFileMD5;
 		String newFileMD5;
+		String localJarName;
 		rootDir = plugin.getServer().getWorldContainer().getAbsolutePath();
 		rootDir = rootDir.substring(0, rootDir.length() -1);
 		try{
-			FileInputStream localFile = new FileInputStream(new File(rootDir+"plugins/xHome.jar"));
+			localJarName = Bukkit.getPluginManager().getPlugin("xHome").getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+			localJarName = localJarName.replace("file:/", "");
+			FileInputStream localFile = new FileInputStream(new File(localJarName));
 			FileInputStream newFile = new FileInputStream(new File(plugin.getDataFolder()+"/download/xHome.jar"));
 			
 			localFileMD5 = DigestUtils.md5Hex(localFile);

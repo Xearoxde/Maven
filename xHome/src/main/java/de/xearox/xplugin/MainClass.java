@@ -47,7 +47,6 @@ public class MainClass extends JavaPlugin{
 	
 	@Override
 	public void onEnable(){
-				
 		try{
 			this.checkUpdates = new checkUpdates(this);
 		    this.functionClass = new FunctionsClass(this);

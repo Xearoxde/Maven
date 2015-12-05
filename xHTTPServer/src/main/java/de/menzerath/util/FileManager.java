@@ -34,7 +34,7 @@ public class FileManager {
         mimeTypes.put(".xhtml", "text/html");
         mimeTypes.put(".css", "text/css");
         mimeTypes.put(".js", "text/js");
-        mimeTypes.put(".php", "text/php");
+        mimeTypes.put(".php", "text/html");
 
         // Anderes
         mimeTypes.put(".txt", "text/plain");

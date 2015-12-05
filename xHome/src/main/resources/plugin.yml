@@ -1,7 +1,8 @@
 name: xHome
 main: de.xearox.xplugin.MainClass
 version: 0.9.0
-author: Xearox
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
 
 commands:
   home:
