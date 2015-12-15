@@ -117,176 +117,175 @@ public class MainClass extends JavaPlugin{
 			YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 			player = (Player) sender; 
 			pLoc = player.getLocation();
-			if((!(sender instanceof Player))&&(!yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles"))){
-				if(args[0].equalsIgnoreCase("rl")){
-					try {
-						yamlFile.load(homeFile);
-						yamlConfigFile.load(configFile);
-						sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
-						return true;
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return true;
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return true;
-					} catch (InvalidConfigurationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return true;
-					}
-				}else{
-					player = (Player) sender; 
-					pLoc = player.getLocation();
-					langClass.setMessageLanguage(player);
-				}
-			}else if(yamlConfigFile.getBoolean("Config.CanOpReloadYamlFiles")){
-				if(args[0].equalsIgnoreCase("rl")){
-					try {
-						yamlFile.load(homeFile);
-						yamlConfigFile.load(configFile);
-						sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
-						return true;
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return true;
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return true;
-					} catch (InvalidConfigurationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return true;
-					}
-				}else{
-					player = (Player) sender; 
-					pLoc = player.getLocation();
-					langClass.setMessageLanguage(player);
-				}
-			}else{
-				player = (Player) sender; 
-				pLoc = player.getLocation();
-				langClass.setMessageLanguage(player);
+//##########Check if the sender is the console. If true, then return a message or something like this #######################################
+			if(!(sender instanceof Player)){
+				System.out.println("The console cant do this!");
 			}
-			if(args.length==0){
+//##########Set the Variables for Player, Players Location and the Language of the player####################################################
+			player = (Player) sender;
+			pLoc = player.getLocation();
+			langClass.setMessageLanguage(player);
+//##########Reload files Command#############################################################################################################
+			if(args[0].equalsIgnoreCase("rl")){
+				try{
+					yamlFile.load(homeFile);
+					yamlConfigFile.load(configFile);
+					sender.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginReloaded));
+					return true;
+				} catch (FileNotFoundException e){
+					e.printStackTrace();
+					return true;
+				} catch (IOException e){
+					e.printStackTrace();
+					return true;
+				} catch (InvalidConfigurationException e){
+					e.printStackTrace();
+					return true;
+				}
+			}
+//##########If no args added to the command the player will be teleported to his homebase####################################################
+			if(args.length == 0){
 				if(player.hasPermission("home.teleport.mainhome")){
 					functionClass.tpHome(pLoc, player);
 					return true;
-				}else{
+				} else {
 					player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 					return true;
 				}
 			}
-			//##########################################################################################
-			if(args.length==1){			
+//##########If one argument added to the command the following commands will run#############################################################
+			if(args.length == 1){
 				if(args[0].equalsIgnoreCase("set")){
-					if(args.length==1){
-						if(player.hasPermission("home.set.mainhome")){
-							functionClass.setMainHome(pLoc, player);
-							return true;
-						}else{
-							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
-							return true;
-						}
-							
+					if(player.hasPermission("home.set.mainhome")){
+						functionClass.setMainHome(pLoc, player);
+						return true;
+					} else {
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
 					}
-					
-				}if(args[0].equalsIgnoreCase("list")){
-					System.out.println(player);
+				}
+				if(args[0].equalsIgnoreCase("list")){
 					if(player.hasPermission("home.list")){
 						functionClass.listHome(player);
 						return true;
-					}else{
+					} else {
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 						return true;
 					}
-					
-				}if(args[0].equalsIgnoreCase("help")){
+				}
+				if(args[0].equalsIgnoreCase("help")){
 					if(player.hasPermission("home.help")){
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomePluginHelp));
 						return true;
-					}else{
+					} else {
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
-						return true;
-					}								
-				}else{
-					try{
-						if(player.hasPermission("home.teleport.diffhome")){
-							functionClass.tpDiffHome(pLoc, player, args[0]);
-							return true;
-						}else{
-							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
-							return true;
-						}
-					}catch (Exception e){
-						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorHomeNotFound));
 						return true;
 					}
 				}
+				try{
+					if(player.hasPermission("home.teleport.diffhome")){
+						functionClass.tpDiffHome(pLoc, player, args[0]);
+						return true;
+					} else {
+						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
+					}
+				} catch (Exception e){
+					player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorHomeNotFound));
+					return true;
+				}
 			}
-			//##########################################################################################
-			if(args.length==2){
-				if(args[0].equalsIgnoreCase("del")){				
+//##########If two arguments added to the command the following will run#####################################################################
+			if(args.length == 2){
+				if(args[0].equalsIgnoreCase("del")){
 					if(player.hasPermission("home.del")){
 						try{
-							functionClass.delHome(player, args[1]);
+							functionClass.delHome(player, args[0]);
 							return true;
-						}catch (Exception e){
+						} catch (Exception e){
 							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorDeleteHome));
 							return true;
 						}
-					}else{
+					} else {
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
+						return true;
 					}
-					
-				}if(args[0].equalsIgnoreCase("set")){
+				}
+				if(args[0].equalsIgnoreCase("set")){
 					if(player.hasPermission("home.set.diffhome")){
 						functionClass.setDiffHome(pLoc, player, args[0], args[1]);
 						return true;
-					}else{
-						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
-					}
-					
-				}if(args[0].equalsIgnoreCase("update")&&(args[1].equalsIgnoreCase("apply"))){
-					if(player.hasPermission("home.update")){
-						if(checkUpdates.applyUpdate()){
-							player.sendMessage(utClass.Format("$axHome - INFO - update successfully"));
-							if(getConfigFile().getBoolean("Config.Update.reloadAfterApply")){
-								this.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
-								return true;
-							}else{ 
-								return true;
-							}
-						}else{
-							player.sendMessage(utClass.Format("$4xHome - INFO - update failed"));
-							return true;
-						}
-					}else{
+					} else {
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 						return true;
 					}
-					
-				}if(args[0].equalsIgnoreCase("update")&&(args[1].equalsIgnoreCase("check"))){
+				}
+				if(args[0].equalsIgnoreCase("update")){
 					if(player.hasPermission("home.update")){
-						if(checkUpdates.checkForUpdatesCMD()){
-							player.sendMessage(utClass.Format("$axHome - INFO - Update available"));
-							return true;
-						}else{
-							player.sendMessage(utClass.Format("$dxHome - INFO - Plugin is UpToDate"));
-							return true;
+						if(args[1].equalsIgnoreCase("check")){
+							if(checkUpdates.checkForUpdatesCMD()){
+								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdateNewUpadteAvailable));
+								return true;
+							} else {
+								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdatePluginUpToDate));
+								return true;
+							}
 						}
-					}else{
+						if(args[1].equalsIgnoreCase("apply")){
+							if(checkUpdates.applyUpdate()){
+								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdateInstallSuccessfully));
+								return true;
+							} else {
+								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdateInstallFailed));
+								return true;
+							}
+						}
+					} else {
 						player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeDontHavePermission));
 						return true;
 					}
 				}
 			}
-			//##########################################################################################
 		}
 		return false;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

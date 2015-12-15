@@ -175,7 +175,21 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Plugin.Enabled", "De plugin is geactiveerd!");
 				yamlFile.addDefault("Message.Plugin.Disabled", "De plugin is gedeactiveerd!");
 				yamlFile.addDefault("Message.Plugin.Reloaded", "$3De plugin is herladen!");
-				yamlFile.addDefault("Message.Plugin.Help", "placeholder");
+				yamlFile.addDefault("Message.Plugin.Help", "$exHome Help\n"
+						+ "########Set your home###############################\n"
+						+ "/home set > Here you can set your home\n"
+						+ "/home set HomeName > Here you can set a named home\n"
+						+ " \n"
+						+ "########Teleport you to home########################\n"
+						+ "/home > You will telport to home\n"
+						+ "/home HomeName > You will teleport to NamedHome\n"
+						+ " \n"
+						+ "#####Delete your home###############################\n"
+						+ "/home del > You can delete your home\n"
+						+ "/home del HomeName > You can delete your NamedHome\n"
+						+ " \n"
+						+ "#####Display the help###############################\n"
+						+ "/home help > Display the help");
 				yamlFile.addDefault("Message.TeleportCosts.ToMainHome", "De teleportatie naar je huis kostte %cost%");
 				yamlFile.addDefault("Message.TeleportCosts.ToDifferentHome", "De teleportatie naar een ander huis kost %home%");
 				yamlFile.addDefault("Message.Delete.Sucessfully", "$2Je huis %home% was succesvol verwijderd!");
@@ -184,6 +198,10 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Je huis kon niet worden gevonden. Wees er zeker van dat je het correct hebt gespeld!");
 				yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Je huis kon niet worden gevonden. Wees er zeker van dat je het correct hebt gespeld!");
 				yamlFile.addDefault("Message.Permission.Error", "$4Sorry, maar je hebt geen permissie om dat te doen!");
+				yamlFile.addDefault("Message.Update.NewUpdateAvailable", "$axHome - INFO - Update available");
+				yamlFile.addDefault("Message.Update.UpToDate", "$dxhome - INFO - Plugin is UpToDate");
+				yamlFile.addDefault("Message.Update.InstallFailed", "$4xHome - ERROR - Update Install Failed");
+				yamlFile.addDefault("Message.Update.InstallSuccessfully", "$bxHome - INFO - Update Install Successfully");
 				yamlFile.options().copyDefaults(true);
 			}else if(languages[i].toString().equalsIgnoreCase("de")){
 				yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
@@ -217,6 +235,10 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Du hast leider kein Zuhause gesetzt!");
 				yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Dein Zuhause konnte nicht gelöscht werden!");
 				yamlFile.addDefault("Message.Permission.Error", "$4Tur mir leid, aber du hast nicht die Rechte, um dies zu benutzen!");
+				yamlFile.addDefault("Message.Update.NewUpdateAvailable", "$axHome - INFO - Neues Update verfügbar");
+				yamlFile.addDefault("Message.Update.UpToDate", "$dxhome - INFO - Plugin ist auf dem neusten Stand");
+				yamlFile.addDefault("Message.Update.InstallFailed", "$4xHome - ERROR - Update Installation fehlgeschlagen");
+				yamlFile.addDefault("Message.Update.InstallSuccessfully", "$bxHome - INFO - Update Installation erfolgreich");
 				yamlFile.options().copyDefaults(true);			
 			}else{
 				yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
@@ -250,6 +272,10 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Error.ListHomeNotFound", "$4Sorry, you don't have set your home!");
 				yamlFile.addDefault("Message.Error.DelHomeNotFound", "$4Your home was not found. Make sure you wrote it correct!");
 				yamlFile.addDefault("Message.Permission.Error", "$4Sorry but you don't have the permission to do that!");
+				yamlFile.addDefault("Message.Update.NewUpdateAvailable", "$axHome - INFO - Update available");
+				yamlFile.addDefault("Message.Update.UpToDate", "$dxhome - INFO - Plugin is UpToDate");
+				yamlFile.addDefault("Message.Update.InstallFailed", "$4xHome - ERROR - Update Install Failed");
+				yamlFile.addDefault("Message.Update.InstallSuccessfully", "$bxHome - INFO - Update Install Successfully");
 				yamlFile.options().copyDefaults(true);
 			}
 			try {

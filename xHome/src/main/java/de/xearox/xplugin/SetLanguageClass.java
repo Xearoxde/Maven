@@ -33,6 +33,10 @@ public class SetLanguageClass {
 	static String MsgHomeErrorDeleteHome;
 	static String MsgHomeErrorHomeNotFound;
 	static String MsgHomeDontHavePermission;
+	static String MsgHomeUpdateNewUpadteAvailable;
+	static String MsgHomeUpdatePluginUpToDate;
+	static String MsgHomeUpdateInstallFailed;
+	static String MsgHomeUpdateInstallSuccessfully;
 	
 	
 	public String getLanguageFileName(String language){
@@ -83,6 +87,10 @@ public class SetLanguageClass {
 			MsgHomeErrorDeleteHome = yamlLangFile.getString("Message.Error.DeleteDiffHome");
 			MsgHomeErrorHomeNotFound = yamlLangFile.getString("Message.Error.ListHomeNotFound");
 			MsgHomeDontHavePermission = yamlLangFile.getString("Message.Permission.Error");
+			MsgHomeUpdateNewUpadteAvailable = yamlLangFile.getString("Message.Update.NewUpdateAvailable");
+			MsgHomeUpdatePluginUpToDate = yamlLangFile.getString("Message.Update.UpToDate");
+			MsgHomeUpdateInstallFailed = yamlLangFile.getString("Message.Update.InstallFailed");
+			MsgHomeUpdateInstallSuccessfully = yamlLangFile.getString("Message.Update.InstallSuccessfully");
 			
 		
 		}catch (Exception e){
