@@ -1,0 +1,51 @@
+name: xHome
+main: de.xearox.xplugin.MainClass
+version: 0.9.0
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
+
+commands:
+  home:
+    description: MyHomes to set homes or multiple homes
+    usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help], [update]
+    
+permissions:
+  home.*:
+    description: Access to all home commands
+    children:
+      home.rl: true
+      home.set.mainhome: true
+      home.set.diffhome: true
+      home.list: true
+      home.del: true
+      home.teleport.mainhome: true
+      home.teleport.diffhome: true
+      home.update: true
+      home.getOPMessage: true
+  home.rl:
+    description: Access to reload yaml files
+    default: op
+  home.set:
+    description: Access to set main home
+    default: true
+  home.set.diffhome:
+    description: Access to set different home
+    default: op
+  home.list:
+    description: Access to list all home
+    default: false
+  home.del:
+    description: Access to remove home
+    default: true
+  home.teleport.mainhome:
+    description: Access to teleport to main home
+    default: true
+  home.teleport.diffhome:
+    description: Access to teleport to different home
+    default: op
+  home.update:
+    description: Access to update the plugin
+    default: op
+  home.getOPMessage:
+    description: Access to get messages from server
+    default: op
