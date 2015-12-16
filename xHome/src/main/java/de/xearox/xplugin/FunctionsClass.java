@@ -42,7 +42,6 @@ public class FunctionsClass {
 			utClass.createFile(homeFile);
 		}
 		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
-		System.out.println(player);
 		try{
 			player.sendMessage(yamlFile.getConfigurationSection("Player."+ player.getUniqueId().toString()).getKeys(false).toString());
 		}catch(Exception e){
@@ -62,7 +61,6 @@ public class FunctionsClass {
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosY", pLoc.getBlockY());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosZ", pLoc.getBlockZ());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.Direction", pLoc.getDirection());
-		System.out.println(p);
 		System.out.println(SetLanguageClass.MsgHomeSetMainHome);
 		p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeSetMainHome));
 		try {

@@ -58,6 +58,9 @@ public class MainClass extends JavaPlugin{
 			functionClass.createHomeFile();
 			checkUpdates.createDownloadFolder();
 			checkUpdates.downloadPlugin();
+			if(getConfigFile().getBoolean("Config.DEVMessage.Enable?")){
+				sendMessageToOP(this);
+			}
 			if(getConfigFile().getBoolean("Config.Update.automatically")){
 				updateChecker(this);
 			}
@@ -89,20 +92,46 @@ public class MainClass extends JavaPlugin{
 			public void run() {
 				// TODO Auto-generated method stub
 				if(checkUpdates.checkForUpdates()){
-					for(int i = 0; i<Bukkit.getServer().getOnlinePlayers().size();i++){
-						Bukkit.getServer().broadcast(utClass.Format("$axHome - INFO - There is a new update"), "home.getOPMessage");
+					for(Player player : Bukkit.getServer().getOnlinePlayers()){
+						if(player == null){
+							continue;
+						}
+						langClass.setMessageLanguage(player);
+						if(player.hasPermission("home.getOPMessage")){
+							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdateNewUpadteAvailable));
+						}
 					}
 				}
 			}
 		}, 0, getConfigFile().getLong("Config.Update.checkInterval")*20*60);
 	}
 	
+	public void sendMessageToOP(MainClass plugin){
+		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				for(int i = 0; i<Bukkit.getServer().getOnlinePlayers().size();i++){
+					Bukkit.getServer().broadcast(utClass.Format("$axHome - DEVNOTICE - In the next Update I will change the update checker!\n"
+							+ "$aPlease download it from the SpiGot MC Page, if it available. Thank You\n"
+							+ "$dThis message can you disable in the config file"), "home.getOPMessage");
+				}
+			}
+		}, 0, 20*60*60);
+	}
+	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){		
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		Player player = null;
 		Location pLoc = null;
 		
 		if(label.equalsIgnoreCase("home")){
+//##########Check if the sender is the console. If true, then return a message or something like this #######################################
+			if(!(sender instanceof Player)){
+				sender.sendMessage(utClass.Format("$cThe console cant do this!"));
+				return true;
+			}
 			String yamlFilePath = "/data/";
 			String yamlFileName = "homelist";
 			String yamlFileType = "yml";
@@ -117,10 +146,6 @@ public class MainClass extends JavaPlugin{
 			YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 			player = (Player) sender; 
 			pLoc = player.getLocation();
-//##########Check if the sender is the console. If true, then return a message or something like this #######################################
-			if(!(sender instanceof Player)){
-				System.out.println("The console cant do this!");
-			}
 //##########Set the Variables for Player, Players Location and the Language of the player####################################################
 			player = (Player) sender;
 			pLoc = player.getLocation();

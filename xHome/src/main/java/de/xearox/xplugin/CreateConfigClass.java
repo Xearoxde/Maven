@@ -68,6 +68,7 @@ public class CreateConfigClass {
 		yamlFile.addDefault("Config.Update.version", "stable");
 		yamlFile.addDefault("Config.Update.checkInterval", 30);
 		yamlFile.addDefault("Config.Update.reloadAfterApply", false);
+		yamlFile.addDefault("Config.DEVMessage.Enable?", true);
 		yamlFile.options().copyDefaults(true);
 		
 		try {
