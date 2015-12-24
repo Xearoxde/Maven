@@ -56,9 +56,10 @@ public class CreateConfigClass {
 		sb.append(" ---------------------------------------------------------------------------------\n");
 		yamlFile.options().header(sb.toString());
 		yamlFile.addDefault("Config.CostsForTeleport", false);
-		yamlFile.addDefault("Config.TeleportCosts", "100");
+		yamlFile.addDefault("Config.TeleportCostsToHome", 100);
+		yamlFile.addDefault("Config.TeleportCostsToDiffHome", 100);
 		yamlFile.addDefault("Config.PremiumCosts", false);
-		yamlFile.addDefault("Config.TeleportPremiumCosts", "10");
+		yamlFile.addDefault("Config.TeleportPremiumCosts", 10);
 		yamlFile.addDefault("Config.TeleportPremiumFlatrate", false);
 		yamlFile.addDefault("Config.CustomUserAnwserMessage", true);
 		yamlFile.addDefault("Config.CustomUserLanguage", "null");
