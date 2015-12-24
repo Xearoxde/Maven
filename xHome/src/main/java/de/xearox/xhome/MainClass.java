@@ -190,12 +190,6 @@ public class MainClass extends JavaPlugin{
 			player = offPlayer.getPlayer();
 			
 			pLoc = player.getLocation();
-//##########Set the Variables for Vault. If econAvailable true###############################################################################
-			if(econAvailable){
-				System.out.println("econAvailable = true");
-				responseTPHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToHome"));
-				responseTPDiffHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToDiffHome"));
-			}
 //##########Set the Variables for Player, Players Location and the Language of the player####################################################
 			player = (Player) sender;
 			pLoc = player.getLocation();
@@ -204,17 +198,15 @@ public class MainClass extends JavaPlugin{
 			if(args.length == 0){
 				if(player.hasPermission("home.teleport.mainhome")){
 					if((econAvailable)&&(yamlConfigFile.getBoolean("Config.CostsForTeleport"))){
+						responseTPHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToHome"));
 						if(responseTPHome.transactionSuccess()){
-							System.out.println("responseTPHome.transactionSuccess = true");
-							System.out.println("Teleport Costs: "+yamlConfigFile.getInt("Config.TeleportCostsToHome"));
 							functionClass.tpHome(pLoc, player);
 							return true;
 						}else{
-							player.sendMessage("Sorry, you have not enough money!");
+							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeCostsTPHome));
 							return true;
 						}
 					}else{
-						System.out.println("responseTPHome.transactionSuccess = false");
 						functionClass.tpHome(pLoc, player);
 						return true;
 					}
@@ -273,11 +265,12 @@ public class MainClass extends JavaPlugin{
 				try{
 					if(player.hasPermission("home.teleport.diffhome")){
 						if((econAvailable)&&(yamlConfigFile.getBoolean("Config.TeleportCostsToDiffHome"))){
+							responseTPDiffHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToDiffHome"));
 							if(responseTPDiffHome.transactionSuccess()){
 								functionClass.tpDiffHome(pLoc, player, args[0]);
 								return true;
 							}else{
-								player.sendMessage("Sorry, you have not enough money!");
+								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeCostsTPDiffHome));
 								return true;
 							}
 						}else{
@@ -332,6 +325,10 @@ public class MainClass extends JavaPlugin{
 						if(args[1].equalsIgnoreCase("apply")){
 							if(checkUpdates.applyUpdate()){
 								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdateInstallSuccessfully));
+								if(yamlConfigFile.getBoolean("Config.Update.reloadAfterApply")){
+									this.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
+									return true;
+								}
 								return true;
 							} else {
 								player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeUpdateInstallFailed));

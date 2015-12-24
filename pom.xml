@@ -9,10 +9,11 @@
   	<module>xChatExtender</module>
 
   	<module>xHome</module>
-  	<module>xEconomy</module>
+  	
   	<module>xSocketServer</module>
   	<module>xSocketClient</module>
   	<module>xHTTPServer</module>
+
   	
   </modules>
   <build>

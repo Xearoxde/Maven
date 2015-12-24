@@ -202,6 +202,8 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Update.UpToDate", "$dxhome - INFO - Plugin is UpToDate");
 				yamlFile.addDefault("Message.Update.InstallFailed", "$4xHome - ERROR - Update Install Failed");
 				yamlFile.addDefault("Message.Update.InstallSuccessfully", "$bxHome - INFO - Update Install Successfully");
+				yamlFile.addDefault("Message.Costs.TeleportToHome", "$4You don't have enough money.");
+				yamlFile.addDefault("Message.Consts.TeleportToDiffHome", "$4You don't have enough money.");
 				yamlFile.options().copyDefaults(true);
 			}else if(languages[i].toString().equalsIgnoreCase("de")){
 				yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
@@ -239,6 +241,8 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Update.UpToDate", "$dxhome - INFO - Plugin ist auf dem neusten Stand");
 				yamlFile.addDefault("Message.Update.InstallFailed", "$4xHome - ERROR - Update Installation fehlgeschlagen");
 				yamlFile.addDefault("Message.Update.InstallSuccessfully", "$bxHome - INFO - Update Installation erfolgreich");
+				yamlFile.addDefault("Message.Costs.TeleportToHome", "$4Tut mir leid, aber du hast nicht genug Geld.");
+				yamlFile.addDefault("Message.Consts.TeleportToDiffHome", "$4Tut mir leid, aber du hast nicht genug Geld.");
 				yamlFile.options().copyDefaults(true);			
 			}else{
 				yamlFile.options().header("That is the Language File. Here you can change everthing. You can use color codes. e.g. $3");
@@ -276,6 +280,8 @@ public class UtilClass {
 				yamlFile.addDefault("Message.Update.UpToDate", "$dxhome - INFO - Plugin is UpToDate");
 				yamlFile.addDefault("Message.Update.InstallFailed", "$4xHome - ERROR - Update Install Failed");
 				yamlFile.addDefault("Message.Update.InstallSuccessfully", "$bxHome - INFO - Update Install Successfully");
+				yamlFile.addDefault("Message.Costs.TeleportToHome", "$4You don't have enough money.");
+				yamlFile.addDefault("Message.Consts.TeleportToDiffHome", "$4You don't have enough money.");
 				yamlFile.options().copyDefaults(true);
 			}
 			try {

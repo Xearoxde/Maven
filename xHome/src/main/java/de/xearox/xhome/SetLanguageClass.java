@@ -37,6 +37,8 @@ public class SetLanguageClass {
 	static String MsgHomeUpdatePluginUpToDate;
 	static String MsgHomeUpdateInstallFailed;
 	static String MsgHomeUpdateInstallSuccessfully;
+	static String MsgHomeCostsTPHome;
+	static String MsgHomeCostsTPDiffHome;
 	
 	
 	public String getLanguageFileName(String language){
@@ -91,6 +93,8 @@ public class SetLanguageClass {
 			MsgHomeUpdatePluginUpToDate = yamlLangFile.getString("Message.Update.UpToDate");
 			MsgHomeUpdateInstallFailed = yamlLangFile.getString("Message.Update.InstallFailed");
 			MsgHomeUpdateInstallSuccessfully = yamlLangFile.getString("Message.Update.InstallSuccessfully");
+			MsgHomeCostsTPHome = yamlLangFile.getString("Message.Costs.TeleportToHome");
+			MsgHomeCostsTPDiffHome = yamlLangFile.getString("Message.Costs.TeleportToDiffHome");
 			
 		
 		}catch (Exception e){
