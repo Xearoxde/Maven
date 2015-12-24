@@ -15,6 +15,7 @@
   	<module>xHTTPServer</module>
 
   	
+  	<module>xConomy</module>
   </modules>
   <build>
     <plugins>
