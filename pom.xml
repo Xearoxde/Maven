@@ -32,6 +32,10 @@
 	        <id>spigot-repo</id>
 	        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 	    </repository>
+	    <repository>
+            <id>Plugin Metrics</id>
+            <url>http://repo.mcstats.org/content/repositories/public</url>
+        </repository>
   </repositories>
   <dependencies>
     <!--Spigot API-->
@@ -40,6 +44,12 @@
         <artifactId>spigot-api</artifactId>
         <version>1.8.8-R0.1-SNAPSHOT</version>
         <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.mcstats.bukkit</groupId>
+        <artifactId>metrics</artifactId>
+        <version>R8-SNAPSHOT</version>
+        <scope>compile</scope>
     </dependency>
     <dependency>
 		<groupId>commons-codec</groupId>

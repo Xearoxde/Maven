@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 Xearox - Christopher Hahnen
  */
-package de.xearox.xplugin;
+package de.xearox.xhome;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 public class MainClass extends JavaPlugin{
 	
@@ -64,6 +65,14 @@ public class MainClass extends JavaPlugin{
 			if(getConfigFile().getBoolean("Config.Update.automatically")){
 				updateChecker(this);
 			}
+			try{
+				Metrics metrics = new Metrics(this);
+				metrics.start();
+			} catch (IOException e){
+				System.out.println("Failed to submit the stats");
+				e.printStackTrace();
+			}
+			System.out.println("Runns");
 		}catch (Exception e){
 			e.printStackTrace();
 		}

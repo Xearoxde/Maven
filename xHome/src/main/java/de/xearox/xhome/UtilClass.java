@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 Xearox - Christopher Hahnen
  */
-package de.xearox.xplugin;
+package de.xearox.xhome;
 
 import java.io.File;
 import java.io.IOException;

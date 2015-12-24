@@ -1,7 +1,7 @@
 /**
  * Copyright 2015 Xearox - Christopher Hahnen
  */
-package de.xearox.xplugin;
+package de.xearox.xhome;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

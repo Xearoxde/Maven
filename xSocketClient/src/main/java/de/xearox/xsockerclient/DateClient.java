@@ -28,5 +28,6 @@ public class DateClient {
         String answer = input.readLine();
         JOptionPane.showMessageDialog(null, answer);
         System.exit(0);
+        s.close();
     }
 }

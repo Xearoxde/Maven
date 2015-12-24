@@ -1,4 +1,4 @@
-package de.xearox.xplugin;
+package de.xearox.xhome;
 
 import java.io.File;
 import java.io.FileInputStream;
