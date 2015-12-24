@@ -8,6 +8,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.xearox.xconomy.licenseManager.LicenseManager;
+import de.xearox.xconomy.listener.PlayerJoinListener;
+import de.xearox.xconomy.listener.PlayerQuitListener;
+
 public class XConomy extends JavaPlugin{
 	public PluginDescriptionFile info;
 	public PluginManager manger;
@@ -24,11 +28,18 @@ public class XConomy extends JavaPlugin{
 	//public static Template Template;
 	public static Timer Interest;
 	
+	@Override
+	public void onLoad(){
+		System.out.println("Test on Load");
+	}
+	
+	@Override
 	public void onEnable(){
 		final long startTime = System.nanoTime();
 		final long endTime;
-		
 		try{
+			//call RegisterListener
+			registerListener();
 			//Localize locale to prevent issues
 			Locale.setDefault(Locale.US);
 			
@@ -38,7 +49,6 @@ public class XConomy extends JavaPlugin{
 			//Plugin directory setup
 			directory = getDataFolder();
 			if(!directory.exists()) directory.mkdir();
-			
 			//Extract Files
 			//Common.extract("Config.yml", "Template.yml");
 			
@@ -46,4 +56,43 @@ public class XConomy extends JavaPlugin{
 			e.printStackTrace();
 		}
 	}
+	@Override
+	public void onDisable(){
+		
+	}
+	public void registerListener(){
+		PluginManager pluginManager = this.getServer().getPluginManager();
+		
+		//listens for the PlayerJoinListener
+		pluginManager.registerEvents(new PlayerJoinListener(this), this);
+		
+		//listens for the PlayerQuitListener
+		pluginManager.registerEvents(new PlayerQuitListener(this), this);
+		
+	}
+	public void checkForUpdates(){}
+	
+	public void checkLicense(){}
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
