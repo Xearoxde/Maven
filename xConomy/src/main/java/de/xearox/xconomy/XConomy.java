@@ -3,19 +3,37 @@ package de.xearox.xconomy;
 import java.io.File;
 import java.util.Locale;
 import java.util.Timer;
+import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.xearox.xconomy.licenseManager.LicenseManager;
+import de.xearox.xconomy.accounts.CreateAccount;
 import de.xearox.xconomy.listener.PlayerJoinListener;
 import de.xearox.xconomy.listener.PlayerQuitListener;
+import de.xearox.xconomy.utility.Common;
+import de.xearox.xconomy.utility.CreateFiles;
 
 public class XConomy extends JavaPlugin{
 	public PluginDescriptionFile info;
 	public PluginManager manger;
+	private CreateAccount createAccount;
+	private Common common;
+	private CreateFiles createFiles;
+	public Logger logger;
 	
+	
+	//Getter
+	public CreateAccount getCreateAccount(){
+		return createAccount;
+	}
+	public Common getCommon(){
+		return common;
+	}
+	public CreateFiles getCreateFiles(){
+		return createFiles;
+	}
 	//private static Accounts Accounts = new Accounts();
 	//public Parser Commands = new Parser();
 	//public Permissions Permissions;
@@ -49,8 +67,13 @@ public class XConomy extends JavaPlugin{
 			//Plugin directory setup
 			directory = getDataFolder();
 			if(!directory.exists()) directory.mkdir();
-			//Extract Files
-			//Common.extract("Config.yml", "Template.yml");
+			
+			//Create instance
+			this.createInstances();
+			
+			createFiles.createConfigFile();
+			createFiles.createReadmeFile();
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -74,7 +97,12 @@ public class XConomy extends JavaPlugin{
 	
 	public void checkLicense(){}
 	
-	
+	public void createInstances(){
+		this.createAccount = new CreateAccount(this);
+		this.common = new Common(this);
+		this.logger = Logger.getLogger("Minecraft");
+		this.createFiles = new CreateFiles(this);
+	}
 
 
 
