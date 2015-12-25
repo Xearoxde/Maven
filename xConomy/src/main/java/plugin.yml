@@ -1,9 +1,0 @@
-name: xConomy
-main: de.xearox.xconomy.XConomy
-version: 0.0.1
-authors: [Xearox]
-website: "http://minecraft.xearox.de"
-commands:
-  test:
-    description: MyHomes to set homes or multiple homes
-    usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help], [update]

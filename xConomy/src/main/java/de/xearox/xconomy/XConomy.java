@@ -56,6 +56,7 @@ public class XConomy extends JavaPlugin{
 		final long startTime = System.nanoTime();
 		final long endTime;
 		try{
+			System.out.println("On Enable");
 			//call RegisterListener
 			registerListener();
 			//Localize locale to prevent issues
@@ -73,7 +74,7 @@ public class XConomy extends JavaPlugin{
 			
 			createFiles.createConfigFile();
 			createFiles.createReadmeFile();
-			
+			System.out.println("On Enable End");
 			
 		}catch(Exception e){
 			e.printStackTrace();

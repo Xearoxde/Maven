@@ -16,14 +16,22 @@ public class CreateFiles {
 	
 	public boolean createConfigFile(){
 		try{
-			File configFile = new File(XConomy.directory+"/config", "config.yml");
+			File configDir = new File(XConomy.directory+"/config");
+			File configFile = new File(configDir, "config.yml");
 			
-			InputStream is = XConomy.class.getResourceAsStream("/resources/config/config.yml");
+			if(!configDir.exists()){
+				configDir.mkdir();
+			}
 			
-			if(is == null) 
+			InputStream is = XConomy.class.getResourceAsStream("/config/config.txt");
+			
+			if(is == null){
+				plugin.logger.warning("xConomy - WARNING - Internal config file was not found");
 				return false;
+			}
 			
 			if(configFile.exists()){
+				plugin.logger.info("xConomy - INFO - Config file already exist");
 				return false;
 			}
 			
@@ -72,14 +80,22 @@ public class CreateFiles {
 	
 	public boolean createReadmeFile(){
 		try{
-			File readmeFile = new File(XConomy.directory+"/config", "readme.txt");
+			File readmeDir = new File(XConomy.directory+"/config");
+			File readmeFile = new File(readmeDir, "readme.txt");
 			
-			InputStream is = XConomy.class.getResourceAsStream("/resources/config/readme.txt");
+			if(!readmeDir.exists()){
+				readmeDir.mkdir();
+			}
 			
-			if(is == null) 
+			InputStream is = XConomy.class.getResourceAsStream("/config/readme.txt");
+			
+			if(is == null){
+				plugin.logger.warning("xConomy - WARNING - Internal README file was not found");
 				return false;
+			}
 			
 			if(readmeFile.exists()){
+				plugin.logger.info("xConomy - INFO - README file already exist");
 				return false;
 			}
 			
