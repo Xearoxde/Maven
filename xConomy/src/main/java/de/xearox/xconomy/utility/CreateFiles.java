@@ -2,7 +2,10 @@ package de.xearox.xconomy.utility;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xearox.xconomy.XConomy;
 
@@ -139,6 +142,26 @@ public class CreateFiles {
 	}
 	
 	public boolean createPlayerTable(){
+		try {
+			File playerTableDir = new File(XConomy.directory+"/data/");
+			File playerTable = new File(playerTableDir+"/playertable.yml");
+			
+			YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(playerTable);
+			
+			yamlFile.options().header("Player Table");
+			yamlFile.options().copyDefaults(true);
+			
+			yamlFile.save(playerTable);
+			
+			System.out.println("PlayerTable created!");
+			
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		return false;
 	}
 }

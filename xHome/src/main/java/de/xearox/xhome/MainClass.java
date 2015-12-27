@@ -168,7 +168,7 @@ public class MainClass extends JavaPlugin{
 //##########Check if the sender is the console. If true, then return a message or something like this #######################################
 			if(!(sender instanceof Player)){
 				//sender.sendMessage(utClass.Format("$cThe console cant do this!"));
-				log.info(utClass.Format("$cThe console cant do this!"));
+				log.info(utClass.Format("$cThe console can't do this!"));
 				return true;
 			}
 			String yamlFilePath = "/data/";
@@ -201,6 +201,7 @@ public class MainClass extends JavaPlugin{
 						responseTPHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToHome"));
 						if(responseTPHome.transactionSuccess()){
 							functionClass.tpHome(pLoc, player);
+							System.out.println("responseTPHome = "+responseTPHome.transactionSuccess());
 							return true;
 						}else{
 							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeCostsTPHome));

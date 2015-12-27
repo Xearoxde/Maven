@@ -22,8 +22,8 @@ public class PlayerJoinListener implements Listener{
 		UUID playerUUID = event.getPlayer().getUniqueId();
 		OfflinePlayer player = plugin.getServer().getOfflinePlayer(playerUUID);
 		
-		event.setJoinMessage("Hallo");
-		player.getPlayer().sendMessage("test");
+		plugin.getCreateAccount().createNewAccount(player);
+		
 	}
 	
 	

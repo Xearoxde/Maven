@@ -1,1 +1,51 @@
 #This is the config file
+#The is the xConomy plugin. Programmed by Xearox.
+#For help visit https://www.spigotmc.org/members/xearox.115679/ or send me an eMail mc-support@xearox.de
+#Also take a look into the README or visit my website under http://minecraft.xearox.de
+#You can also buy the premium version of this plugin on my website.
+#This version is limited to 20 player accounts!
+#With the premium version you will get lifetime support for this plugin also installation support if you need.
+#Also you get discount of all my following plugins
+
+#This section is for the common plugin configuration
+#If you don't use the free version. Please uncomment the path for the license key.
+#If you set FreeVersion to false and don't set the LicensePath the plugin take the standard path
+#Standard path = pluginRootFolder/license
+
+Config:
+  Autoupdate: false
+  Snooper: false
+  FreeVersion: true
+  #LicensePath: Path/To/The/License/Key
+
+#Set the name of the Currency.
+Currency:
+  Name:
+    Singular: Singular
+    Plural: Plural
+
+#Set the name of the Premium Currency / Only Available in the Premium version
+Premium:
+  Name:
+    Singular: Singular
+    Plural: Plural
+
+#If you want to set a default amount of money for new Player do it here.
+NewPlayer:  
+  StartMoney:
+    Value: 1000
+
+#Which data saving method do you want?
+#You can choose between YAML, MySQL and SQLite
+#If you have chosen MySQL uncomment the Username, Password and the Database Name section
+PlayerSaving:
+  DatabaseType: YAML
+  #Username: Username
+  #Password: Password
+  #DatabaseName: DatabaseName
+
+
+
+
+
+#Copyright Xearox 2015 - 2016
