@@ -23,7 +23,7 @@ public class CreateFiles {
 				configDir.mkdir();
 			}
 			
-			InputStream is = XConomy.class.getResourceAsStream("/config/config.txt");
+			InputStream is = XConomy.class.getResourceAsStream("/config/config.yml");
 			
 			if(is == null){
 				plugin.logger.warning("xConomy - WARNING - Internal config file was not found");

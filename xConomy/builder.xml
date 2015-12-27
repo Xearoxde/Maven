@@ -2,6 +2,6 @@
 <!-- Configuration of the Ant build system to generate a Jar file -->
 <project name="xConomy" default="CreateJar">
   <target name="CreateJar" description="Create Jar file">
-        <jar jarfile="./server/plugins/Plugin.jar" basedir="./target/classes/" includes="**/*" />
+        <jar jarfile="./server/plugins/xConomy.jar" basedir="./target/classes/" includes="**/*" />
   </target>
 </project>
