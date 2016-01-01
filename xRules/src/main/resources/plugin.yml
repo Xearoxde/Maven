@@ -1,0 +1,9 @@
+name: xRules
+main: de.xearox.xrules.XRules
+version: 0.0.1
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
+
+commands:
+  xrules:
+    usage: xxx

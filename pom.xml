@@ -16,6 +16,7 @@
 
   	
   	<module>xConomy</module>
+  	<module>xRules</module>
   </modules>
   <build>
     <plugins>
@@ -51,6 +52,11 @@
         <version>1.8.8-R0.1-SNAPSHOT</version>
         <scope>provided</scope>
     </dependency>
+    <dependency>
+    	<groupId>com.google.code.findbugs</groupId>
+    	<artifactId>jsr305</artifactId>
+    	<version>3.0.0</version>
+	</dependency>
     <dependency>
         <groupId>org.mcstats.bukkit</groupId>
         <artifactId>metrics</artifactId>

@@ -9,6 +9,9 @@ commands:
   home:
     description: MyHomes to set homes or multiple homes
     usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help], [update]
+  spawn:
+    description: Teleport to Spawn
+    usage: /<command>
     
 permissions:
   home.*:

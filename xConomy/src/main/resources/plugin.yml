@@ -3,6 +3,7 @@ main: de.xearox.xconomy.XConomy
 version: 0.0.1
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
+loadbefore: [xHome]
 commands:
   money:
     description: money function

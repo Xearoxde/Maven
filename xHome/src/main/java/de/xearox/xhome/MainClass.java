@@ -85,8 +85,10 @@ public class MainClass extends JavaPlugin{
 			
 			if (!setupEconomy() ) {
 				econAvailable = false;
+				log.warning("econAvailable = false");
 			}else{
 				econAvailable = true;
+				log.warning("econAvailable = true");
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -198,10 +200,9 @@ public class MainClass extends JavaPlugin{
 			if(args.length == 0){
 				if(player.hasPermission("home.teleport.mainhome")){
 					if((econAvailable)&&(yamlConfigFile.getBoolean("Config.CostsForTeleport"))){
-						responseTPHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToHome"));
+						responseTPHome = econ.withdrawPlayer(offPlayer, yamlConfigFile.getInt("Config.TeleportCostsToHome"));
 						if(responseTPHome.transactionSuccess()){
 							functionClass.tpHome(pLoc, player);
-							System.out.println("responseTPHome = "+responseTPHome.transactionSuccess());
 							return true;
 						}else{
 							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeCostsTPHome));
@@ -266,7 +267,7 @@ public class MainClass extends JavaPlugin{
 				try{
 					if(player.hasPermission("home.teleport.diffhome")){
 						if((econAvailable)&&(yamlConfigFile.getBoolean("Config.TeleportCostsToDiffHome"))){
-							responseTPDiffHome = econ.withdrawPlayer(offPlayer, player.getWorld().getName(), yamlConfigFile.getInt("Config.TeleportCostsToDiffHome"));
+							responseTPDiffHome = econ.withdrawPlayer(offPlayer, yamlConfigFile.getInt("Config.TeleportCostsToDiffHome"));
 							if(responseTPDiffHome.transactionSuccess()){
 								functionClass.tpDiffHome(pLoc, player, args[0]);
 								return true;
@@ -343,6 +344,13 @@ public class MainClass extends JavaPlugin{
 				}
 			}
 		}
+		if(cmd.getName().equalsIgnoreCase("spawn")) {
+	         //if(player.hasPermission("vitality.spawn")) {
+			player = (Player) sender;     
+			player.teleport(player.getWorld().getSpawnLocation());    
+			player.sendMessage("You have been teleported to spawn");
+	            }
+	           //}
 		return false;
 	}
 	
