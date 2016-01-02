@@ -2,14 +2,20 @@ package de.xearox.xrules.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public class LogFormat extends Formatter{
 	public String format(LogRecord record){
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("[dd.MM.yyyy - HH:mm:ss] ");
+		String time = sdf.format(cal.getTime());
 		StringBuilder builder = new StringBuilder();
 		Level level = record.getLevel();
+		builder.append(time);
 		if(level == Level.FINEST){
 			builder.append("[FINEST]");
 		} else if(level == Level.FINER){
