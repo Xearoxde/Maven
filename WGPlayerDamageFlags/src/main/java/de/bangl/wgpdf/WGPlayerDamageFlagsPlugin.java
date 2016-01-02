@@ -9,18 +9,13 @@ import com.sk89q.worldguard.protection.flags.EnumFlag;
 
 import de.bangl.wgpdf.listener.PlayerDamageListener;
 
-@SuppressWarnings("rawtypes")
 public class WGPlayerDamageFlagsPlugin extends JavaPlugin{
 
-	@SuppressWarnings("unchecked")
 	public static final EnumFlag DAMAGE_CAUSE_FLAG = new EnumFlag("damage-cause", DmgCause.class);
-	@SuppressWarnings("unchecked")
 	public static final CustomSetFlag ALLOW_DAMAGE_FLAG = new CustomSetFlag("allow-damage", DAMAGE_CAUSE_FLAG);
-	@SuppressWarnings("unchecked")
 	public static final CustomSetFlag DENY_DAMAGE_FLAG = new CustomSetFlag("deny-damage", DAMAGE_CAUSE_FLAG);
 	private WGCustomFlagsPlugin pluginWGCustomFlags;
 	private WorldGuardPlugin pluginWorldGuard;
-	@SuppressWarnings("unused")
 	private PlayerDamageListener listenerplayerDamage;
        
 	public WorldGuardPlugin getWGP(){

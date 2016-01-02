@@ -25,7 +25,6 @@ public class Utils{
 		return (WorldGuardPlugin)wg;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean dmgAllowedAtLocation(WGPlayerDamageFlagsPlugin plugin, DmgCause cause, Location loc) {
 		return Util.flagAllowedAtLocation(plugin.getWGP(), cause, loc, WGPlayerDamageFlagsPlugin.ALLOW_DAMAGE_FLAG, WGPlayerDamageFlagsPlugin.DENY_DAMAGE_FLAG, DmgCause.ANY);
 	}
