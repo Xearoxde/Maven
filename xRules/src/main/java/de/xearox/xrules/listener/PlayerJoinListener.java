@@ -1,6 +1,9 @@
 package de.xearox.xrules.listener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,17 +41,35 @@ public class PlayerJoinListener implements Listener{
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent event){
 		OfflinePlayer offPlayer = plugin.getServer().getOfflinePlayer(event.getPlayer().getUniqueId());
-		
 		Player player = offPlayer.getPlayer();
+		UUID uuid = offPlayer.getUniqueId();
+		String playerIP = "";
+		String playerName = "";
+		String playerUUID = "";
 		
-		UUID playerUUID = offPlayer.getUniqueId();
-		
-		if(!yamlPlayerFile.contains("UUID."+playerUUID.toString()) || !yamlPlayerFile.getBoolean("UUID."+playerUUID.toString()+".AcceptTheRules")){
-			logger.log(Level.INFO, "The Player "+player.getDisplayName()+" has entered the server first time");
-			if(!yamlPlayerFile.contains("UUID."+playerUUID.toString())){
-				yamlPlayerFile.set("UUID."+playerUUID.toString()+".LastName", player.getDisplayName());
-				yamlPlayerFile.set("UUID."+playerUUID.toString()+".AcceptTheRules", false );
+		if(yamlConfigFile.getBoolean("config.Logging.LogPlayerIP")){
+			if(yamlConfigFile.getBoolean("config.Logging.LogPlayerIP")){
+				playerIP = player.getAddress().getHostName();
 			}
+			if(yamlConfigFile.getBoolean("config.Logging.LogPlayerIP")){
+				playerName = player.getDisplayName();
+			}
+			if(yamlConfigFile.getBoolean("config.Logging.LogPlayerIP")){
+				playerUUID = uuid.toString();
+			}
+		}
+		
+		if(!yamlPlayerFile.contains("UUID."+playerUUID) || !yamlPlayerFile.getBoolean("UUID."+playerUUID+".AcceptTheRules")){
+			if(!yamlPlayerFile.contains("UUID."+playerUUID)){
+				yamlPlayerFile.set("UUID."+playerUUID+".LastName", player.getDisplayName());
+				yamlPlayerFile.set("UUID."+playerUUID+".AcceptTheRules", false );
+				if(yamlConfigFile.getBoolean("config.PlayerTable.SaveIP")){
+					yamlPlayerFile.set("UUID."+playerUUID+".IP", player.getAddress().getHostName());
+				} else {
+					yamlPlayerFile.set("UUID."+playerUUID+".IP", "");
+				}
+			}
+			logger.log(Level.INFO,"The Player "+playerName+" with the IP "+playerIP+" and the UUID "+playerUUID+" has joined the Server");
 			createMessages();
 			
 			if(yamlConfigFile.getBoolean("config.WelcomeMessage.Enable")){
@@ -57,12 +78,19 @@ public class PlayerJoinListener implements Listener{
 				tCompos.welcomeMessage.setText(placeHolder);
 				event.getPlayer().spigot().sendMessage(tCompos.welcomeMessage);
 			}
-			event.getPlayer().spigot().sendMessage(tCompos.rulesMessage);
-			event.getPlayer().spigot().sendMessage(tCompos.serverRules);
-			
-			event.getPlayer().spigot().sendMessage(tCompos.acceptMessage);
-			event.getPlayer().spigot().sendMessage(tCompos.plainText);
-			event.getPlayer().spigot().sendMessage(tCompos.declineMessage);
+			if(yamlConfigFile.getBoolean("config.Rules.Message.Enable")){
+				event.getPlayer().spigot().sendMessage(tCompos.rulesMessage);
+			}
+			if(yamlConfigFile.getBoolean("config.ServerRules.Enable")){
+				event.getPlayer().spigot().sendMessage(tCompos.serverRules);
+			}
+			if(yamlConfigFile.getBoolean("config.Accept.Message.Enable")){
+				event.getPlayer().spigot().sendMessage(tCompos.acceptMessage);
+			}
+			if(yamlConfigFile.getBoolean("config.Decline.Message.Enable")){
+				event.getPlayer().spigot().sendMessage(tCompos.plainText);
+				event.getPlayer().spigot().sendMessage(tCompos.declineMessage);
+			}
 			
 			try {
 				yamlPlayerFile.save(plugin.getPlayerFile());
@@ -76,12 +104,6 @@ public class PlayerJoinListener implements Listener{
 	}
 	
 	private void createMessages(){
-		//TextComponent welcomeMessage = new TextComponent();
-		//TextComponent rulesMessage = new TextComponent();
-		//TextComponent acceptMessage = new TextComponent();
-		//TextComponent declineMessage = new TextComponent();
-		//TextComponent serverRules = new TextComponent();
-		
 		int i = 1;
 		
 		StringBuilder builder = new StringBuilder();

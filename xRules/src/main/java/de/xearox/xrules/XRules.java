@@ -2,6 +2,8 @@ package de.xearox.xrules;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -133,12 +135,11 @@ public class XRules extends JavaPlugin{
 				logger.log(Level.WARNING, "Could not use log file xrules.log :"+e.getMessage());
 			}
 			
+			logger.log(Level.INFO, "\n");
+			
 			createConfigFile(this.getYamlConfigFile());
 			
 			pluginManager.registerEvents(new PlayerJoinListener(this), this);
-			
-			logger.info("Plugin started");
-			
 			
 		} catch(SecurityException e){
 			e.printStackTrace();
@@ -157,6 +158,8 @@ public class XRules extends JavaPlugin{
 		yamlCon.addDefault("config.Logging.LogPlayerName", true);
 		yamlCon.addDefault("config.Logging.LogPlayerUUID", true);
 		
+		yamlCon.addDefault("config.PlayerTable.SaveIP", true);
+		
 		yamlCon.addDefault("config.WelcomeMessage.Enable", true);
 		yamlCon.addDefault("config.WelcomeMessage.Msg", "Welcome %player% to the server");
 		yamlCon.addDefault("config.WelcomeMessage.Color", "RED");
@@ -169,6 +172,16 @@ public class XRules extends JavaPlugin{
 		yamlCon.addDefault("config.Colors.Light", "LIGHT_PURPLE");
 		yamlCon.addDefault("config.Colors.Special", "MAGIC");
 		
+		yamlCon.addDefault("config.ServerRules.Enable", true);
+		yamlCon.addDefault("config.ServerRules.URL", "http://www.google.de");
+		yamlCon.addDefault("config.ServerRules.Msg", "Click here to read the server rules");
+		yamlCon.addDefault("config.ServerRules.HoverText", "Server Rules");
+		yamlCon.addDefault("config.ServerRules.Color", "DARK_GREEN");
+		yamlCon.addDefault("config.ServerRules.Bold", false);
+		yamlCon.addDefault("config.ServerRules.Italic", false);
+		yamlCon.addDefault("config.ServerRules.Underline", false);
+		
+		yamlCon.addDefault("config.Rules.Message.Enable", true);
 		yamlCon.addDefault("config.Rules.Message.Color", "YELLOW");
 		yamlCon.addDefault("config.Rules.Message.Bold", false);
 		yamlCon.addDefault("config.Rules.Message.Italic", false);
@@ -184,14 +197,7 @@ public class XRules extends JavaPlugin{
 		yamlCon.addDefault("config.Rules.Message.Line9", "");
 		yamlCon.addDefault("config.Rules.Message.Line10", "");
 		
-		yamlCon.addDefault("config.ServerRules.URL", "http://www.google.de");
-		yamlCon.addDefault("config.ServerRules.Msg", "Click here to read the server rules");
-		yamlCon.addDefault("config.ServerRules.HoverText", "Server Rules");
-		yamlCon.addDefault("config.ServerRules.Color", "DARK_GREEN");
-		yamlCon.addDefault("config.ServerRules.Bold", false);
-		yamlCon.addDefault("config.ServerRules.Italic", false);
-		yamlCon.addDefault("config.ServerRules.Underline", true);
-		
+		yamlCon.addDefault("config.Accept.Message.Enable", true);
 		yamlCon.addDefault("config.Accept.Message.Color", "GREEN");
 		yamlCon.addDefault("config.Accept.Message.Bold", false);
 		yamlCon.addDefault("config.Accept.Message.Italic", false);
@@ -199,7 +205,9 @@ public class XRules extends JavaPlugin{
 		yamlCon.addDefault("config.Accept.Message.Msg", "[Accept]");
 		yamlCon.addDefault("config.Accept.Command", "manuadd %player% %group%");
 		yamlCon.addDefault("config.Accept.Group", "Default");
+		yamlCon.addDefault("config.Accept.Message.AfterAccept.Msg", "You are now member of the group %group%. Have fun!");
 		
+		yamlCon.addDefault("config.Decline.Message.Enable", true);
 		yamlCon.addDefault("config.Decline.Message.Color", "RED");
 		yamlCon.addDefault("config.Decline.Message.Bold", false);
 		yamlCon.addDefault("config.Decline.Message.Italic", false);
@@ -278,7 +286,8 @@ public class XRules extends JavaPlugin{
 						yamlPlayerFile.set("UUID."+player.getUniqueId().toString()+".AcceptTheRules", true);
 						try {
 							yamlPlayerFile.save(getPlayerFile());
-							logger.log(Level.INFO, "Player "+player.getDisplayName()+" accepted the server rules!");
+							player.sendMessage("");
+							logger.log(Level.INFO,"Player "+player.getDisplayName()+" accepted the server rules!");
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							logger.log(Level.SEVERE, "Can't set the Accept Rules to true", e);
@@ -290,6 +299,7 @@ public class XRules extends JavaPlugin{
 					if(!yamlPlayerFile.getBoolean("UUID."+player.getUniqueId().toString()+".AcceptTheRules")){
 						command = yamlConfigFile.getString("config.Decline.Command");
 						command = command.replace("%player%", player.getDisplayName());
+						logger.log(Level.INFO,"Player "+player.getDisplayName()+" decline the server rules!");
 						this.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
 						return true;
 					} else {
