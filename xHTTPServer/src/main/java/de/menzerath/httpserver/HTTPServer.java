@@ -9,11 +9,12 @@ import java.net.ServerSocket;
 
 public class HTTPServer {
 
-    /**
+	/**
      * Einstiegspunkt der Anwendung; erstellt ein HTTPServer-Objekt
      * @param args Beim Aufruf übergebene Argumente; werden aber ignoriert
      */
     public static void main(String[] args) {
+    	
     	if(args.length==0){
     		new HTTPServer(9090, new File("./www"), true, new File("log.txt"));
     	}else if(args.length==1){

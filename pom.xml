@@ -18,6 +18,7 @@
   	<module>xConomy</module>
   	<module>xRules</module>
   	<module>WGPlayerDamageFlags</module>
+  	<module>xBooks</module>
   </modules>
   <build>
     <plugins>

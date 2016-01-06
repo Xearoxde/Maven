@@ -1,20 +1,33 @@
 package de.menzerath.httpserver;
 
-import de.menzerath.util.ServerHelper;
-import de.menzerath.util.FileManager;
-import de.menzerath.util.Logger;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+
+import de.menzerath.util.FileManager;
+import de.menzerath.util.Logger;
+import de.menzerath.util.ServerHelper;
+import de.xearox.httphandler.HTTPHandler;
 
 public class HTTPThread extends Thread {
     private Socket socket;
     private File webRoot;
     private boolean allowDirectoryListing;
+    private HTTPHandler httpHandler;
 
     /**
      * Konstruktor; speichert die übergebenen Daten
@@ -27,6 +40,7 @@ public class HTTPThread extends Thread {
         this.socket = socket;
         this.webRoot = webRoot;
         this.allowDirectoryListing = allowDirectoryListing;
+        this.httpHandler = new HTTPHandler();
     }
 
     /**
@@ -100,6 +114,9 @@ public class HTTPThread extends Thread {
         wantedFile = request.get(0).substring(4, request.get(0).length() - 9);
         if (isPostRequest) wantedFile = request.get(0).substring(5, request.get(0).length() - 9);
 
+        if(wantedFile.contains("php") && isPostRequest){
+        	this.httpHandler.getPostRequest(request, this, out, in, socket);
+        }
         // GET-Request mit Argumenten: Entferne diese für die Pfad-Angabe
         if (!isPostRequest && request.get(0).contains("?")) {
             path = wantedFile.substring(0, wantedFile.indexOf("?"));
@@ -324,7 +341,7 @@ public class HTTPThread extends Thread {
      * @param code    Fehler-Code, der gesendet werden soll (403, 404, ...)
      * @param message Zusätzlicher Text ("Not Found", ...)
      */
-    private void sendError(BufferedOutputStream out, int code, String message) {
+    public void sendError(BufferedOutputStream out, int code, String message) {
         // Bereitet Daten der Response vor
         String output = WebResources.getErrorTemplate("Error " + code + ": " + message);
 
