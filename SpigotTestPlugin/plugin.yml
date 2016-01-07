@@ -1,0 +1,36 @@
+name: TestPlugin
+main: de.xearox.tutorial.MainClass
+version: 0.2
+author: xearox
+
+commands:
+  test:
+    description: Test Command
+    usage: /<command>
+  teleport:
+    description: Teleportiert nen Spieler
+    usage: /<command> [Player]
+  playerdeath:
+    description: Zeigt an wie oft ein Spieler gestorben ist
+    usage: /<command> [Player]
+  findplayer:
+    description: Findet einen Player
+    usage: /<command> [Player]
+  blockstat:
+    description: Beschreibung
+    usage: /<command> [BlockName] {Sand,Stone,Grass,Log,Other}
+  addDBcolumn:
+    description: Fuegt einen Spalte in die Datenbank hinzu.
+    usage: /<command> [TableName] [ColumnName] [ColumnType]
+  renameDBtable:
+    description: Benennt die Tabelle um
+    usage: /<command> [NewTableName] [OldTableName]
+  redling:
+    description: InGame Waehrung
+    usage: /<command> [Balance],[send] [TargetPlayer] [Value], [Help]
+  xearling:
+    description: Premium Waehrung
+    usage: /<command> [Balance]
+  buy:
+    description: Zum Kaufen von diversen Dingen
+    usage: /<command> [list], [ItemName] [Value], [help]

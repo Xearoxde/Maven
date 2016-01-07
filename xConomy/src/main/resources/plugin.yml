@@ -8,3 +8,6 @@ commands:
   money:
     description: money function
     usage: /<command> ,[send] [TargetPlayer] [Amount], [add] [TargetPlayer] [Amount]
+  ecweb:
+    description: Webinterface
+    usage: /<command> register Username Password

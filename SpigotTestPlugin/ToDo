@@ -1,0 +1,49 @@
+ToDo List
+
+Primary
+o Add Sign Trade
+o Add Player Trade
+o Add algorithm for Offer / Demand 
+
+Secondary
+o Support for MySQL
+o Support for local file
+o Jobs for players
+o Stock Exchange
+
+
+
+String sql = "CREATE TABLE IF NOT EXISTS "+PlayerSignTradeTable+
+						"(UUID			TEXT						NOT NULL,"+
+						" PlayerName 	TEXT	 					NOT NULL,"+
+						" BlockXPos		TEXT						NOT NULL,"+
+						" BlockYPos		TEXT						NOT NULL,"+
+						" BlockZPos		TEXT						NOT NULL,"+
+						" SignTradeType	TEXT						NOT NULL,"+
+						" ItemToSell	TEXT						NOT NULL,"+
+						" ItemValue		TEXT						NOT NULL)";
+						
+						
+						case "diamond":
+				return "diamant";
+			
+			case "oak_wood":
+				return "eichenholz";
+			
+			case "coal":
+				return "kohle";
+				
+			case "iron_ore":
+				return "eisenerz";
+				
+			case "iron_ingot":
+				return "eisenbarren";
+				
+			case "stone":
+				return "stein";
+				
+			case "cobblestone":
+				return "kieselstein";
+				
+			case "sand":
+				return "sand";

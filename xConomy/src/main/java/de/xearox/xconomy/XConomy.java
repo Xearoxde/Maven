@@ -22,6 +22,7 @@ import de.xearox.xconomy.listener.PlayerJoinListener;
 import de.xearox.xconomy.listener.PlayerQuitListener;
 import de.xearox.xconomy.utility.Common;
 import de.xearox.xconomy.utility.CreateFiles;
+import de.xearox.xconomy.utility.Database;
 
 public class XConomy extends JavaPlugin{
 	public PluginDescriptionFile info;
@@ -30,6 +31,7 @@ public class XConomy extends JavaPlugin{
 	private Common common;
 	private CreateFiles createFiles;
 	private AccountActions accountActions;
+	private Database database;
 	public Logger logger;
 	
 	
@@ -45,6 +47,9 @@ public class XConomy extends JavaPlugin{
 	}
 	public AccountActions getAccountActions(){
 		return accountActions;
+	}
+	public Database database(){
+		return database;
 	}
 	//private static Accounts Accounts = new Accounts();
 	//public Parser Commands = new Parser();
@@ -89,6 +94,8 @@ public class XConomy extends JavaPlugin{
 			createFiles.createPlayerTable();
 			System.out.println("On Enable End");
 			
+			database.createDatabaseTable();
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -117,6 +124,7 @@ public class XConomy extends JavaPlugin{
 		this.logger = Logger.getLogger("Minecraft");
 		this.createFiles = new CreateFiles(this);
 		this.accountActions = new AccountActions(this);
+		this.database = new Database(this);
 	}
 
 	@Override
@@ -209,6 +217,40 @@ public class XConomy extends JavaPlugin{
 					}
 				}
 			}
+		}
+		
+		if(label.equalsIgnoreCase("ecweb")){
+			if(!(sender instanceof Player)){
+				logger.info("xConomy - INFO - The console can't do this!");
+			}
+			
+			Player playerSender = null;
+			Player player = null;
+			Location pLoc = null;
+			playerSender = (Player) sender;
+			OfflinePlayer offPlayer = this.getServer().getOfflinePlayer(playerSender.getUniqueId());
+			
+			player = offPlayer.getPlayer();
+			
+			if(args.length == 0){
+				player.sendMessage("Nicht genug Parameter, benutze /ecweb help um weitere hilfe zu erhalten!");
+				return true;
+			}
+			if(args[0].equalsIgnoreCase("register")){
+				if(args.length == 3){
+					if(database.createNewPlayer(offPlayer, args[1], args[2])){
+						player.sendMessage("Dein Account wurde im Webinterface angelegt");
+					} else {
+						player.sendMessage("Du hast bereits ein Account!");
+					}
+					return true;
+				} else {
+					player.sendMessage("Um einen Account im Webinterface anlegen zu können, musst du den folgenden Befehlt nutzen");
+					player.sendMessage("/ecweb register Username Password");
+					return true;
+				}
+			}
+			
 		}
 		return false;
 	}

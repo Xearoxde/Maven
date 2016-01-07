@@ -19,6 +19,8 @@
   	<module>xRules</module>
   	<module>WGPlayerDamageFlags</module>
   	<module>xBooks</module>
+  	<module>../SpigotTestPlugin</module>
+  	<module>text</module>
   </modules>
   <build>
     <plugins>
@@ -91,6 +93,11 @@
 		<artifactId>VaultAPI</artifactId>
 		<version>1.5</version>
 		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.xerial</groupId>
+		<artifactId>sqlite-jdbc</artifactId>
+		<version>3.8.11.2</version>
 	</dependency>
   </dependencies>
 </project>
