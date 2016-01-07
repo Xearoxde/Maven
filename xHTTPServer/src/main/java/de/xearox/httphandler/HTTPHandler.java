@@ -2,10 +2,10 @@ package de.xearox.httphandler;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import org.apache.commons.lang.StringUtils;
 
 import de.menzerath.httpserver.HTTPThread;
 import de.menzerath.util.Logger;
@@ -21,6 +21,7 @@ public class HTTPHandler {
 	public void getPostRequest(ArrayList<String> request, HTTPThread httpThread
 			,BufferedOutputStream out, BufferedReader in, Socket socket){
 		String wantedFile;
+		StringBuilder sb = new StringBuilder();
 		this.httpThread = httpThread;
 		if(request.isEmpty()){
 			this.httpThread.sendError(out, 400, "BAD REQUEST");
@@ -32,10 +33,51 @@ public class HTTPHandler {
 		System.out.println(wantedFile);
 		if(wantedFile.equalsIgnoreCase("/test.php")){
 			System.out.println("Test Bestanden");
-			
-			return;
+			int ch = 0;
+			try{
+				while(in.ready() && (ch = in.read()) != -1){
+					sb.append(Character.toChars(ch));
+				}
+				System.out.println(sb.toString());
+				System.out.println("");
+				loginHandler(sb.toString());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		
 	}
+	
+	public boolean loginHandler(String postData){
+		
+		String username;
+		String password;
+		
+		username = StringUtils.substringBetween(postData, "Username=", "&");
+		password = StringUtils.substringAfter(postData, "Password=");
+		
+		System.out.println(username);
+		System.out.println(password);
+		
+		return true;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
