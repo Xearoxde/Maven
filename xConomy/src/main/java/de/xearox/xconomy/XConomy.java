@@ -16,6 +16,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.xearox.httpserver.HTTPServer;
 import de.xearox.xconomy.accounts.AccountActions;
 import de.xearox.xconomy.accounts.CreateAccount;
 import de.xearox.xconomy.listener.PlayerJoinListener;
@@ -32,6 +33,7 @@ public class XConomy extends JavaPlugin{
 	private CreateFiles createFiles;
 	private AccountActions accountActions;
 	private Database database;
+	private HTTPServer httpServer;
 	public Logger logger;
 	
 	
@@ -51,6 +53,9 @@ public class XConomy extends JavaPlugin{
 	public Database database(){
 		return database;
 	}
+	public HTTPServer httpServer(){
+		return httpServer;
+	}
 	//private static Accounts Accounts = new Accounts();
 	//public Parser Commands = new Parser();
 	//public Permissions Permissions;
@@ -64,16 +69,13 @@ public class XConomy extends JavaPlugin{
 	public static Timer Interest;
 	
 	@Override
-	public void onLoad(){
-		System.out.println("Test on Load");
-	}
+	public void onLoad(){}
 	
 	@Override
 	public void onEnable(){
 		final long startTime = System.nanoTime();
 		final long endTime;
 		try{
-			System.out.println("On Enable");
 			//call RegisterListener
 			registerListener();
 			//Localize locale to prevent issues
@@ -92,7 +94,7 @@ public class XConomy extends JavaPlugin{
 			createFiles.createConfigFile();
 			createFiles.createReadmeFile();
 			createFiles.createPlayerTable();
-			System.out.println("On Enable End");
+			this.createWebserver();
 			
 			database.createDatabaseTable();
 			
@@ -101,9 +103,8 @@ public class XConomy extends JavaPlugin{
 		}
 	}
 	@Override
-	public void onDisable(){
-		
-	}
+	public void onDisable(){}
+	
 	public void registerListener(){
 		PluginManager pluginManager = this.getServer().getPluginManager();
 		
@@ -117,6 +118,30 @@ public class XConomy extends JavaPlugin{
 	public void checkForUpdates(){}
 	
 	public void checkLicense(){}
+	
+	public void createWebserver(){
+		File configDir = new File(XConomy.directory+"/config/");
+		File configFile = new File(configDir+"/config.yml");
+		int port;
+		File webRoot;
+		String webRootString;
+		boolean allowDirectoryListing;
+		File logfile;
+		
+		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(configFile);
+		
+		if(!yamlFile.getBoolean("Webserver.Enable")){
+			logger.info("Running xConomy without webserver");
+		} else {
+			webRootString = directory + yamlFile.getString("Webserver.Webroot");
+			port = yamlFile.getInt("Webserver.Port");
+			webRoot = new File(webRootString);
+			allowDirectoryListing = yamlFile.getBoolean("Webserver.AllowDirectoryListing");
+			logfile = new File(yamlFile.getString("Webserver.Logfile"));
+			this.httpServer = new HTTPServer(port, webRoot, allowDirectoryListing, logfile, this);
+		}
+		
+	}
 	
 	public void createInstances(){
 		this.createAccount = new CreateAccount(this);

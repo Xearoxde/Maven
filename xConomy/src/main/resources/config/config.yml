@@ -44,7 +44,17 @@ PlayerSaving:
   #Password: Password
   #DatabaseName: DatabaseName
 
-
+#If you want use the built-in webserver you can define here all
+#Make sure you use a non used port. Default it's set to 9090
+#You can also specify the root directory for the webinterface
+#How do add a custom design for the webinterface take a look into the readme
+Webserver:
+  Enable: false
+  Port: 9090
+  Webroot: /www
+  AllowDirectoryListing: false
+  Logfile: log.txt
+  
 
 
 

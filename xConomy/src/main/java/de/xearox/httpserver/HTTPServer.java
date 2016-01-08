@@ -6,27 +6,16 @@ import java.net.ServerSocket;
 
 import de.xearox.httpserver.util.Logger;
 import de.xearox.httpserver.util.ServerHelper;
+import de.xearox.xconomy.XConomy;
 
 public class HTTPServer {
 
-	/**
-     * Einstiegspunkt der Anwendung; erstellt ein HTTPServer-Objekt
-     * @param args Beim Aufruf übergebene Argumente; werden aber ignoriert
-     */
-    public static void main(String[] args) {
-    	
-    	if(args.length==0){
-    		new HTTPServer(9090, new File("./www"), true, new File("log.txt"));
-    	}else if(args.length==1){
-    		new HTTPServer(Integer.parseInt(args[0]), new File("./www"), true, new File("log.txt"));
-    	}
-        
-    }
-
+	private XConomy plugin;
     /**
      * Konstruktor; erstellt (wenn nötig) den Ordner für die Daten und startet schließlich den ConnectionListener
      */
-    public HTTPServer(int port, final File webRoot, final boolean allowDirectoryListing, File logfile) {
+    public HTTPServer(int port, final File webRoot, final boolean allowDirectoryListing, File logfile, 
+    		XConomy plugin) {
         Logger.setLogfile(logfile);
 
         // Gib die IP-Adresse sowie den Port des Servers aus
@@ -37,7 +26,9 @@ public class HTTPServer {
         for (int i = 0; i < lineUrl.length(); i++) lineOne += "#";
         for (int i = 0; i < lineUrl.length() - 18; i++) lineTitle += " ";
         lineTitle += "###";
-
+        
+        this.plugin = plugin;
+        
         // Ausgabe der Informationen
         System.out.println(lineOne);
         System.out.println(lineTitle);
@@ -48,8 +39,7 @@ public class HTTPServer {
         if (!webRoot.exists() && !webRoot.mkdir()) {
             // Ordner existiert nicht & konnte nicht angelegt werden: Abbruch
             Logger.exception("Konnte Daten-Verzeichnis nicht erstellen.");
-            Logger.exception("Beende...");
-            System.exit(1);
+            return;
         }
 
         // Erstelle einen ServerSocket mit dem angegebenen Port
@@ -59,8 +49,7 @@ public class HTTPServer {
         } catch (IOException | IllegalArgumentException e) {
             // Port bereits belegt, darf nicht genutzt werden, ...: Abbruch
             Logger.exception(e.getMessage());
-            Logger.exception("Beende...");
-            System.exit(1);
+            return;
         }
 
         // Neuer Thread: wartet auf eingehende Verbindungen und "vermittelt" diese an einen neuen HTTPThread, der die Anfrage dann verarbeitet
@@ -73,8 +62,7 @@ public class HTTPServer {
                         thread.start();
                     } catch (IOException e) {
                         Logger.exception(e.getMessage());
-                        Logger.exception("Beende...");
-                        System.exit(1);
+                        return;
                     }
                 }
             }
