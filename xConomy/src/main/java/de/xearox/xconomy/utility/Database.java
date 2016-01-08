@@ -1,6 +1,7 @@
 package de.xearox.xconomy.utility;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -58,11 +59,11 @@ public class Database {
 				if(statement != null){
 					statement.close();
 					System.out.println("Statement geschlossen");
-					closeSQLConnection();
 				}
-				
 				}catch (SQLException e){
 					System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+				} finally {
+					closeSQLConnection();
 				}
 		}
 	}
@@ -75,32 +76,37 @@ public class Database {
 			System.out.println("offlinePlayer null!!");
 			return false;
 		}
-		/*if(hasAccount(offlinePlayer)){
+		if(hasAccount(offlinePlayer)){
 			System.out.println("Account vorhanden!");
 			return false;
-		}*/
+		}
 		
 		String playerName = offlinePlayer.getPlayer().getDisplayName();
 		
 		try{
 			connection = getSQLConnection();
 			
+			password = MD5Hashing(password);
+			
 			uuid = offlinePlayer.getUniqueId().toString();
 			
 			statement = connection.createStatement();
 			
 			sql = "INSERT INTO Accounts (UUID, PlayerLastName, Username, Password)"
-					+ "VALUES ('"+uuid+playerName+username+password+"');";
+					+ "VALUES ('"+uuid+"','"+playerName+"','"+username+"','"+password+"');";
 			
 			statement.executeUpdate(sql);
 			
 			return true;
 		} catch ( SQLException e){
 			e.printStackTrace();
-			return false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			closeSQLConnection();
 		}
+		return false;
 	}
 	
 	public boolean hasAccount(OfflinePlayer offlinePlayer){
@@ -118,9 +124,8 @@ public class Database {
 			System.out.println("Vor pre Statement");
 			try{
 				String sql = "SELECT UUID FROM Accounts WHERE UUID = '"+uuid+"';";
-				System.out.println(sql);
+				
 				statement = connection.createStatement();
-				System.out.print(statement);
 				
 				resultSet = statement.executeQuery(sql);
 				
@@ -136,8 +141,6 @@ public class Database {
 				}
 				
 			} catch (SQLException e){
-				e.printStackTrace();
-				System.out.println("############################");
 				return false;
 			} catch (Exception e){
 				e.printStackTrace();
@@ -166,13 +169,14 @@ public class Database {
 	
 	public Connection getSQLConnection(){
 		try{
-			if(connection != null){
+			if(connection != null && !connection.isClosed()){
 				return connection;
 			}
 			dbName = "/testDB.db";
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:"+dbPath+"/data/"+dbName);
 			plugin.logger.info("SQL Connection etablished");
+			System.out.println("SQL Connection etablished");
 			return connection;
 		} catch ( Exception e){
 			plugin.logger.severe(e.getMessage());
@@ -183,7 +187,7 @@ public class Database {
 	
 	public void closeSQLConnection(){
 		try{
-			if(connection!=null&&!connection.isClosed()){
+			if(connection!=null){//&&!connection.isClosed()
 				System.out.println("Database connection closed");
 				connection.close();
 				return;
@@ -193,5 +197,22 @@ public class Database {
 			
 		}
 	}
+	
+	public String MD5Hashing(String Value)throws Exception
+    {
+    	String password = Value;
+    	
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        
+        byte byteData[] = md.digest();
+ 
+        //convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
 	
 }
