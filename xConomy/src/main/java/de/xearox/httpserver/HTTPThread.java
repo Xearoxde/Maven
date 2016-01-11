@@ -12,22 +12,40 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.UUID;
 
-import de.xearox.httpserver.httphandler.HTTPHandler;
+import de.xearox.httpserver.handler.CookieHandler;
+import de.xearox.httpserver.handler.HTTPHandler;
+import de.xearox.httpserver.handler.IncludeHandler;
 import de.xearox.httpserver.util.FileManager;
 import de.xearox.httpserver.util.Logger;
+import de.xearox.httpserver.util.PageSites;
+import de.xearox.httpserver.util.PageVariables;
 import de.xearox.httpserver.util.ServerHelper;
+import de.xearox.xconomy.XConomy;
+import de.xearox.xconomy.utility.Database;
 
 public class HTTPThread extends Thread {
     private Socket socket;
     private File webRoot;
     private boolean allowDirectoryListing;
     private HTTPHandler httpHandler;
+    private XConomy plugin;
+    private LoginData loginData;
+    private boolean loginSuccess;
+    private CookieHandler cookieHandler;
+    private IncludeHandler includeHandler;
+    private Map<String, String> cookies;
 
     /**
      * Konstruktor; speichert die übergebenen Daten
@@ -36,11 +54,16 @@ public class HTTPThread extends Thread {
      * @param webRoot               Pfad zum Hauptverzeichnis
      * @param allowDirectoryListing Sollen Verzeichnisinhalte aufgelistet werden, falls keine Index-Datei vorliegt?
      */
-    public HTTPThread(Socket socket, File webRoot, boolean allowDirectoryListing) {
+    public HTTPThread(Socket socket, File webRoot, boolean allowDirectoryListing, XConomy plugin) {
         this.socket = socket;
+        this.plugin = plugin;
         this.webRoot = webRoot;
         this.allowDirectoryListing = allowDirectoryListing;
-        this.httpHandler = new HTTPHandler();
+        this.loginData = new LoginData();
+        this.httpHandler = new HTTPHandler(plugin, this.loginData);
+        this.cookies = new HashMap<String, String>();
+        this.cookieHandler = new CookieHandler();
+        this.includeHandler = new IncludeHandler();
     }
 
     /**
@@ -49,7 +72,7 @@ public class HTTPThread extends Thread {
     public void run() {
         // Vorbereitung und Einrichtung des BufferedReader und BufferedOutputStream
         // zum Lesen des Requests und zur Ausgabe der Response
-        final BufferedReader in;
+    	final BufferedReader in;
         final BufferedOutputStream out;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF8"));
@@ -58,7 +81,6 @@ public class HTTPThread extends Thread {
             Logger.exception(e.getMessage());
             return;
         }
-
         // Timeout für die Verbindung von 30 Sekunden
         // Verhindert zu viele offengehaltene Verbindungen, aber auch Übertragung von großen Dateien
         try {
@@ -80,9 +102,10 @@ public class HTTPThread extends Thread {
             Logger.exception(e.getMessage());
             return;
         }
-
         // Request war leer; sollte nicht auftreten
-        if (request.isEmpty()) return;
+        if (request.isEmpty()) {
+        	return;
+        }
 
         // Nur Requests mit dem HTTP 1.0 / 1.1 Protokoll erlaubt
         if (!request.get(0).endsWith(" HTTP/1.0") && !request.get(0).endsWith(" HTTP/1.1")) {
@@ -104,18 +127,195 @@ public class HTTPThread extends Thread {
                 return;
             }
         }
-
         // Auf welche Datei / welchen Pfad wird zugegriffen?
         String wantedFile;
         String path;
         File file;
-
-        // GET-Request ist wahrscheinlicher, daher wird zuerst diese Methode angenommen
+        
         wantedFile = request.get(0).substring(4, request.get(0).length() - 9);
+        
+        //If the wanted file : index.php, index.html, index.ecweb or just / then the server will return the replaced index.ecweb file
+        //Also it will only return the index.ecweb if the browser has not set a cookie right now
+        if(wantedFile.equals("/")||wantedFile.equals("/index.php")||wantedFile.equals("/index.html")||wantedFile.equals("index.ecweb")){
+        	file = new File(webRoot + "/index.ecweb");
+        	if(file.isFile() && file.exists()){
+        		for(int i = 0; i < request.size(); i += 1){
+        			if(request.get(i).indexOf("Cookie:") == -1){ //If request return -1 then no cookie was set
+        				try {
+        					Scanner scanner = new Scanner(file);
+							String content = scanner.useDelimiter("\\Z").next();
+							content = includeHandler.pageInclude(webRoot.toString(), content);
+							content = content.replace("{hostname}", socket.getLocalAddress().toString());
+							content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
+							sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
+							
+							out.write(content.getBytes());
+							out.flush();
+							out.close();
+							
+							scanner.close();
+							
+							// Schließt den Socket; "keep-alive" wird also ignoriert
+							socket.close();
+							return;
+							
+							
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}	
+        			}
+        		}	
+        	}
+        }
+        
+        
+        
+        
+
         if (isPostRequest) wantedFile = request.get(0).substring(5, request.get(0).length() - 9);
 
         if(wantedFile.contains("php") && isPostRequest){
-        	this.httpHandler.getPostRequest(request, this, out, in, socket);
+        	loginData = this.httpHandler.getPostRequest(request, this, out, in, socket, cookies);
+        	if(loginData == null){
+        		//sendError(out, 403, "Forbidden");
+        	}
+        	
+        	if(loginData.loginSuccess || loginData.isLogout){
+        		loginSuccess = loginData.loginSuccess;
+        		wantedFile = loginData.wantedFile;
+        		
+        		if(cookies.isEmpty() && !loginData.isLogout){
+        			try {
+						cookies = plugin.database().getCookies(cookies, loginData);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						cookies = cookieHandler.setCookies(cookies, loginData, socket);
+						plugin.database().createNewCookie(cookies);
+						loginData.isCookieSet = true;
+					}
+        			
+        		}
+        		
+        	} else {
+        		if(loginData.isLogout){
+        			wantedFile = "/index.ecweb";
+        		} else {
+        			sendError(out, 403, "Forbidden");
+        			return;
+        		}
+        	}
+        }
+        // Angeforderte Datei abfangen und variabeln ersetzen
+        if(wantedFile.contains("welcome.ecweb") && loginData.loginSuccess){
+        	String content = WebResources.getWelcomeRedirect(socket);
+        	try {
+        		sendHeader(out, 301, "Moved Permanently", "text/html", content.length(), System.currentTimeMillis());
+        		// Sendet Daten der Response
+				out.write(content.getBytes());
+				out.flush();
+				out.close();
+				
+				// Schließt den Socket; "keep-alive" wird also ignoriert
+				socket.close();
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}        
+        }
+        
+        if(wantedFile.contains("logout.php")){
+        	String content = WebResources.getIndexRedirect(socket);
+        	try {
+        		sendHeader(out, 301, "Moved Permanently", "text/html", content.length(), System.currentTimeMillis());
+        		// Sendet Daten der Response
+				out.write(content.getBytes());
+				out.flush();
+				out.close();
+				
+				// Schließt den Socket; "keep-alive" wird also ignoriert
+				socket.close();
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}        
+        }
+        if(wantedFile.contains(".ecweb")){
+        	File getWantedFile = new File(webRoot + wantedFile);
+        	if(getWantedFile.exists()&&getWantedFile.isFile()){
+        		try {
+					@SuppressWarnings("resource")
+					String content = new Scanner(getWantedFile).useDelimiter("\\Z").next();
+					if(cookies.isEmpty()){
+						try{
+							cookies = cookieHandler.getCookies(cookies, request);
+							loginData.username = cookies.get("username");
+							if(loginData.username.equals("")){
+								sendError(out, 403, "Forbidden");
+								return;
+							}
+							
+						} catch (Exception e){
+							getWantedFile = new File(webRoot + "/index.ecweb");
+							content = new Scanner(getWantedFile).useDelimiter("\\Z").next();
+							content = includeHandler.pageInclude(webRoot.getPath(), content);
+							content = content.replace("{hostname}", socket.getLocalAddress().toString());
+							content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
+							sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
+							try {
+								// Sendet Daten der Response
+								out.write(content.getBytes());
+								out.flush();
+								out.close();
+								// Schließt den Socket; "keep-alive" wird also ignoriert
+								socket.close();
+								return;
+							} catch (IOException ex) {
+								Logger.exception(ex.getMessage());
+								sendError(out, 403, "Forbidden");
+								return;
+							}
+						}
+					}
+					try{
+						if(!cookieHandler.getCookies(cookies, request).equals(plugin.database().getCookies(cookies,loginData))){
+							sendError(out, 403, "Forbidden");
+							return;
+						}
+					} catch ( SQLException e){
+						wantedFile = "/";
+					}
+					content = includeHandler.pageInclude(webRoot.getPath(), content);
+					content = content.replace("{hostname}", socket.getLocalAddress().toString());
+					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
+					content = content.replace("{username}", loginData.username);
+					content = content.replace(PageVariables.PLAYER_NAME.getPlaceholder(), loginData.username);
+					content = content.replace(PageVariables.PLAYER_MONEY.getPlaceholder(), 
+							httpHandler.getPlayerMoney(UUID.fromString(plugin.database().getPlayerUUID(loginData.username))));
+					sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
+					
+					try {
+						// Sendet Daten der Response
+						out.write(content.getBytes());
+						out.flush();
+						out.close();
+						// Schließt den Socket; "keep-alive" wird also ignoriert
+						socket.close();
+					} catch (IOException e) {
+						Logger.exception(e.getMessage());
+					}
+					
+					return;
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
         }
         // GET-Request mit Argumenten: Entferne diese für die Pfad-Angabe
         if (!isPostRequest && request.get(0).contains("?")) {
@@ -135,13 +335,12 @@ public class HTTPThread extends Thread {
         // Falls ein Verzeichnis angezeigt werden soll, und eine Index-Datei vorhanden ist
         // soll letztere angezeigt werden
         if (file.isDirectory()) {
-            File indexFile = new File(file, "index.html");
+            File indexFile = new File(file, "index.ecweb");
             if (indexFile.exists() && !indexFile.isDirectory()) {
                 file = indexFile;
-
                 // "/index.html" an Verzeichnispfad anhängen
                 if (wantedFile.contains("?")) {
-                    wantedFile = wantedFile.substring(0, wantedFile.indexOf("?")) + "/index.html" + wantedFile.substring(wantedFile.indexOf("?"));
+                    wantedFile = wantedFile.substring(0, wantedFile.indexOf("?")) + "/index.ecweb" + wantedFile.substring(wantedFile.indexOf("?"));
                 }
             }
         }
@@ -283,10 +482,65 @@ public class HTTPThread extends Thread {
             if (contentType == null) {
                 contentType = "application/octet-stream";
             }
-
             // Header senden, Zugriff loggen und Datei senden
-            sendHeader(out, 200, "OK", contentType, file.length(), file.lastModified());
-            Logger.access(wantedFile, socket.getInetAddress().toString());
+            if(cookies.isEmpty()){
+            	cookies = cookieHandler.getCookies(cookies, request);
+            	if(cookies.isEmpty()){
+            		cookies.put("loggedin", "0");
+            	}
+            }
+            if((wantedFile.contains("index.ecweb")||(wantedFile.equals("/")))&&cookies.get("loggedin").equals("1")){
+            	String content = WebResources.getWelcomeRedirect(socket);
+            	try {
+            		sendHeader(out, 301, "Moved Permanently", "text/html", content.length(), System.currentTimeMillis());
+            		// Sendet Daten der Response
+    				out.write(content.getBytes());
+    				out.flush();
+    				out.close();
+    				
+    				// Schließt den Socket; "keep-alive" wird also ignoriert
+    				socket.close();
+    				return;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}        
+            } 
+            else if(wantedFile.contains("index.ecweb")||(wantedFile.equals("/"))){
+            	String content;
+				try {
+					content = includeHandler.pageInclude(webRoot.getPath(), file);
+					content = content.replace("{hostname}", socket.getLocalAddress().toString());
+					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
+					
+					sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
+	        		// Sendet Daten der Response
+					out.write(content.getBytes());
+					out.flush();
+					out.close();
+					return;
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            	
+            } else {
+            	sendHeader(out, 200, "OK", contentType, file.length(), file.lastModified());
+            	Logger.access(wantedFile, socket.getInetAddress().toString());
+            }
             try {
                 byte[] buffer = new byte[4096];
                 int bytesRead;
@@ -297,7 +551,7 @@ public class HTTPThread extends Thread {
             } catch (NullPointerException | IOException e) {
                 // Wirft eine "Broken Pipe" oder "Socket Write Error" Exception,
                 // wenn der Download / Stream abgebrochen wird
-                Logger.exception(e.getMessage());
+            	Logger.exception(e.getMessage());
             }
         }
 
@@ -322,17 +576,52 @@ public class HTTPThread extends Thread {
      */
     private void sendHeader(BufferedOutputStream out, int code, String codeMessage, String contentType, long contentLength, long lastModified) {
         try {
-            out.write(("HTTP/1.1 " + code + " " + codeMessage + "\r\n" +
-                    "Date: " + new Date().toString() + "\r\n" +
-                    "Server: Marvins HTTP-Server\r\n" +
-                    "Content-Type: " + contentType + "; charset=utf-8\r\n" +
-                    ((contentLength != -1) ? "Content-Length: " + contentLength + "\r\n" : "") +
-                    "Last-modified: " + new Date(lastModified).toString() + "\r\n" +
-                    "\r\n").getBytes());
-        } catch (IOException e) {
-            Logger.exception(e.getMessage());
-        }
-    }
+        	if(loginSuccess){
+        		out.write(("HTTP/1.1 " + code + " " + codeMessage + "\r\n" +
+    					"Set-Cookie: "+"name=ecweb" +"\r\n"+
+    					"Set-Cookie: "+"username=" + loginData.username +"\r\n"+
+        				"Set-Cookie: "+"IP=" +socket.getInetAddress() +"\r\n"+
+    					"Set-Cookie: "+"key="+cookies.get("key") +"\r\n"+
+    					"Set-Cookie: "+"loggedin="+ "1" +"\r\n"+
+    					"Cache-Control: "+"no-cache"+"\r\n"+
+    					"Pragma: "+"no-cache"+"\r\n"+
+    					"Date: " + new Date().toString() + "\r\n" +
+    					"Server: Xearox HTTP-Server\r\n" +
+    					"Content-Type: " + contentType + "; charset=utf-8\r\n" +
+    					((contentLength != -1) ? "Content-Length: " + contentLength + "\r\n" : "") +
+    					"Last-modified: " + new Date(lastModified).toString() + "\r\n" +
+    					"\r\n").getBytes());
+        	} else if(loginData.isLogout){
+        		out.write(("HTTP/1.1 " + code + " " + codeMessage + "\r\n" +
+    					"Set-Cookie: "+"name=ecweb" +"\r\n"+
+    					"Set-Cookie: "+"username=" + "" +"\r\n"+
+        				"Set-Cookie: "+"IP=" +"" +"\r\n"+
+    					"Set-Cookie: "+"key="+"" +"\r\n"+
+    					"Set-Cookie: "+"loggedin="+ "0" +"\r\n"+
+    					"Cache-Control: "+"no-cache"+"\r\n"+
+    					"Pragma: "+"no-cache"+"\r\n"+
+    					"Date: " + new Date().toString() + "\r\n" +
+    					"Server: Xearox HTTP-Server\r\n" +
+    					"Content-Type: " + contentType + "; charset=utf-8\r\n" +
+    					((contentLength != -1) ? "Content-Length: " + contentLength + "\r\n" : "") +
+    					"Last-modified: " + new Date(lastModified).toString() + "\r\n" +
+    					"\r\n").getBytes());
+        	} else {
+        		out.write(("HTTP/1.1 " + code + " " + codeMessage + "\r\n" +
+    					"Date: " + new Date().toString() + "\r\n" +
+    					"Server: Xearox HTTP-Server\r\n" +
+    					"Cache-Control: "+"no-cache"+"\r\n"+
+    					"Pragma: "+"no-cache"+"\r\n"+
+    					"Content-Type: " + contentType + "; charset=utf-8\r\n" +
+    					((contentLength != -1) ? "Content-Length: " + contentLength + "\r\n" : "") +
+    					"Last-modified: " + new Date(lastModified).toString() + "\r\n" +
+    					"\r\n").getBytes());
+        	}
+			
+			    } catch (IOException e) {
+			        Logger.exception(e.getMessage());
+			    }
+			}
 
     /**
      * Sendet eine Fehlerseite zum Browser
@@ -360,4 +649,14 @@ public class HTTPThread extends Thread {
             Logger.exception(e.getMessage());
         }
     }
+
+
+
+
+
+
+
+
+
+
 }

@@ -1,6 +1,7 @@
 package de.xearox.xconomy;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.logging.Logger;
@@ -96,14 +97,22 @@ public class XConomy extends JavaPlugin{
 			createFiles.createPlayerTable();
 			this.createWebserver();
 			
-			database.createDatabaseTable();
+			database.createAccountsDBTable();
+			database.createCookiesDBTable();
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	@Override
-	public void onDisable(){}
+	public void onDisable(){
+		try {
+			this.httpServer.getSocket().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("#### Can't close socket ####");
+		}
+	}
 	
 	public void registerListener(){
 		PluginManager pluginManager = this.getServer().getPluginManager();

@@ -7,12 +7,16 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import de.xearox.httpserver.LoginData;
 import de.xearox.xconomy.XConomy;
 
 public class Database {
@@ -36,7 +40,7 @@ public class Database {
 		//this.dbName = yamlFile.getString("Config.DBName");
 	}
 	
-	public void createDatabaseTable(){
+	public void createAccountsDBTable(){
 		Statement statement = null;
 		try{
 			
@@ -46,9 +50,42 @@ public class Database {
 			
 			String sql = "CREATE TABLE IF NOT EXISTS Accounts"
 					+ "(UUID TEXT NOT NULL,"
-					+ "PlayerLastName TEXT NOT NULL,"
-					+ "Username TEXT NOT NULL,"
-					+ "Password TEXT NOT NULL)";
+					+ "playerlastname TEXT NOT NULL,"
+					+ "username TEXT NOT NULL,"
+					+ "password TEXT NOT NULL,"
+					+ "admin INTEGER NOT NULL)";
+			statement.executeQuery(sql);
+					
+			
+		}catch ( SQLException e){
+			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		}finally{
+			try{					
+				if(statement != null){
+					statement.close();
+					System.out.println("Statement geschlossen");
+				}
+				}catch (SQLException e){
+					System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+				} finally {
+					closeSQLConnection();
+				}
+		}
+	}
+	
+	public void createCookiesDBTable(){
+		Statement statement = null;
+		try{
+			
+			connection = getSQLConnection();
+			
+			statement = connection.createStatement();
+			
+			String sql = "CREATE TABLE IF NOT EXISTS Cookies"
+					+ "(username TEXT NOT NULL,"
+					+ "ip TEXT NOT NULL,"
+					+ "key TEXT NOT NULL,"
+					+ "loggedin INTEGER NOT NULL)";
 			statement.executeQuery(sql);
 					
 			
@@ -69,15 +106,21 @@ public class Database {
 	}
 	
 	public boolean createNewPlayer(OfflinePlayer offlinePlayer, String username, String password){
+		int isAdmin = 0;
+		
+		if(plugin.getServer().getOperators().contains(offlinePlayer)){
+			isAdmin = 1;
+		} else {
+			isAdmin = 0;
+		}
+		
 		Statement statement = null;
 		String sql;
 		String uuid;
 		if(offlinePlayer == null){
-			System.out.println("offlinePlayer null!!");
 			return false;
 		}
 		if(hasAccount(offlinePlayer)){
-			System.out.println("Account vorhanden!");
 			return false;
 		}
 		
@@ -92,8 +135,8 @@ public class Database {
 			
 			statement = connection.createStatement();
 			
-			sql = "INSERT INTO Accounts (UUID, PlayerLastName, Username, Password)"
-					+ "VALUES ('"+uuid+"','"+playerName+"','"+username+"','"+password+"');";
+			sql = "INSERT INTO Accounts (UUID, playerlastname, username, password, admin)"
+					+ "VALUES ('"+uuid+"','"+playerName+"','"+username+"','"+password+"','"+isAdmin+"');";
 			
 			statement.executeUpdate(sql);
 			
@@ -109,6 +152,55 @@ public class Database {
 		return false;
 	}
 	
+	public void createNewCookie(Map<String, String> cookies){
+		Statement statement = null;
+		String sql;
+		
+		try{
+			connection = getSQLConnection();
+			
+			statement = connection.createStatement();
+			sql = "INSERT INTO Cookies (username, ip, key, loggedin)"
+					+ "VALUES ('"+cookies.get("username")+"','"+cookies.get("ip")
+					+ "','"+cookies.get("key")+"','"+cookies.get("loggedin")+"');";
+			
+			statement.executeUpdate(sql);
+			
+		} catch ( SQLException e){
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			closeSQLConnection();
+		}
+	}
+	
+	public Map<String, String> getCookies(Map<String, String> cookies, LoginData loginData) throws SQLException{
+		Statement statement;
+		ResultSet resultSet;
+		
+		connection = getSQLConnection();
+			
+		String sql = "SELECT * FROM Cookies WHERE username = '"+loginData.username+"';";
+				
+		statement = connection.createStatement();
+				
+		resultSet = statement.executeQuery(sql);
+		
+		if(resultSet.getString("username").equalsIgnoreCase(loginData.username)){
+			cookies.put("username", resultSet.getString("username"));
+			cookies.put("ip", resultSet.getString("ip"));
+			cookies.put("key", resultSet.getString("key"));
+			cookies.put("loggedin", resultSet.getString("loggedin"));
+			closeSQLConnection();
+			return cookies;
+		} else {
+			closeSQLConnection();
+			return cookies;
+		}
+	}
+	
 	public boolean hasAccount(OfflinePlayer offlinePlayer){
 		Statement statement;
 		ResultSet resultSet;
@@ -117,11 +209,6 @@ public class Database {
 		try{
 			connection = getSQLConnection();
 			
-			System.out.println(uuid);
-			System.out.println(player.getDisplayName());
-			
-			System.out.print(connection);
-			System.out.println("Vor pre Statement");
 			try{
 				String sql = "SELECT UUID FROM Accounts WHERE UUID = '"+uuid+"';";
 				
@@ -133,10 +220,8 @@ public class Database {
 					return false;
 				}
 				if(resultSet.getString("UUID").equalsIgnoreCase(uuid.toLowerCase())){
-					System.out.println("UUID gefunden!");
 					return true;
 				} else {
-					System.out.println("UUID nicht gefunden!");
 					return false;
 				}
 				
@@ -167,6 +252,94 @@ public class Database {
 		return "";
 	}
 	
+	public boolean checkLoginData(String username, String password){
+		Statement statement;
+		ResultSet resultSet;
+		
+		try{
+			connection = getSQLConnection();
+			
+			password = MD5Hashing(password);
+			
+			String sql = "SELECT * FROM Accounts WHERE Username = '"+username+"';";
+			
+			statement = connection.createStatement();
+			
+			resultSet = statement.executeQuery(sql);
+			
+			if(resultSet == null){
+				return false;
+			}
+			
+			
+			if(resultSet.getString("Password").equalsIgnoreCase(password)){
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (Exception e){
+			//e.printStackTrace();
+		} finally {
+			closeSQLConnection();
+		}
+		
+		return false;
+	}
+	
+	public String getPlayerUUID(String username){
+		Statement statement;
+		ResultSet resultSet;
+		
+		try{
+			connection = getSQLConnection();
+			
+			String sql = "SELECT * FROM Accounts WHERE Username = '"+username+"';";
+			
+			statement = connection.createStatement();
+			
+			resultSet = statement.executeQuery(sql);
+			
+			if(resultSet == null){
+				return "";
+			}
+			
+			return resultSet.getString("UUID");
+			
+		} catch (Exception e){
+			//e.printStackTrace();
+		} finally {
+			closeSQLConnection();
+		}
+		
+		return "";
+	}
+	
+	public boolean removeCookie(String cookieKey){
+		Statement statement;
+		
+		try{
+			connection = getSQLConnection();
+			
+			String sql = "DELETE FROM Cookies WHERE key = '"+cookieKey+"';";
+			
+			statement = connection.createStatement();
+			
+			statement.executeUpdate(sql);
+			
+			statement.close();
+			
+			return true;
+			
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			closeSQLConnection();
+		}
+		
+		return false;
+	}
+	
 	public Connection getSQLConnection(){
 		try{
 			if(connection != null && !connection.isClosed()){
@@ -175,8 +348,6 @@ public class Database {
 			dbName = "/testDB.db";
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:"+dbPath+"/data/"+dbName);
-			plugin.logger.info("SQL Connection etablished");
-			System.out.println("SQL Connection etablished");
 			return connection;
 		} catch ( Exception e){
 			plugin.logger.severe(e.getMessage());
@@ -187,9 +358,9 @@ public class Database {
 	
 	public void closeSQLConnection(){
 		try{
-			if(connection!=null){//&&!connection.isClosed()
-				System.out.println("Database connection closed");
+			if(connection!=null){
 				connection.close();
+				connection = null;
 				return;
 			}
 		}catch ( Exception e){

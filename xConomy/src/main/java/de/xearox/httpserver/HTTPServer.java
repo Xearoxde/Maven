@@ -11,11 +11,21 @@ import de.xearox.xconomy.XConomy;
 public class HTTPServer {
 
 	private XConomy plugin;
-    /**
+	private ServerSocket socket;
+	
+	private ServerSocket setSocket(ServerSocket socket){
+		return socket;
+	}
+	
+	public ServerSocket getSocket(){
+		return this.socket;
+	}
+	
+	/**
      * Konstruktor; erstellt (wenn nötig) den Ordner für die Daten und startet schließlich den ConnectionListener
      */
     public HTTPServer(int port, final File webRoot, final boolean allowDirectoryListing, File logfile, 
-    		XConomy plugin) {
+    		final XConomy plugin) {
         Logger.setLogfile(logfile);
 
         // Gib die IP-Adresse sowie den Port des Servers aus
@@ -43,9 +53,10 @@ public class HTTPServer {
         }
 
         // Erstelle einen ServerSocket mit dem angegebenen Port
-        ServerSocket socket = null;
+        this.setSocket(socket = null);
         try {
-            socket = new ServerSocket(port);
+            //socket = new ServerSocket(port);
+        	this.setSocket(socket = new ServerSocket(port));
         } catch (IOException | IllegalArgumentException e) {
             // Port bereits belegt, darf nicht genutzt werden, ...: Abbruch
             Logger.exception(e.getMessage());
@@ -58,7 +69,7 @@ public class HTTPServer {
             public void run(){
                 while (true) {
                     try {
-                        HTTPThread thread = new HTTPThread(finalSocket.accept(), webRoot, allowDirectoryListing);
+                        HTTPThread thread = new HTTPThread(finalSocket.accept(), webRoot, allowDirectoryListing, plugin);
                         thread.start();
                     } catch (IOException e) {
                         Logger.exception(e.getMessage());

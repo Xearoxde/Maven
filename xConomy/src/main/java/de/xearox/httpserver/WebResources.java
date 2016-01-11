@@ -1,5 +1,7 @@
 package de.xearox.httpserver;
 
+import java.net.Socket;
+
 /**
  * Diese Klasse beinhaltet Ressourcen, die bei der Dateiauflistung und
  * bei Fehlerseien angezeigt werden:
@@ -33,6 +35,44 @@ public class WebResources {
                 content +
                 "</body>" +
                 "</html>";
+    }
+    
+    public static String getWelcomePage(String username){
+    	return "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">" +
+                "<style>" + STYLE + "</style>" +
+                "<title>Welcome back "+username+"</title>" +
+                "</head>" +
+                "<body>" +
+                "<h1>Welcome back "+username+"</h1>" +
+                "<p>Actually you can't do here nothing but you can see this page</p>" +
+                "<p>Come later back to see more here."+
+                "</body>" +
+                "</html>";
+    }
+    
+    public static String getWelcomeRedirect(Socket socket){
+    	return "<!DOCTYPE html>"+
+    			"<html>" +
+    			"<head>" +
+    			"<meta http-equiv=\"refresh\" content=\"0; url=http://"+socket.getLocalAddress()+":9090/welcome.ecweb"+"\" />"+
+    			"</head>" +
+    			"<body>" +
+    			"</body>" +
+    			"</html>";
+    }
+    
+    public static String getIndexRedirect(Socket socket){
+    	return "<!DOCTYPE html>"+
+    			"<html>" +
+    			"<head>" +
+    			"<meta http-equiv=\"refresh\" content=\"0; url=http://"+socket.getLocalAddress()+":9090/index.ecweb"+"\" />"+
+    			"</head>" +
+    			"<body>" +
+    			"</body>" +
+    			"</html>";
     }
 
     public static String getErrorTemplate(String error) {
