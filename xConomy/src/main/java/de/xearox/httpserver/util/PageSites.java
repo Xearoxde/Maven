@@ -7,7 +7,9 @@ public enum PageSites{
 	FOOTER("{footer}","/tpl/footer.tpl"),
 	LOGIN("{login}","/tpl/login.tpl"),
 	LOGOUT("{logout}","/tpl/logout.tpl"),
-	PLAYERINFO("{playerinfo}","/tpl/playerinfo.tpl");
+	PLAYERINFO("{playerinfo}","/tpl/playerinfo.tpl"),
+	ADMINPANEL("{adminpanel}", "/tpl/adminpanel.tpl"),
+	COMMANDFRAME("{commandframe}","/tpl/commandframe.tpl");
 	//BODY("{body}","/tpl/body.tpl");
 	
 	
@@ -33,6 +35,10 @@ public enum PageSites{
 			return placeholder;
 		case PLAYERINFO:
 			return placeholder;
+		case ADMINPANEL:
+			return placeholder;
+		case COMMANDFRAME:
+			return placeholder;
 		}		
 		return "";
 	}
@@ -50,6 +56,10 @@ public enum PageSites{
 		case LOGOUT:
 			return path;
 		case PLAYERINFO:
+			return path;
+		case ADMINPANEL:
+			return path;
+		case COMMANDFRAME:
 			return path;
 		}		
 		return "";

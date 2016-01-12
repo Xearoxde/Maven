@@ -26,8 +26,6 @@ public class CookieHandler {
 				cookies.put("ip", ip.replace("IP=/", ""));
 				cookies.put("key", sessionID.replace("key=", ""));
 				cookies.put("loggedin", loggedin.replace("loggedin=", ""));
-			} else {
-				System.out.println("index = -1");
 			}
 		}
 		return cookies;

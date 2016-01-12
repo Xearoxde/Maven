@@ -86,6 +86,24 @@ public class HTTPHandler {
 				e.printStackTrace();
 			}
 		}
+		if(wantedFile.equalsIgnoreCase("/tpl/sendcommand.php")){
+			int ch = 0;
+			try{
+				while(in.ready() && (ch = in.read()) != -1){
+					sb.append(Character.toChars(ch));
+				}
+				String command = sb.toString();
+				command = command.replace("%2F", "/");
+				command = command.replace("+", " ");
+				command = command.replace("command=", "");
+				plugin.getCommon().runCommand(command);
+				
+				loginData.wantedFile = "/tpl/acpcommand.tpl";
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			
+		}
 		return loginData;
 		
 	}
@@ -101,6 +119,11 @@ public class HTTPHandler {
 		if(plugin.database().checkLoginData(username, password)){
 			loginData.loginSuccess = true;
 			loginData.username = username;
+			if(plugin.database().getAdmin(username)){
+				loginData.isAdmin = true;
+			} else {
+				loginData.isAdmin = false;
+			}
 			loginData.wantedFile = "/welcome.ecweb";
 			return loginData;
 		} else {

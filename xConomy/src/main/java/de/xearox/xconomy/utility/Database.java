@@ -340,6 +340,43 @@ public class Database {
 		return false;
 	}
 	
+	public boolean getAdmin(String username){
+		Statement statement;
+		ResultSet resultSet;
+		try{
+			connection = getSQLConnection();
+			
+			try{
+				String sql = "SELECT * FROM Accounts WHERE username = '"+username+"';";
+				
+				statement = connection.createStatement();
+				
+				resultSet = statement.executeQuery(sql);
+				
+				if(resultSet == null){
+					return false;
+				}
+				if(resultSet.getInt("admin") == 1){
+					return true;
+				} else {
+					return false;
+				}
+				
+			} catch (SQLException e){
+				return false;
+			} catch (Exception e){
+				e.printStackTrace();
+				return false;
+			}
+			//System.out.println("Nach pre Statement");
+		} catch (Exception e){
+			e.printStackTrace();
+			return false;
+		} finally {
+			closeSQLConnection();
+		}
+	}
+	
 	public Connection getSQLConnection(){
 		try{
 			if(connection != null && !connection.isClosed()){

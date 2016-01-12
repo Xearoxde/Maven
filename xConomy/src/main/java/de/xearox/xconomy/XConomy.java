@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Timer;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -172,6 +173,11 @@ public class XConomy extends JavaPlugin{
 		if(label.equalsIgnoreCase("money")){
 			if(!(sender instanceof Player)){
 				logger.info("xConomy - INFO - The console can't do this!");
+				if(args[0].equalsIgnoreCase("add")){
+					accountActions.depositMoney(Bukkit.getOfflinePlayer(args[1]), Double.parseDouble(args[2]));
+					System.out.println("blaa");
+				}
+				return true;
 			}
 			
 			Player playerSender = null;
@@ -198,10 +204,11 @@ public class XConomy extends JavaPlugin{
 			}
 			if(args.length == 3){
 				if(args[0].equalsIgnoreCase("add")){
+					System.out.println(this.getServer().getOfflinePlayers());
 					OfflinePlayer targetPlayer = null;
 					for(int i = 0; i<Bukkit.getOfflinePlayers().length;i++){
+						System.out.println("OfflinePlayer = " + Bukkit.getOfflinePlayers()[i]);
 						if(Bukkit.getOfflinePlayers()[i].getPlayer().getName().equalsIgnoreCase(args[1])){
-							System.out.println("Test");
 							targetPlayer = Bukkit.getOfflinePlayer(Bukkit.getOfflinePlayers()[i].getPlayer().getUniqueId());
 							accountActions.depositMoney(targetPlayer, Double.parseDouble(args[2]));
 							return true;

@@ -136,15 +136,16 @@ public class HTTPThread extends Thread {
         
         //If the wanted file : index.php, index.html, index.ecweb or just / then the server will return the replaced index.ecweb file
         //Also it will only return the index.ecweb if the browser has not set a cookie right now
-        if(wantedFile.equals("/")||wantedFile.equals("/index.php")||wantedFile.equals("/index.html")||wantedFile.equals("index.ecweb")){
+        if(wantedFile.equals("/")||wantedFile.equals("/index.php")||wantedFile.equals("/index.html")||wantedFile.equals("/index.ecweb")){
         	file = new File(webRoot + "/index.ecweb");
         	if(file.isFile() && file.exists()){
         		for(int i = 0; i < request.size(); i += 1){
-        			if(request.get(i).indexOf("Cookie:") == -1){ //If request return -1 then no cookie was set
+        			if(request.get(i).indexOf("Cookie:") == -1 && i == request.size()){ //If request return -1 then no cookie was set
         				try {
+        					System.out.println(i);
         					Scanner scanner = new Scanner(file);
 							String content = scanner.useDelimiter("\\Z").next();
-							content = includeHandler.pageInclude(webRoot.toString(), content);
+							content = includeHandler.pageInclude(webRoot.toString(), content, loginData);
 							content = content.replace("{hostname}", socket.getLocalAddress().toString());
 							content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 							sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
@@ -166,13 +167,13 @@ public class HTTPThread extends Thread {
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}	
+						}
+        			} else if(request.get(i).indexOf("Cookie:") > -1){
+        				cookies = cookieHandler.getCookies(cookies, request);
         			}
-        		}	
+        		}
         	}
         }
-        
-        
         
         
 
@@ -182,6 +183,35 @@ public class HTTPThread extends Thread {
         	loginData = this.httpHandler.getPostRequest(request, this, out, in, socket, cookies);
         	if(loginData == null){
         		//sendError(out, 403, "Forbidden");
+        	}
+        	System.out.println(loginData.wantedFile);
+        	if(loginData.wantedFile.equals("/tpl/acpcommand.tpl")){
+        		String content;
+        		file = new File(webRoot + loginData.wantedFile);
+				try {
+					content = new Scanner(file).useDelimiter("\\Z").next();
+					content = includeHandler.pageInclude(webRoot.getPath(), content, loginData);
+					content = content.replace("{hostname}", socket.getLocalAddress().toString());
+					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
+					sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
+					
+					out.write(content.getBytes());
+					out.flush();
+					out.close();
+					// Schließt den Socket; "keep-alive" wird also ignoriert
+					socket.close();
+					return;
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					Logger.exception(e.getMessage());
+					sendError(out, 404, "File not Found");
+					return;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Logger.exception(e.getMessage());
+					sendError(out, 403, "Forbidden");
+					return;
+				}
         	}
         	
         	if(loginData.loginSuccess || loginData.isLogout){
@@ -247,6 +277,19 @@ public class HTTPThread extends Thread {
         }
         if(wantedFile.contains(".ecweb")){
         	File getWantedFile = new File(webRoot + wantedFile);
+        	if(wantedFile.equals("/acp/adminpanel.ecweb")&&!loginData.isAdmin){
+        		cookies = cookieHandler.getCookies(cookies, request);
+            	loginData.isAdmin = plugin.database().getAdmin(cookies.get("username"));
+            	if(!loginData.isAdmin){
+	        		System.out.println(loginData.isAdmin);
+	        		System.out.println(loginData.username);
+	        		System.out.println(wantedFile);
+	        		sendError(out, 403, "Forbidden");
+					return;
+            	} else {
+            		cookies.clear();
+            	}
+        	}
         	if(getWantedFile.exists()&&getWantedFile.isFile()){
         		try {
 					@SuppressWarnings("resource")
@@ -259,11 +302,12 @@ public class HTTPThread extends Thread {
 								sendError(out, 403, "Forbidden");
 								return;
 							}
+							loginData.isAdmin = plugin.database().getAdmin(loginData.username);
 							
 						} catch (Exception e){
 							getWantedFile = new File(webRoot + "/index.ecweb");
 							content = new Scanner(getWantedFile).useDelimiter("\\Z").next();
-							content = includeHandler.pageInclude(webRoot.getPath(), content);
+							content = includeHandler.pageInclude(webRoot.getPath(), content, loginData);
 							content = content.replace("{hostname}", socket.getLocalAddress().toString());
 							content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 							sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
@@ -290,7 +334,7 @@ public class HTTPThread extends Thread {
 					} catch ( SQLException e){
 						wantedFile = "/";
 					}
-					content = includeHandler.pageInclude(webRoot.getPath(), content);
+					content = includeHandler.pageInclude(webRoot.getPath(), content, loginData);
 					content = content.replace("{hostname}", socket.getLocalAddress().toString());
 					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 					content = content.replace("{username}", loginData.username);
@@ -509,7 +553,7 @@ public class HTTPThread extends Thread {
             else if(wantedFile.contains("index.ecweb")||(wantedFile.equals("/"))){
             	String content;
 				try {
-					content = includeHandler.pageInclude(webRoot.getPath(), file);
+					content = includeHandler.pageInclude(webRoot.getPath(), file, loginData);
 					content = content.replace("{hostname}", socket.getLocalAddress().toString());
 					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 					

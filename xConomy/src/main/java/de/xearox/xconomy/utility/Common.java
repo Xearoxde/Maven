@@ -3,6 +3,7 @@ package de.xearox.xconomy.utility;
 import java.io.File;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -44,7 +45,7 @@ public class Common {
 		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(configFile);
 		return yamlFile.getString("Currency.Name.Singular");
 	}
-	
+	//
 	public String getCurrencyNamePlural(){
 		
 		File configDir = new File(XConomy.directory+"/config/");
@@ -52,6 +53,20 @@ public class Common {
 		
 		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(configFile);
 		return yamlFile.getString("Currency.Name.Plural");
+	}
+	
+	public void runCommand(final String command){
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				System.out.println(command);
+				plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.replace("/", ""));
+			}
+		},0);
+		
+		
 	}
 
 

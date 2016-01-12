@@ -4,26 +4,40 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import de.xearox.httpserver.LoginData;
 import de.xearox.httpserver.util.PageSites;
 import de.xearox.httpserver.util.PageVariables;
 
 public class IncludeHandler {
 	
-	public String pageInclude(String webRoot, String content) throws FileNotFoundException{
+	@SuppressWarnings("resource")
+	public String pageInclude(String webRoot, String content, LoginData loginData) throws FileNotFoundException{
 		String reader = null;
 		for(PageSites pages : PageSites.values()){
 			File includeFile = new File(webRoot+pages.getPath());
 			Scanner scanner = new Scanner(includeFile);
 			if(includeFile.exists()){
-				reader = scanner.useDelimiter("\\Z").next();
-				content = content.replace(pages.getPlaceholder(), reader);
+				if(pages.equals(PageSites.ADMINPANEL)||pages.equals(PageSites.COMMANDFRAME)){
+					if(loginData.isAdmin){
+						scanner = new Scanner(includeFile);
+						reader = scanner.useDelimiter("\\Z").next();
+						content = content.replace(pages.getPlaceholder(), reader);
+					} else {
+						scanner = new Scanner(includeFile);
+						reader = scanner.useDelimiter("\\Z").next();
+						content = content.replace(pages.getPlaceholder(), "");
+					}
+				} else {
+					reader = scanner.useDelimiter("\\Z").next();
+					content = content.replace(pages.getPlaceholder(), reader);
+				}
 			}
 			scanner.close();
 		}
 		return content;
 	}
 	
-	public String pageInclude(String webRoot, File file) throws FileNotFoundException{
+	public String pageInclude(String webRoot, File file, LoginData loginData) throws FileNotFoundException{
 		String reader = null;
 		File sourceFile = file;
 		String content;
@@ -34,9 +48,22 @@ public class IncludeHandler {
 		for(PageSites pages : PageSites.values()){
 			includeFile = new File(webRoot+pages.getPath());
 			if(includeFile.exists()){
-				scanner = new Scanner(includeFile);
-				reader = scanner.useDelimiter("\\Z").next();
-				content = content.replace(pages.getPlaceholder(), reader);
+				if(pages.equals(PageSites.ADMINPANEL)||pages.equals(PageSites.COMMANDFRAME)){
+					if(loginData.isAdmin){
+						scanner = new Scanner(includeFile);
+						reader = scanner.useDelimiter("\\Z").next();
+						content = content.replace(pages.getPlaceholder(), reader);
+					} else {
+						scanner = new Scanner(includeFile);
+						reader = scanner.useDelimiter("\\Z").next();
+						content = content.replace(pages.getPlaceholder(), "");
+					}
+				} else {
+					scanner = new Scanner(includeFile);
+					reader = scanner.useDelimiter("\\Z").next();
+					content = content.replace(pages.getPlaceholder(), reader);
+				}
+				
 			}
 			scanner.close();
 		}

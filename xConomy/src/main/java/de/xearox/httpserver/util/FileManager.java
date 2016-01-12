@@ -36,6 +36,7 @@ public class FileManager {
         mimeTypes.put(".js", "text/js");
         mimeTypes.put(".php", "text/html");
         mimeTypes.put(".ecweb", "text/html");
+        mimeTypes.put(".tpl", "text/html");
 
         // Anderes
         mimeTypes.put(".txt", "text/plain");
