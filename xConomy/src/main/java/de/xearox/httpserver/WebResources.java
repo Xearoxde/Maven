@@ -1,6 +1,11 @@
 package de.xearox.httpserver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 
 /**
  * Diese Klasse beinhaltet Ressourcen, die bei der Dateiauflistung und
@@ -54,10 +59,27 @@ public class WebResources {
     }
     
     public static String getWelcomeRedirect(Socket socket){
+    	String ip = "";
+        
+        URL whatismyip;
+		try {
+			whatismyip = new URL("http://checkip.amazonaws.com");
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+
+			ip = in2.readLine(); //you get the IP as a String
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     	return "<!DOCTYPE html>"+
     			"<html>" +
     			"<head>" +
-    			"<meta http-equiv=\"refresh\" content=\"0; url=http://"+socket.getLocalAddress()+":9090/welcome.ecweb"+"\" />"+
+    			"<meta http-equiv=\"refresh\" content=\"0; url=http://"+ip+":9090/welcome.ecweb"+"\" />"+
     			"</head>" +
     			"<body>" +
     			"</body>" +
@@ -65,10 +87,27 @@ public class WebResources {
     }
     
     public static String getIndexRedirect(Socket socket){
+    	String ip = "";
+        
+        URL whatismyip;
+		try {
+			whatismyip = new URL("http://checkip.amazonaws.com");
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+
+			ip = in2.readLine(); //you get the IP as a String
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     	return "<!DOCTYPE html>"+
     			"<html>" +
     			"<head>" +
-    			"<meta http-equiv=\"refresh\" content=\"0; url=http://"+socket.getLocalAddress()+":9090/index.ecweb"+"\" />"+
+    			"<meta http-equiv=\"refresh\" content=\"0; url=http://"+ip+":9090/index.ecweb"+"\" />"+
     			"</head>" +
     			"<body>" +
     			"</body>" +

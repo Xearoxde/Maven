@@ -6,9 +6,11 @@ package de.xearox.xhome;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -16,12 +18,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.permission.Permission;
 
 public class MainClass extends JavaPlugin{
 	
@@ -31,6 +35,8 @@ public class MainClass extends JavaPlugin{
 	private CreateConfigClass configClass;
 	private checkUpdates checkUpdates;
 	private static boolean econAvailable;
+	@SuppressWarnings("unused")
+	private static boolean permAvailable;
 	//Getter
 	public UtilClass getUtilClass(){
 		return utClass;
@@ -55,6 +61,7 @@ public class MainClass extends JavaPlugin{
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
+	public static Permission perm = null;
 	
 	@Override
 	public void onEnable(){
@@ -69,18 +76,13 @@ public class MainClass extends JavaPlugin{
 			functionClass.createHomeFile();
 			checkUpdates.createDownloadFolder();
 			checkUpdates.downloadPlugin();
+			registerListener();
+			
 			if(getConfigFile().getBoolean("Config.DEVMessage.Enable?")){
 				sendMessageToOP(this);
 			}
 			if(getConfigFile().getBoolean("Config.Update.automatically")){
 				updateChecker(this);
-			}
-			try{
-				Metrics metrics = new Metrics(this);
-				metrics.start();
-			} catch (IOException e){
-				System.out.println("Failed to submit the stats");
-				e.printStackTrace();
 			}
 			
 			if (!setupEconomy() ) {
@@ -88,7 +90,23 @@ public class MainClass extends JavaPlugin{
 				log.warning("econAvailable = false");
 			}else{
 				econAvailable = true;
-				log.warning("econAvailable = true");
+				log.info("econAvailable = true");
+			}
+
+			if(!setupPermission() ){
+				permAvailable = false;
+				log.warning("permAvailable = false");
+			}else{
+				permAvailable = true;
+				log.info("permAvailable = true");
+			}
+			
+			try{
+				Metrics metrics = new Metrics(this);
+				metrics.start();
+			} catch (IOException e){
+				System.out.println("Failed to submit the stats");
+				e.printStackTrace();
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -111,6 +129,25 @@ public class MainClass extends JavaPlugin{
 		econ = rsp.getProvider();
 		return econ != null;
     }
+	
+	public void registerListener(){
+		PluginManager pluginManager = this.getServer().getPluginManager();
+		//listens for the PlayerJoinListener
+		pluginManager.registerEvents(new PlayerJoinListener(this), this);
+		
+	}
+	
+	private boolean setupPermission(){
+		if(getServer().getPluginManager().getPlugin("Vault") == null){
+			return false;
+		}
+		RegisteredServiceProvider<Permission> rspPerm = getServer().getServicesManager().getRegistration(Permission.class);
+		if(rspPerm == null) {
+			return false;
+		}
+		perm = rspPerm.getProvider();
+		return rspPerm != null;
+	}
 	
 	public YamlConfiguration getConfigFile(){
 		String configFilePath = "/config/";
@@ -228,7 +265,7 @@ public class MainClass extends JavaPlugin{
 						return true;
 					}
 				}
-				//##########Reload files Command#############################################################################################################
+//##########Reload files Command#############################################################################################################
 				if(args[0].equalsIgnoreCase("rl")){
 					try{
 						yamlFile.load(homeFile);
@@ -351,6 +388,87 @@ public class MainClass extends JavaPlugin{
 			player.sendMessage("You have been teleported to spawn");
 	            }
 	           //}
+		
+		if(cmd.getName().equalsIgnoreCase("getPermGroup")){
+			if(!(sender instanceof Player)){
+				//sender.sendMessage(utClass.Format("$cThe console cant do this!"));
+				log.info(utClass.Format("$cThe console can't do this!"));
+				return true;
+			}
+			player = (Player) sender;
+			UUID playerUUID = player.getUniqueId();
+			
+			offPlayer = this.getServer().getOfflinePlayer(playerUUID);
+			
+			if(perm == null){
+				player.sendMessage("Permissions not available");
+				return true;
+			}
+			
+			
+			String playerPermGroup = perm.getPrimaryGroup(offPlayer.getPlayer().getWorld().getName(), offPlayer);
+			
+			player.sendMessage("Du bist in der Gruppe = " + playerPermGroup);
+			
+			return true;
+			
+		}
+		
+		if(cmd.getName().equalsIgnoreCase("getYamlList")){
+			if(!(sender instanceof Player)){
+				//sender.sendMessage(utClass.Format("$cThe console cant do this!"));
+				log.info(utClass.Format("$cThe console can't do this!"));
+				return true;
+			}
+			player = (Player) sender;
+			UUID playerUUID = player.getUniqueId();
+			
+			offPlayer = this.getServer().getOfflinePlayer(playerUUID);
+			
+			String filePath = "/config/";
+			String fileName = "config";
+			String fileType = "yml";
+			YamlConfiguration yamlFile;
+			File file = utClass.getFile(filePath, fileName, fileType);
+			yamlFile = utClass.yamlCon(file);
+			
+			if(args.length == 0){
+				player.sendMessage("Gebe eine Wert ein");
+				return true;
+			}
+			
+			player.sendMessage("Config: "+yamlFile.getConfigurationSection(args[0]).getKeys(Boolean.getBoolean(args[1])));
+			
+			return true;
+			
+		}
+		
+		if(cmd.getName().equalsIgnoreCase("writePermGroups")){
+			if(!(sender instanceof Player)){
+				//sender.sendMessage(utClass.Format("$cThe console cant do this!"));
+				log.info(utClass.Format("$cThe console can't do this!"));
+				return true;
+			}
+			String filePath = "/config/";
+			String fileName = "config";
+			String fileType = "yml";
+			YamlConfiguration yamlFile;
+			player = (Player) sender;
+			File file = utClass.getFile(filePath, fileName, fileType);
+			yamlFile = utClass.yamlCon(file);
+			
+			for(String group : perm.getGroups()){
+				yamlFile.set("Config.Maximumhome.Groups."+group, 0);
+				player.sendMessage(ChatColor.GOLD + group + ChatColor.GREEN +" added");
+			}
+			try {
+				yamlFile.save(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return true;
+		}
 		return false;
 	}
 	

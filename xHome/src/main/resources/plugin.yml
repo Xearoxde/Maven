@@ -12,6 +12,15 @@ commands:
   spawn:
     description: Teleport to Spawn
     usage: /<command>
+  getPermGroup:
+    description: Get permission group
+    usage: /<command>
+  getYamlList:
+    description: Get list in a yaml file
+    usage: /<command> [path] [deep(true/false)]
+  writePermGroups:
+    description: Writes all permissions groups to config file
+    usage: /<command>
     
 permissions:
   home.*:

@@ -9,8 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -74,6 +76,25 @@ public class HTTPThread extends Thread {
         // zum Lesen des Requests und zur Ausgabe der Response
     	final BufferedReader in;
         final BufferedOutputStream out;
+        String ip = "";
+        
+        URL whatismyip;
+		try {
+			whatismyip = new URL("http://checkip.amazonaws.com");
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+
+			ip = in2.readLine(); //you get the IP as a String
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
+        
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF8"));
             out = new BufferedOutputStream(socket.getOutputStream());
@@ -146,7 +167,7 @@ public class HTTPThread extends Thread {
         					Scanner scanner = new Scanner(file);
 							String content = scanner.useDelimiter("\\Z").next();
 							content = includeHandler.pageInclude(webRoot.toString(), content, loginData);
-							content = content.replace("{hostname}", socket.getLocalAddress().toString());
+							content = content.replace("{hostname}", ip);
 							content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 							sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
 							
@@ -191,7 +212,7 @@ public class HTTPThread extends Thread {
 				try {
 					content = new Scanner(file).useDelimiter("\\Z").next();
 					content = includeHandler.pageInclude(webRoot.getPath(), content, loginData);
-					content = content.replace("{hostname}", socket.getLocalAddress().toString());
+					content = content.replace("{hostname}", ip);
 					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 					sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
 					
@@ -308,7 +329,7 @@ public class HTTPThread extends Thread {
 							getWantedFile = new File(webRoot + "/index.ecweb");
 							content = new Scanner(getWantedFile).useDelimiter("\\Z").next();
 							content = includeHandler.pageInclude(webRoot.getPath(), content, loginData);
-							content = content.replace("{hostname}", socket.getLocalAddress().toString());
+							content = content.replace("{hostname}", ip);
 							content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 							sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());
 							try {
@@ -335,7 +356,7 @@ public class HTTPThread extends Thread {
 						wantedFile = "/";
 					}
 					content = includeHandler.pageInclude(webRoot.getPath(), content, loginData);
-					content = content.replace("{hostname}", socket.getLocalAddress().toString());
+					content = content.replace("{hostname}", ip);
 					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 					content = content.replace("{username}", loginData.username);
 					content = content.replace(PageVariables.PLAYER_NAME.getPlaceholder(), loginData.username);
@@ -554,7 +575,7 @@ public class HTTPThread extends Thread {
             	String content;
 				try {
 					content = includeHandler.pageInclude(webRoot.getPath(), file, loginData);
-					content = content.replace("{hostname}", socket.getLocalAddress().toString());
+					content = content.replace("{hostname}", ip);
 					content = content.replace("{port}", String.valueOf(socket.getLocalPort()));
 					
 					sendHeader(out, 200, "OK", "text/html", content.length(), System.currentTimeMillis());

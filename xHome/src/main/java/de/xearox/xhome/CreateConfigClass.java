@@ -70,6 +70,7 @@ public class CreateConfigClass {
 		yamlFile.addDefault("Config.Update.checkInterval", 30);
 		yamlFile.addDefault("Config.Update.reloadAfterApply", false);
 		yamlFile.addDefault("Config.DEVMessage.Enable?", true);
+		yamlFile.addDefault("Config.Maximumhome.Groups", "");
 		yamlFile.options().copyDefaults(true);
 		
 		try {

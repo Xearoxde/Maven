@@ -55,7 +55,6 @@ public class FunctionsClass {
 		UtilClass utClass = plugin.getUtilClass();
 		homeFile = utClass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
-		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PlayerName", p.getDisplayName());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.World", pLoc.getWorld().getName());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosX", pLoc.getBlockX());
 		yamlFile.set("Player."+ p.getUniqueId().toString()+".MainHome.PosY", pLoc.getBlockY());
@@ -77,7 +76,6 @@ public class FunctionsClass {
 		homeFile = utClass.getFile(filePath, fileName, fileType);
 		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
 		if(args1.equalsIgnoreCase("set")){
-			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PlayerName", p.getDisplayName());
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".World", pLoc.getWorld().getName());
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PosX", pLoc.getBlockX());
 			yamlFile.set("Player."+ p.getUniqueId().toString()+"."+args2+".PosY", pLoc.getBlockY());
@@ -128,7 +126,7 @@ public class FunctionsClass {
 			pLoc.setDirection(direction);
 			p.teleport(pLoc);
 			p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeTeleportToMainHome));
-		}		
+		}
 	}
 	
 	public void tpDiffHome(Location pLoc, Player p, String args1){
@@ -145,13 +143,10 @@ public class FunctionsClass {
 			direction = yamlFile.getVector("Player."+ p.getUniqueId().toString()+"."+args1+".Direction");
 			pLoc.setX(posX);pLoc.setY(posY);pLoc.setZ(posZ);pLoc.setWorld(plugin.getServer().getWorld(world));
 			pLoc.setDirection(direction);
-			p.teleport(pLoc);			
+			p.teleport(pLoc);
 			p.sendMessage(utClass.Format(SetLanguageClass.MsgHomeTeleportToDiffHome.replace("%home%", args1)));
 		}
-		
-		
 	}
-	
 	
 	
 }

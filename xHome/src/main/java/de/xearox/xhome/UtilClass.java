@@ -7,8 +7,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -297,7 +299,36 @@ public class UtilClass {
 		return ChatColor.translateAlternateColorCodes('$', format);
 	}
 	
+	public int getPlayerHomeCount(OfflinePlayer offPlayer){
+		UUID uuid = offPlayer.getUniqueId();
+		
+		String filePath = "/data/";
+		String fileName = "homelist";
+		String fileType = "yml";
+		File homeFile;
+		
+		UtilClass utClass = plugin.getUtilClass();
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
+		
+		return yamlFile.getInt("Player."+ uuid.toString()+".HomeCount");
+	}
 	
+	public int getPlayerMaxHomeCount(OfflinePlayer offPlayer){
+		UUID uuid = offPlayer.getUniqueId();
+		
+		String filePath = "/config/";
+		String fileName = "config";
+		String fileType = "yml";
+		YamlConfiguration yamlFile;
+		File file = this.getFile(filePath, fileName, fileType);
+		yamlFile = this.yamlCon(file);
+		
+		String permGroup = MainClass.perm.getPrimaryGroup(offPlayer.getPlayer().getWorld().getName(), offPlayer);
+		
+		return yamlFile.getInt("Config.Maximumhome.Groups."+permGroup);
+	}
 	
 	
 	
