@@ -315,6 +315,29 @@ public class UtilClass {
 		return yamlFile.getInt("Player."+ uuid.toString()+".HomeCount");
 	}
 	
+	public void setPlayerHomeCount(OfflinePlayer offPlayer, int homeCount){
+		UUID uuid = offPlayer.getUniqueId();
+		
+		String filePath = "/data/";
+		String fileName = "homelist";
+		String fileType = "yml";
+		File homeFile;
+		
+		UtilClass utClass = plugin.getUtilClass();
+		homeFile = utClass.getFile(filePath, fileName, fileType);
+		
+		YamlConfiguration yamlFile = utClass.yamlCon(homeFile);
+		
+		yamlFile.set("Player."+ uuid.toString()+".HomeCount", homeCount);
+		
+		try {
+			yamlFile.save(homeFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	public int getPlayerMaxHomeCount(OfflinePlayer offPlayer){
 		UUID uuid = offPlayer.getUniqueId();
 		
@@ -330,7 +353,9 @@ public class UtilClass {
 		return yamlFile.getInt("Config.Maximumhome.Groups."+permGroup);
 	}
 	
-	
+	public boolean compareHomeCount(int usedHome, int maxHome){
+		return usedHome < maxHome; 
+	}
 	
 	
 	

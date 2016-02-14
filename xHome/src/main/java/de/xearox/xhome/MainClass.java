@@ -330,7 +330,7 @@ public class MainClass extends JavaPlugin{
 				if(args[0].equalsIgnoreCase("del")){
 					if(player.hasPermission("home.del")){
 						try{
-							functionClass.delHome(player, args[0]);
+							functionClass.delHome(player, args[1]);
 							return true;
 						} catch (Exception e){
 							player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeErrorDeleteHome));

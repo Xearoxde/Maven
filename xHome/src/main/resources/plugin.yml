@@ -10,11 +10,11 @@ commands:
     description: MyHomes to set homes or multiple homes
     usage: /<command> ,[set], [set] [homename], [del] [homename], [list], [help], [update]
   spawn:
-    description: Teleport to Spawn
-    usage: /<command>
+    #description: Teleport to Spawn
+    #usage: /<command>
   getPermGroup:
-    description: Get permission group
-    usage: /<command>
+    #description: Get permission group
+    #usage: /<command>
   getYamlList:
     description: Get list in a yaml file
     usage: /<command> [path] [deep(true/false)]
@@ -35,6 +35,7 @@ permissions:
       home.teleport.diffhome: true
       home.update: true
       home.getOPMessage: true
+      home.getPermissionGroups: true
   home.rl:
     description: Access to reload yaml files
     default: op
@@ -61,4 +62,7 @@ permissions:
     default: op
   home.getOPMessage:
     description: Access to get messages from server
+    default: op
+  home.getPermissionGroups:
+    description: Get all groups from a permission plugin if available
     default: op

@@ -64,6 +64,7 @@ public class CreateConfigClass {
 		yamlFile.addDefault("Config.CustomUserAnwserMessage", true);
 		yamlFile.addDefault("Config.CustomUserLanguage", "null");
 		yamlFile.addDefault("Config.CanOpReloadYamlFiles", false);
+		yamlFile.addDefault("Config.MaxHomes?", true);
 		yamlFile.addDefault("Config.Update.automatically", true);
 		yamlFile.addDefault("Config.Update.download", true);
 		yamlFile.addDefault("Config.Update.version", "stable");
