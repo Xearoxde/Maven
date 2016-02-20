@@ -21,6 +21,7 @@
   	<module>xBooks</module>
   	<module>../SpigotTestPlugin</module>
   	<module>text</module>
+  	<module>xDaily</module>
   </modules>
   <build>
     <plugins>

@@ -1,6 +1,6 @@
-name: xHome
-main: de.xearox.xhome.MainClass
-version: 0.13.1
+name: xDaily
+main: de.xearox.xdaily.XDaily
+version: 0.0.1
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
 softdepend: [Vault]

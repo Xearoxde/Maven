@@ -39,6 +39,7 @@ public class SetLanguageClass {
 	static String MsgHomeUpdateInstallSuccessfully;
 	static String MsgHomeCostsTPHome;
 	static String MsgHomeCostsTPDiffHome;
+	static String MsgHomeNotEnoughHomeSpace;
 	
 	
 	public String getLanguageFileName(String language){
@@ -95,6 +96,7 @@ public class SetLanguageClass {
 			MsgHomeUpdateInstallSuccessfully = yamlLangFile.getString("Message.Update.InstallSuccessfully");
 			MsgHomeCostsTPHome = yamlLangFile.getString("Message.Costs.TeleportToHome");
 			MsgHomeCostsTPDiffHome = yamlLangFile.getString("Message.Costs.TeleportToDiffHome");
+			MsgHomeNotEnoughHomeSpace = yamlLangFile.getString("Message.HomeSet.NotEnoughHomeSpace");
 			
 		
 		}catch (Exception e){

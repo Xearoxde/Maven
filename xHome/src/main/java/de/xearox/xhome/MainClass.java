@@ -395,10 +395,25 @@ public class MainClass extends JavaPlugin{
 				log.info(utClass.Format("$cThe console can't do this!"));
 				return true;
 			}
+			String filePath = "/config/";
+			String fileName = "config";
+			String fileType = "yml";
+			YamlConfiguration yamlFile;
+			File file = utClass.getFile(filePath, fileName, fileType);
+			yamlFile = utClass.yamlCon(file);
+			
+			if(!yamlFile.getBoolean("Config.DebugCommands")){
+				return true;
+			}
+			
 			player = (Player) sender;
 			UUID playerUUID = player.getUniqueId();
 			
 			offPlayer = this.getServer().getOfflinePlayer(playerUUID);
+			
+			if(!player.hasPermission("home.debugCommands")){
+				return true;
+			}
 			
 			if(perm == null){
 				player.sendMessage("Permissions not available");
@@ -432,6 +447,14 @@ public class MainClass extends JavaPlugin{
 			File file = utClass.getFile(filePath, fileName, fileType);
 			yamlFile = utClass.yamlCon(file);
 			
+			if(!yamlFile.getBoolean("Config.DebugCommands")){
+				return true;
+			}
+			
+			if(!player.hasPermission("home.debugCommands")){
+				return true;
+			}
+			
 			if(args.length == 0){
 				player.sendMessage("Gebe eine Wert ein");
 				return true;
@@ -456,6 +479,10 @@ public class MainClass extends JavaPlugin{
 			player = (Player) sender;
 			File file = utClass.getFile(filePath, fileName, fileType);
 			yamlFile = utClass.yamlCon(file);
+			
+			if(!player.hasPermission("home.getPermissionGroups")){
+				return true;
+			}
 			
 			for(String group : perm.getGroups()){
 				yamlFile.set("Config.Maximumhome.Groups."+group, 0);

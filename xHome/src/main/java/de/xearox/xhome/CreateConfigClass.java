@@ -72,6 +72,7 @@ public class CreateConfigClass {
 		yamlFile.addDefault("Config.Update.reloadAfterApply", false);
 		yamlFile.addDefault("Config.DEVMessage.Enable?", true);
 		yamlFile.addDefault("Config.Maximumhome.Groups", "");
+		yamlFile.addDefault("Config.DebugCommands", false);
 		yamlFile.options().copyDefaults(true);
 		
 		try {

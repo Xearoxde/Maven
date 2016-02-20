@@ -109,7 +109,7 @@ public class FunctionsClass {
 					player.sendMessage("HomeCount = "+ homeCount);
 					player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeSetDiffHome.replace("%home%", args2)));
 				} else {
-					player.sendMessage("Sorry, but you have set all your homes");
+					player.sendMessage(utClass.Format(SetLanguageClass.MsgHomeNotEnoughHomeSpace));
 				}
 			} else {
 				yamlFile.set("Player."+ uuid.toString()+".Homes."+args2+".World", pLoc.getWorld().getName());
