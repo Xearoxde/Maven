@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<!-- Configuration of the Ant build system to generate a Jar file -->
+<project name="xDaily" default="CreateJar">
+  <target name="CreateJar" description="Create Jar file">
+        <!-- <jar jarfile="D:\Development\Java\Maven\xConomy\server\plugins\xHome.jar" basedir="./target/classes/" includes="**/*" />-->
+        <jar jarfile="C:\Users\chahn\Desktop\serverfiles\plugins\xDaily.jar" basedir="./target/classes/" includes="**/*" />
+  </target>
+</project>

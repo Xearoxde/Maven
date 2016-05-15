@@ -1,17 +1,2 @@
-xDaily
+>>> ToDo List <<<
 
-Tägliches Login wird belohnt
-
-Nur wenn ein Spieler wirklich täglich einloggt, dann wird dieser belohnt.
-Falls ein Spieler einen Tag nicht eingeloggt hat, wird der Counter zurück gesetzt.
-
-Realisiert wird es per GUI, also anklickbar.
-
-Loggt sich ein Spieler das erstemal am Tag ein, wird die GUI automatisch aufgerufen.
-
-In der Config wird folgendes einstellbar sein:
-
-- Automatische Updates
-- Welche Version
-- Wie viele Tage soll es geben
-- Welche Belohnungen soll es geben
