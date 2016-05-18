@@ -1,7 +1,9 @@
 package de.xearox.xdaily.listeners;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -60,11 +62,14 @@ public class InventoryClickEventListener implements Listener{
 		matList.add(Material.COAL);
 		
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+		String string = sdf.format(Calendar.getInstance().getTime());
 		
+		System.out.println(string);
 		
 		for(int i = 0; i < dailyDays+1; i++){
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Day "+i)){
-				plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+				/*plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 					
 					@Override
 					public void run() {
@@ -73,9 +78,10 @@ public class InventoryClickEventListener implements Listener{
 						
 						event.getCurrentItem().setType(matList.get(random.nextInt(matList.size())));
 					}
-				}, 0, 2);
+				}, 0, 2);*/
+				Random random = new Random();
 				
-				event.getCurrentItem().setType(Material.DIAMOND);
+				event.getCurrentItem().setType(matList.get(random.nextInt(matList.size())));
 			} else {
 				event.setCancelled(true);
 			}

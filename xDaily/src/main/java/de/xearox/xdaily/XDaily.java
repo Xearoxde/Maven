@@ -1,7 +1,5 @@
 package de.xearox.xdaily;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginManager;

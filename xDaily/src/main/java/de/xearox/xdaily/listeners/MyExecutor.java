@@ -89,9 +89,6 @@ public class MyExecutor implements CommandExecutor {
 			}
 			
 			player.openInventory(inv);
-			
-			player.sendMessage("Test");
-			player.sendMessage(calendar.getTime().toString());
 			return true;
 		}
 		
