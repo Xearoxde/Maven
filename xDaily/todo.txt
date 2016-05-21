@@ -1,2 +1,19 @@
 >>> ToDo List <<<
 
+- Automatisches erstellen von Player Dateien, ggf. im späteren werden alle Plugins über eine Datei angesteuert.
+- Wenn ein Spieler sich ein neuer Spieler das erste Mal auf den Server einloggt, wird eine Datei erstellt mit den entsprechenden Daten
+- 
+
+Player_Name : Xearox
+Player_First_Login : 01.01.1000
+Rewards:
+	01.01.1000:
+		Get_Reward: true
+		Reward_Type: diamond
+	02.01.1000:
+		Get_Reward: false
+		Reward_Type: none
+	03.01.1000:
+		Get_Reward: false
+		Reward_Type: none
+	

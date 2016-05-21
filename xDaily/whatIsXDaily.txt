@@ -13,5 +13,8 @@ In der Config wird folgendes einstellbar sein:
 
 - Automatische Updates
 - Welche Version
+- Ob die Items Random generiert werden sollen, nach Vorgabe, also die Chance ein bestimmtes Item zu erhalten oder ob vorher festgelegt wird, an welchen Tag
+	ein Spieler was bekommt.
 - Wie viele Tage soll es geben
 - Welche Belohnungen soll es geben
+- Vault Support

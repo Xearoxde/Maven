@@ -9,18 +9,30 @@ import de.xearox.xdaily.listeners.InventoryClickEventListener;
 import de.xearox.xdaily.listeners.MyExecutor;
 import de.xearox.xdaily.listeners.PlayerJoinListener;
 import de.xearox.xdaily.utilz.CreateConfig;
+import de.xearox.xdaily.utilz.CreateFiles;
+import de.xearox.xdaily.utilz.Utilz;
 
 public class XDaily extends JavaPlugin{
 	
 	private PlayerJoinListener onPlayerJoinListener;
 	private MyExecutor myExecutor;
 	private CreateConfig createConfig;
+	private CreateFiles createFiles;
+	private Utilz utilz;
 	
 	
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public CreateConfig getCreateConfig(){
 		return createConfig;
+	}
+	
+	public Utilz getUtilz(){
+		return utilz;
+	}
+	
+	public CreateFiles getCreateFiles(){
+		return createFiles;
 	}
 	
 	public PlayerJoinListener getPlayerJoinListener(){
@@ -45,6 +57,8 @@ public class XDaily extends JavaPlugin{
 		try{
 			this.onPlayerJoinListener = new PlayerJoinListener(this);
 			this.createConfig = new CreateConfig(this);
+			this.createFiles = new CreateFiles(this);
+			this.utilz = new Utilz(this);
 			this.createConfig.createConfig();
 			registerListener();
 			createCommands();

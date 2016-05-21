@@ -112,6 +112,8 @@ public class XConomy extends JavaPlugin{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("#### Can't close socket ####");
+		} catch (Exception e){
+			
 		}
 	}
 	

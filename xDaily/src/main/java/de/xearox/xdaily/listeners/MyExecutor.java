@@ -1,6 +1,7 @@
 package de.xearox.xdaily.listeners;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -41,6 +42,8 @@ public class MyExecutor implements CommandExecutor {
 			YamlConfiguration yamlFile;
 			yamlFile = YamlConfiguration.loadConfiguration(file);
 			
+			boolean randomItems = yamlFile.getBoolean("Config.DailyBonus.RandomItems");
+			
 			int dailyDays = yamlFile.getInt("Config.DailyBonus.Days");
 			int maxDays = 0;
 			
@@ -75,11 +78,25 @@ public class MyExecutor implements CommandExecutor {
 			
 			inv = Bukkit.createInventory(null, maxDays, ChatColor.BLUE+"Daily Login Bonus");
 			
-			lore.add(ChatColor.YELLOW + "Datum");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+			Calendar calendar = Calendar.getInstance();
 			
+			String myDate = sdf.format(Calendar.getInstance().getTime());
+			
+			lore.add(ChatColor.YELLOW + myDate);
 			for(int i = 0; i < dailyDays; i++){
 				
 				slot1Meta.setDisplayName(ChatColor.RED+"Day "+(i+1));
+				if(i == 0){
+					myDate = sdf.format(calendar.getTime());
+				} else {
+					calendar.add(Calendar.DAY_OF_MONTH, 1);
+					myDate = sdf.format(calendar.getTime());
+				}
+				
+				
+				
+				lore.set(0, ChatColor.YELLOW + myDate);
 				
 				slot1Meta.setLore(lore);
 				
