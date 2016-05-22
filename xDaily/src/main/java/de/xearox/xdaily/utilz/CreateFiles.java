@@ -53,6 +53,7 @@ public class CreateFiles {
 		//Yaml Default File
 		yamlFile.addDefault("Player_Name", playerName );
 		yamlFile.addDefault("Player_First_Login", myDate );
+		yamlFile.addDefault("Is_Player_VIP?", false);
 		
 		for(int i = 0; i < days; i++){
 			

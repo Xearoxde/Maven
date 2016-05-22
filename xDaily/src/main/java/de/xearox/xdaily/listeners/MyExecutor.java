@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -42,13 +43,17 @@ public class MyExecutor implements CommandExecutor {
 				ItemMeta slot1Meta = slot1.getItemMeta();
 				ArrayList<String> lore = new ArrayList<String>();
 				
-				File file = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
+				File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
+				YamlConfiguration yamlConfigFile;
+				yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
+				
+				File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
 				YamlConfiguration yamlFile;
 				yamlFile = YamlConfiguration.loadConfiguration(file);
 				
-				boolean randomItems = yamlFile.getBoolean("Config.DailyBonus.RandomItems");
+				boolean randomItems = yamlConfigFile.getBoolean("Config.DailyBonus.RandomItems");
 				
-				int dailyDays = yamlFile.getInt("Config.DailyBonus.Days");
+				int dailyDays = yamlConfigFile.getInt("Config.DailyBonus.Days");
 				int maxDays = 0;
 				
 				if(dailyDays <= 9){
@@ -87,8 +92,47 @@ public class MyExecutor implements CommandExecutor {
 				
 				String myDate = sdf.format(Calendar.getInstance().getTime());
 				
-				lore.add(ChatColor.YELLOW + myDate);
-				for(int i = 0; i < dailyDays; i++){
+				Set<String> list = yamlFile.getConfigurationSection("Rewards").getKeys(false);
+				
+				lore.add(""); // 0 Date or Description
+				lore.add(""); // 1 Reward Type
+				
+				int i = 0;
+				try{
+					for(String date : list){
+						String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type");
+						String rewardValue = yamlFile.getString("Rewards."+date+".Reward_Value");
+						String vipMulti = yamlConfigFile.getString("Config.DailyBonus.VIP.Multiplier");
+						slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
+						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money")){
+							slot1.setType(Material.DOUBLE_PLANT);
+						} else {
+							slot1.setType(Material.getMaterial(rewardType.toUpperCase()));
+						}
+						lore.set(0, ChatColor.YELLOW+date);
+						lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
+						if(yamlFile.getBoolean("Is_Player_VIP?")){
+							lore.add(ChatColor.GREEN+"VIP Bonus : x"+vipMulti);
+							slot1Meta.setLore(lore);
+							slot1.setItemMeta(slot1Meta);
+							inv.setItem(i, slot1);
+							lore.remove(2);
+						} else {
+							slot1Meta.setLore(lore);
+							slot1.setItemMeta(slot1Meta);
+							inv.setItem(i, slot1);
+						}
+						
+						i++;
+					}
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				
+				
+				
+				/*for(int i = 0; i < dailyDays; i++){
 					
 					slot1Meta.setDisplayName(ChatColor.RED+"Day "+(i+1));
 					if(i == 0){
@@ -105,7 +149,7 @@ public class MyExecutor implements CommandExecutor {
 					slot1.setItemMeta(slot1Meta);
 					
 					inv.setItem(i, slot1);
-				}
+				}*/
 				
 				player.openInventory(inv);
 				return true;
@@ -122,7 +166,14 @@ public class MyExecutor implements CommandExecutor {
 		if(label.equalsIgnoreCase("test")){
 			Player player = (Player) sender;
 			
-			player.sendMessage("test33");
+			File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+			YamlConfiguration yamlFile;
+			yamlFile = YamlConfiguration.loadConfiguration(file);
+			
+			player.sendMessage(yamlFile.getConfigurationSection("Rewards").getKeys(true).toString());
+			
+			//XDaily.econ.depositPlayer(player, 100);
+			//player.sendMessage("test33");
 			return true;
 		}
 		
