@@ -1,9 +1,7 @@
 package de.xearox.xdaily.listeners;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -25,7 +23,6 @@ public class MyExecutor implements CommandExecutor {
 
 	private XDaily plugin;
 	private CreateRewards createRewards;
-	private Calendar calendar = Calendar.getInstance();
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
@@ -50,8 +47,6 @@ public class MyExecutor implements CommandExecutor {
 				File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
 				YamlConfiguration yamlFile;
 				yamlFile = YamlConfiguration.loadConfiguration(file);
-				
-				boolean randomItems = yamlConfigFile.getBoolean("Config.DailyBonus.RandomItems");
 				
 				int dailyDays = yamlConfigFile.getInt("Config.DailyBonus.Days");
 				int maxDays = 0;
@@ -87,11 +82,6 @@ public class MyExecutor implements CommandExecutor {
 				
 				inv = Bukkit.createInventory(null, maxDays, ChatColor.BLUE+"Daily Login Bonus");
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-				Calendar calendar = Calendar.getInstance();
-				
-				String myDate = sdf.format(Calendar.getInstance().getTime());
-				
 				Set<String> list = yamlFile.getConfigurationSection("Rewards").getKeys(false);
 				
 				lore.add(""); // 0 Date or Description
@@ -103,13 +93,17 @@ public class MyExecutor implements CommandExecutor {
 						String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type");
 						String rewardValue = yamlFile.getString("Rewards."+date+".Reward_Value");
 						String vipMulti = yamlConfigFile.getString("Config.DailyBonus.VIP.Multiplier");
-						slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
-						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money")){
+						boolean getReward = yamlFile.getBoolean("Rewards."+date+".Get_Reward?");
+						//slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
+						slot1Meta.setDisplayName(ChatColor.RED+date);
+						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
 							slot1.setType(Material.DOUBLE_PLANT);
+						} else if(getReward){
+							slot1.setType(Material.BARRIER);
 						} else {
 							slot1.setType(Material.getMaterial(rewardType.toUpperCase()));
 						}
-						lore.set(0, ChatColor.YELLOW+date);
+						//lore.set(0, ChatColor.YELLOW+date);
 						lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
 						if(yamlFile.getBoolean("Is_Player_VIP?")){
 							lore.add(ChatColor.GREEN+"VIP Bonus : x"+vipMulti);
