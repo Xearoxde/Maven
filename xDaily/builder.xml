@@ -3,6 +3,6 @@
 <project name="xDaily" default="CreateJar">
   <target name="CreateJar" description="Create Jar file">
         <!-- <jar jarfile="D:\Development\Java\Maven\xConomy\server\plugins\xHome.jar" basedir="./target/classes/" includes="**/*" />-->
-        <jar jarfile="D:\Development\Minecraft\MC Server\plugins\xDaily.jar" basedir="./target/classes/" includes="**/*" />
+        <jar jarfile="D:\Development\Minecraft\MCServer\plugins\xDaily.jar" basedir="./target/classes/" includes="**/*" />
   </target>
 </project>

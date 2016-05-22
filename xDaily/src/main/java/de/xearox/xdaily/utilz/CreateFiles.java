@@ -22,9 +22,10 @@ public class CreateFiles {
 	
 	public void CreatePlayerFile(Player player){
 		//Setting Up Variables
-		String uuid = player.getUniqueId().toString();
-		String playerName = player.getName();
+		String uuid = utilz.getPlayerUUID(player);
+		String playerName = utilz.getPlayerName(player);
 		String myDate;
+		boolean randomItems;
 		int days;
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
@@ -43,6 +44,11 @@ public class CreateFiles {
 		yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
 		
 		days = yamlConfigFile.getInt("Config.DailyBonus.Days");
+		if(yamlConfigFile.getBoolean("Config.DailyBonus.RandomItems")){
+			randomItems = true;
+		} else {
+			randomItems = false;
+		}
 		
 		//Yaml Default File
 		yamlFile.addDefault("Player_Name", playerName );
@@ -56,8 +62,18 @@ public class CreateFiles {
 				calendar.add(Calendar.DAY_OF_MONTH, 1);
 				myDate = sdf.format(calendar.getTime());
 			}
-			yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
-			yamlFile.addDefault("Rewards."+myDate+".Reward_Type", "none");
+			if(randomItems){
+				//
+			} else {
+				try{
+					yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Name", yamlConfigFile.getInt("Config.DailyBonus.Rewards.Day."+(i+1)+".Name"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Type", yamlConfigFile.getString("Config.DailyBonus.Rewards.Day."+(i+1)+".Reward"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Value", yamlConfigFile.getInt("Config.DailyBonus.Rewards.Day."+(i+1)+".Value"));
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 		yamlFile.options().copyDefaults(true);
 		
@@ -69,5 +85,31 @@ public class CreateFiles {
 		}
 		
 	}
+	
+	public void createVIPFile(){
+		String pluginDir = plugin.getDataFolder().getAbsolutePath();
+		
+		File file = new File(pluginDir + "/data/vip-player.txt");
+		utilz.createFile(file);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

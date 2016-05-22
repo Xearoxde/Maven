@@ -1,11 +1,14 @@
 package de.xearox.xdaily.utilz;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Scanner;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -74,7 +77,7 @@ public class Utilz {
 	 * @param fileName The name of the File
 	 * @param fileType The type of the File. e.g. .yml
 	 */
-	public void createFile(Plugin plugin,String filePath, String fileName, String fileType){
+	public void createYAMLFile(Plugin plugin,String filePath, String fileName, String fileType){
 		File newFile = new File(plugin.getDataFolder()+File.separator+fileName+fileType);
 		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(newFile);
 		if(!fileExist(plugin.getDataFolder()+File.separator+filePath+fileName+fileType)){
@@ -92,7 +95,7 @@ public class Utilz {
 		
 	}
 	
-	public void createFile(File file){
+	public void createYAMLFile(File file){
 		YamlConfiguration yamlFile = YamlConfiguration.loadConfiguration(file);
 		if(!fileExist(file)){
 			try {
@@ -104,6 +107,28 @@ public class Utilz {
 			}
 		}else{
 			System.out.println("xDaily - INFO - The file "+file.getName().toString()+" does already exist. No operation needed!");
+		}
+	}
+	
+	public void createFile(String fileName){
+		if(!fileExist(plugin.getDataFolder()+File.separator+fileName)){
+			try {
+				File file = new File(fileName);
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void createFile(File file){
+		if(!fileExist(file)){
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -156,4 +181,47 @@ public class Utilz {
 		String date = sdf.format(Calendar.getInstance().getTime());
 		return date;
 	}
+	
+	public ArrayList<String> readFileByLine(File file){
+		try {
+			Scanner scanner = new Scanner(file);
+			ArrayList<String> list = new ArrayList<String>();
+			while(scanner.hasNextLine()){
+				list.add(scanner.nextLine());
+			}
+			scanner.close();
+			return list;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
