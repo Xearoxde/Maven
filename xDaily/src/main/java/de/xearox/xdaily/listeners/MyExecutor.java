@@ -17,21 +17,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
+import de.xearox.xdaily.utilz.CreateFiles;
 import net.md_5.bungee.api.ChatColor;
 
 public class MyExecutor implements CommandExecutor {
 
 	private XDaily plugin;
 	private CreateRewards createRewards;
+	private CreateFiles createFiles;
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
 		this.createRewards = plugin.getCreateRewards();
+		this.createFiles = plugin.getCreateFiles();
+		
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(label.equalsIgnoreCase("daily")){
+			if(!(sender instanceof Player)){
+				sender.sendMessage(ChatColor.RED+"The console can't do this!");
+				return true;
+			}
+			
+			if(!sender.hasPermission("daily")){
+				sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
+				return true;
+			}
 			if(args.length == 0){
 				Player player = (Player) sender;
 				Inventory inv;
@@ -149,22 +162,45 @@ public class MyExecutor implements CommandExecutor {
 				return true;
 			} else if(args.length == 1){
 				if(args[0].equalsIgnoreCase("admin")){
+					if(!(sender instanceof Player)){
+						sender.sendMessage(ChatColor.RED+"The console can't do this!");
+						return true;
+					}
+					if(!sender.hasPermission("daily.admin")){
+						sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
+						return true;
+					}
 					Player player = (Player) sender;
 					
 					createRewards.createAdminGUI(player);
 					return true;
 				}
+			}else if(args.length == 2){
+				if(args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("rewriteplayerfiles")){
+					if(!(sender instanceof Player)){
+						sender.sendMessage(ChatColor.RED+"The console can't do this!");
+						return true;
+					}
+					if(!sender.hasPermission("daily.admin.rewriteplayerfiles")){
+						sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
+						return true;
+					}
+					Player player = (Player) sender;
+					createFiles.CreatePlayerFile(player, true);
+					return true;
+					
+				}
 			}
 		}
 		
 		if(label.equalsIgnoreCase("test")){
-			Player player = (Player) sender;
+			if((sender instanceof Player)){
+				Player player = (Player) sender;
+			}
 			
-			File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
-			YamlConfiguration yamlFile;
-			yamlFile = YamlConfiguration.loadConfiguration(file);
 			
-			player.sendMessage(yamlFile.getConfigurationSection("Rewards").getKeys(true).toString());
+			System.out.println ((char)27 + "[31mThis is just a test" + (char)27 +"[0m");
+			System.out.println ((char)27 + "[31;1mThis is just a test" + (char)27 +"[0m");
 			
 			//XDaily.econ.depositPlayer(player, 100);
 			//player.sendMessage("test33");

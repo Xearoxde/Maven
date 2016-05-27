@@ -1,6 +1,6 @@
 name: xDaily
 main: de.xearox.xdaily.XDaily
-version: 0.0.1
+version: 0.4.0
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
 softdepend: [Vault]
@@ -8,26 +8,32 @@ softdepend: [Vault]
 commands:
   daily:
     description: TestCommand
-    usage: /<command>
+    usage: /<command>, [admin], [admin] [rewriteplayerfiles]
   test:
     description: TestCommand
     usage: /<command>  
     
-#permissions:
-#  home.*:
-#    description: Access to all home commands
-#    children:
-#      home.rl: true
-#      home.set.mainhome: true
-#      home.set.diffhome: true
-#      home.list: true
-#      home.del: true
-#      home.teleport.mainhome: true
-#      home.teleport.diffhome: true
-#      home.update: true
-#      home.getOPMessage: true
-#      home.getPermissionGroups: true
-#      home.debugCommands: true
-#  home.rl:
-#    description: Access to reload yaml files
-#    default: op
+permissions:
+  daily.*:
+    description: Access to all daily reset commands
+    children:
+      daily.admin: true
+      daily.admin.rewriteplayerfiles: true
+      #daily.set.diffhome: true
+      #daily.list: true
+      #daily.del: true
+      #daily.teleport.mainhome: true
+      #daily.teleport.diffhome: true
+      #daily.update: true
+      #daily.getOPMessage: true
+      #daily.getPermissionGroups: true
+      #daily.debugCommands: true
+  daily:
+    description: Daily Configuration GUI
+    default: true
+  daily.admin:
+    description: Daily Configuration GUI
+    default: op
+  daily.admin.rewriteplayerfiles:
+    description: If you change the reward days you need to rewrite the player files
+    default: op

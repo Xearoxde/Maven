@@ -104,4 +104,7 @@ if(label.equalsIgnoreCase("daily")){
 				}
 			}
 		}
+Set<String> to Array		
+String[] dateArray = list.toArray(new String[list.size()]);
+String date = dateArray[i];
 	

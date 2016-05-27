@@ -18,14 +18,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.xearox.xdaily.XDaily;
+import de.xearox.xdaily.utilz.Utilz;
 import net.md_5.bungee.api.ChatColor;
 
 public class InventoryClickEventListener implements Listener{
 	
 	private XDaily plugin;
+	private Utilz utilz;
 	
 	public InventoryClickEventListener(XDaily plugin) {
 		this.plugin = plugin;
+		this.utilz = plugin.getUtilz();
 	}
 	
 	@EventHandler
@@ -52,19 +55,16 @@ public class InventoryClickEventListener implements Listener{
 			Set<String> list = yamlFile.getConfigurationSection("Rewards").getKeys(false);
 			Material rewardMatType = null;
 			
-			/*for(int i = 0; i < dailyDays+1; i++){
-				
-			}*/
-			
 			if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()){
 				player.closeInventory();
 				return;
 			}
-			
+			String dateATM = utilz.getDate();
 			
 			for(String date : list){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
-						&& !yamlFile.getBoolean("Rewards."+date+".Get_Reward?")){
+						&& !yamlFile.getBoolean("Rewards."+date+".Get_Reward?") && date.equalsIgnoreCase(dateATM)){
+					
 					boolean isVIP = yamlFile.getBoolean("Is_Player_VIP?");
 					String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type").toUpperCase();
 					int rewardValue = yamlFile.getInt("Rewards."+date+".Reward_Value");
@@ -90,6 +90,7 @@ public class InventoryClickEventListener implements Listener{
 						} catch (Exception e){
 							e.printStackTrace();
 						}
+						System.out.println("Test");
 						ItemStack itemStack = new ItemStack(rewardMatType);
 						itemStack.setAmount(rewardValue);
 						player.getInventory().addItem(itemStack);
@@ -105,7 +106,13 @@ public class InventoryClickEventListener implements Listener{
 					}
 					
 					
-				} else {
+				} else if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
+						&& yamlFile.getBoolean("Rewards."+date+".Get_Reward?")){
+					
+					event.getWhoClicked().sendMessage(ChatColor.DARK_RED+"You have got this reward already!");
+					event.setCancelled(true);
+					break;
+				} else{
 					event.setCancelled(true);
 				}
 			}

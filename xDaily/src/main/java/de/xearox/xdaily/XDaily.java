@@ -1,7 +1,12 @@
 package de.xearox.xdaily;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +29,7 @@ public class XDaily extends JavaPlugin{
 	private CreateConfig createConfig;
 	private CreateFiles createFiles;
 	private VaultIntegration vaultIntegration;
+	private DailyReset dailyReset;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
@@ -51,6 +57,10 @@ public class XDaily extends JavaPlugin{
 		return createRewards;
 	}
 	
+	public DailyReset getDailyReset(){
+		return dailyReset;
+	}
+	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
 		getCommand("daily").setExecutor(myExecutor);
@@ -71,13 +81,15 @@ public class XDaily extends JavaPlugin{
 			this.vaultIntegration = new VaultIntegration(this);
 			this.utilz = new Utilz(this);
 			this.createRewards = new CreateRewards(this);
+			this.createFiles = new CreateFiles(this);
+			this.dailyReset = new DailyReset(this);
 			this.onPlayerJoinListener = new PlayerJoinListener(this);
 			this.createConfig = new CreateConfig(this);
-			this.createFiles = new CreateFiles(this);
 			this.createConfig.createConfig();
 			registerListener();
 			createCommands();
 			this.createFiles.createVIPFile();
+			checkVIPFile();
 			
 			//Vault Stuff
 			if(!vaultIntegration.setupEconomy()){
@@ -95,6 +107,42 @@ public class XDaily extends JavaPlugin{
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private void checkVIPFile(){
+		File configFile = new File(this.getDataFolder()+File.separator+"/config/config.yml");
+		YamlConfiguration yamlConfigFile;
+		yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
+		
+		if(yamlConfigFile.getBoolean("Config.DailyBonus.VIP.VIPFile.AutoUpdate?"))
+		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				File file = new File(getDataFolder()+File.separator+"/data/vip-player.txt");
+				ArrayList<String> list = utilz.readFileByLine(file);
+				for(String uuid : list){
+					try {
+						File playerFile = new File(getDataFolder()+File.separator+"/data/"+uuid+".yml");
+						YamlConfiguration yamlPlayerFile;
+						yamlPlayerFile = YamlConfiguration.loadConfiguration(playerFile);
+						
+						yamlPlayerFile.set("Is_Player_VIP?", true);
+						
+						yamlPlayerFile.save(playerFile);
+						
+						getServer().getConsoleSender().sendMessage(ChatColor.DARK_GREEN+"VIP Players updated");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		}, 0, yamlConfigFile.getInt("Config.DailyBonus.VIP.VIPFile.AutoUpdateInterval?")*20*60);
 	}
 	
 	@Override

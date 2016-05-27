@@ -20,8 +20,9 @@ public class CreateFiles {
 		this.utilz = plugin.getUtilz();
 	}
 	
-	public void CreatePlayerFile(Player player){
+	public void CreatePlayerFile(Player player, boolean rewriteFile){
 		//Setting Up Variables
+		
 		String uuid = utilz.getPlayerUUID(player);
 		String playerName = utilz.getPlayerName(player);
 		String myDate;
@@ -37,6 +38,8 @@ public class CreateFiles {
 		File file = new File(plugin.getDataFolder()+File.separator+"/data/" + uuid + ".yml");
 		YamlConfiguration yamlFile;
 		yamlFile = YamlConfiguration.loadConfiguration(file);
+		
+		if(utilz.fileExist(file) && !rewriteFile) return;
 		
 		//Loading config File
 		File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
