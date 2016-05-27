@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
 import de.xearox.xdaily.utilz.CreateFiles;
+import de.xearox.xdaily.utilz.Utilz;
 import net.md_5.bungee.api.ChatColor;
 
 public class MyExecutor implements CommandExecutor {
@@ -29,27 +30,28 @@ public class MyExecutor implements CommandExecutor {
 	private XDaily plugin;
 	private CreateRewards createRewards;
 	private CreateFiles createFiles;
+	private Utilz utilz;
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
 		this.createRewards = plugin.getCreateRewards();
 		this.createFiles = plugin.getCreateFiles();
+		this.utilz = plugin.getUtilz();
 		
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(label.equalsIgnoreCase("daily")){
-			if(!(sender instanceof Player)){
-				sender.sendMessage(ChatColor.RED+"The console can't do this!");
-				return true;
-			}
-			
 			if(!sender.hasPermission("daily")){
 				sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
 				return true;
 			}
 			if(args.length == 0){
+				if(!(sender instanceof Player)){
+					sender.sendMessage(ChatColor.RED+"The console can't do this!");
+					return true;
+				}
 				Player player = (Player) sender;
 				Inventory inv;
 				
@@ -196,17 +198,29 @@ public class MyExecutor implements CommandExecutor {
 				}
 			}else if(args.length == 3){
 				if(args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("addVIP")){
-					if(!(sender instanceof Player)){
+					/*if(!(sender instanceof Player)){
 						sender.sendMessage(ChatColor.RED+"The console can't do this!");
 						return true;
-					}
+					}*/
 					
 					try {
 						Writer writer = new BufferedWriter(new FileWriter(plugin.getDataFolder()+File.separator+"/data/vip-player.txt", true));
 						
-						String addingPlayer = plugin.getServer().getPlayer(args[2]).getUniqueId().toString();
+						String addingPlayer = utilz.getUUIDFromMojang(args[2]);
 						
-						writer.append(addingPlayer);
+						
+						ArrayList<String> fileContent = utilz.readFileByLine(new File(plugin.getDataFolder()+File.separator+"/data/vip-player.txt"));
+						
+						if(fileContent.contains(addingPlayer)){
+							sender.sendMessage(ChatColor.DARK_PURPLE+"The player "+ChatColor.YELLOW+args[2]
+									+ChatColor.DARK_PURPLE+" is already in the VIP file!");
+							writer.close();
+							return true;
+						}
+						
+						
+						writer.write(addingPlayer);
+						writer.write(System.lineSeparator());
 						writer.close();
 						sender.sendMessage(ChatColor.DARK_AQUA+"The player "+ChatColor.YELLOW+args[2]+ChatColor.DARK_AQUA+" with the UUID "
 								+ ChatColor.YELLOW+addingPlayer+ChatColor.DARK_AQUA+" has been added to the VIP File");
@@ -225,7 +239,12 @@ public class MyExecutor implements CommandExecutor {
 				Player player = (Player) sender;
 			}
 			
-			
+			try {
+				sender.sendMessage(utilz.getUUIDFromMojang(args[0]));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println ((char)27 + "[31mThis is just a test" + (char)27 +"[0m");
 			System.out.println ((char)27 + "[31;1mThis is just a test" + (char)27 +"[0m");
 			

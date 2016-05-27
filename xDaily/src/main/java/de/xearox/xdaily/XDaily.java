@@ -128,6 +128,10 @@ public class XDaily extends JavaPlugin{
 						YamlConfiguration yamlPlayerFile;
 						yamlPlayerFile = YamlConfiguration.loadConfiguration(playerFile);
 						
+						if(yamlPlayerFile.getBoolean("Is_Player_VIP?")){
+							continue;
+						}
+						
 						yamlPlayerFile.set("Is_Player_VIP?", true);
 						
 						yamlPlayerFile.save(playerFile);

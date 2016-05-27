@@ -1,10 +1,14 @@
 package de.xearox.xdaily.utilz;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -198,6 +202,32 @@ public class Utilz {
 		}
 	}
 	
+	    public String getUUIDFromMojang(String playerName) throws IOException {
+	    
+	    
+        URL url = new URL("https://api.mojang.com/users/profiles/minecraft/"+playerName);
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        StringBuilder sb = new StringBuilder();
+
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) sb.append(inputLine);
+        
+        in.close();
+        
+        String content = sb.toString();
+        
+        content = content.substring(content.indexOf("\"id\":\"")+6, content.indexOf("\",\"name\""));
+        
+        //1dc3a9dcb24e445db4a6e3ad5cccd997
+        //1dc3a9dc-b24e-445d-b4a6-e3ad5cccd997
+        
+        content = new StringBuilder(content).insert(content.length()-24, "-").toString();
+        content = new StringBuilder(content).insert(content.length()-20, "-").toString();
+        content = new StringBuilder(content).insert(content.length()-16, "-").toString();
+        content = new StringBuilder(content).insert(content.length()-12, "-").toString();
+        
+        return content;
+	    }
 	
 	
 	
