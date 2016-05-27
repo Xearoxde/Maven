@@ -1,6 +1,6 @@
 name: xDaily
 main: de.xearox.xdaily.XDaily
-version: 0.4.0
+version: 0.3.2
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
 softdepend: [Vault]
@@ -8,7 +8,7 @@ softdepend: [Vault]
 commands:
   daily:
     description: TestCommand
-    usage: /<command>, [admin], [admin] [rewriteplayerfiles]
+    usage: /<command>, [admin], [admin] [rewriteplayerfiles], [admin] [addVIP] (PlayerName)
   test:
     description: TestCommand
     usage: /<command>  
@@ -19,6 +19,7 @@ permissions:
     children:
       daily.admin: true
       daily.admin.rewriteplayerfiles: true
+      daily.admin.addVIP: true
       #daily.set.diffhome: true
       #daily.list: true
       #daily.del: true
@@ -36,4 +37,7 @@ permissions:
     default: op
   daily.admin.rewriteplayerfiles:
     description: If you change the reward days you need to rewrite the player files
+    default: op
+  daily.admin.addVIP:
+    description: Add the player's UUID to the VIP file
     default: op

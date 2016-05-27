@@ -1,6 +1,10 @@
 package de.xearox.xdaily.listeners;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -188,6 +192,29 @@ public class MyExecutor implements CommandExecutor {
 					Player player = (Player) sender;
 					createFiles.CreatePlayerFile(player, true);
 					return true;
+					
+				}
+			}else if(args.length == 3){
+				if(args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("addVIP")){
+					if(!(sender instanceof Player)){
+						sender.sendMessage(ChatColor.RED+"The console can't do this!");
+						return true;
+					}
+					
+					try {
+						Writer writer = new BufferedWriter(new FileWriter(plugin.getDataFolder()+File.separator+"/data/vip-player.txt", true));
+						
+						String addingPlayer = plugin.getServer().getPlayer(args[2]).getUniqueId().toString();
+						
+						writer.append(addingPlayer);
+						writer.close();
+						sender.sendMessage(ChatColor.DARK_AQUA+"The player "+ChatColor.YELLOW+args[2]+ChatColor.DARK_AQUA+" with the UUID "
+								+ ChatColor.YELLOW+addingPlayer+ChatColor.DARK_AQUA+" has been added to the VIP File");
+						return true;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 				}
 			}
