@@ -26,13 +26,13 @@ public class XDaily extends JavaPlugin{
 	
 	private Utilz utilz;
 	private MyExecutor myExecutor;
+	private SetLanguageClass langClass;
 	private CreateRewards createRewards;
 	private PlayerJoinListener onPlayerJoinListener;
 	private CreateConfig createConfig;
 	private CreateFiles createFiles;
 	private VaultIntegration vaultIntegration;
 	private DailyReset dailyReset;
-	private SetLanguageClass langClass;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
@@ -42,6 +42,10 @@ public class XDaily extends JavaPlugin{
 	
 	public Utilz getUtilz(){
 		return utilz;
+	}
+	
+	public SetLanguageClass getLanguageClass(){
+		return langClass;
 	}
 	
 	public CreateConfig getCreateConfig(){
@@ -62,10 +66,6 @@ public class XDaily extends JavaPlugin{
 	
 	public DailyReset getDailyReset(){
 		return dailyReset;
-	}
-	
-	public SetLanguageClass getLanguageClass(){
-		return langClass;
 	}
 	
 	
@@ -147,7 +147,6 @@ public class XDaily extends JavaPlugin{
 						File playerFile = new File(getDataFolder()+File.separator+"/data/"+uuid+".yml");
 						YamlConfiguration yamlPlayerFile;
 						yamlPlayerFile = YamlConfiguration.loadConfiguration(playerFile);
-						
 						if(yamlPlayerFile.getBoolean("Is_Player_VIP?")){
 							continue;
 						}
@@ -156,7 +155,7 @@ public class XDaily extends JavaPlugin{
 						
 						yamlPlayerFile.save(playerFile);
 						langClass.setLanguage(null, true);
-						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.ConsoleVIPPlayersUpdated));
+						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.getConsoleVIPPlayersUpdated()));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -164,7 +163,6 @@ public class XDaily extends JavaPlugin{
 						e.printStackTrace();
 					}
 				}
-				
 			}
 		}, 0, yamlConfigFile.getInt("Config.DailyBonus.VIP.VIPFile.AutoUpdateInterval?")*20*60);
 	}
