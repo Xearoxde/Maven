@@ -31,7 +31,7 @@ public class SetLanguageClass {
 	
 	//Console Messages
 	
-	static String ConsoleVIPPlayersUpdated;
+	private static String ConsoleVIPPlayersUpdated;
 	static String ConsoleCantDoThat;
 	
 	//Admin Messages
@@ -105,7 +105,7 @@ public class SetLanguageClass {
 			PlayerGetThisReward = yamlFile.getString("Player.GetThisReward");
 			
 			//Console Messages
-			ConsoleVIPPlayersUpdated = yamlFile.getString("Console.VIPPlayerUpdated");
+			setConsoleVIPPlayersUpdated(yamlFile.getString("Console.VIPPlayerUpdated"));
 			ConsoleCantDoThat = yamlFile.getString("Console.CantDoThat");
 			
 			//Admin Messages
@@ -132,6 +132,14 @@ public class SetLanguageClass {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public static String getConsoleVIPPlayersUpdated() {
+		return ConsoleVIPPlayersUpdated;
+	}
+
+	public static void setConsoleVIPPlayersUpdated(String consoleVIPPlayersUpdated) {
+		ConsoleVIPPlayersUpdated = consoleVIPPlayersUpdated;
 	}
 	
 	
