@@ -155,7 +155,7 @@ public class XDaily extends JavaPlugin{
 						
 						yamlPlayerFile.save(playerFile);
 						langClass.setLanguage(null, true);
-						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.ErrMojangAPINotAvailable));
+						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.ErrMojangAPINotAvailable)); 
 						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.getConsoleVIPPlayersUpdated()));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
