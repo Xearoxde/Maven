@@ -208,6 +208,13 @@ public class MyExecutor implements CommandExecutor {
 						
 						String addingPlayer = utilz.getUUIDFromMojang(args[2]);
 						
+						if(addingPlayer.equalsIgnoreCase("")){
+							sender.sendMessage(ChatColor.RED+"The player "+ChatColor.YELLOW+args[2]
+									+ChatColor.RED+" can't be found or the Mojang API not temporarly not available!");
+							writer.close();
+							return true;
+						}
+						
 						
 						ArrayList<String> fileContent = utilz.readFileByLine(new File(plugin.getDataFolder()+File.separator+"/data/vip-player.txt"));
 						
@@ -240,7 +247,13 @@ public class MyExecutor implements CommandExecutor {
 			}
 			
 			try {
-				sender.sendMessage(utilz.getUUIDFromMojang(args[0]));
+				String addingPlayer = utilz.getUUIDFromMojang(args[0]);
+				if(addingPlayer.equalsIgnoreCase("")){
+					sender.sendMessage(ChatColor.RED+"The player "+ChatColor.YELLOW+args[0]
+							+ChatColor.RED+" can't be found or the Mojang API not temporarly not available!");
+					return true;
+				}
+				sender.sendMessage("Test : "+addingPlayer);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

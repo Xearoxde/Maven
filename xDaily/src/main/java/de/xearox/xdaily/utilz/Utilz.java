@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -202,34 +203,60 @@ public class Utilz {
 		}
 	}
 	
-	    public String getUUIDFromMojang(String playerName) throws IOException {
+    public String getUUIDFromMojang(String playerName) throws IOException {
+    	URL url = new URL("https://api.mojang.com/users/profiles/minecraft/"+playerName);
+	    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+	    StringBuilder sb = new StringBuilder();
+	
+	    String inputLine;
+	    while ((inputLine = in.readLine()) != null) sb.append(inputLine);
 	    
+	    in.close();
 	    
-        URL url = new URL("https://api.mojang.com/users/profiles/minecraft/"+playerName);
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        StringBuilder sb = new StringBuilder();
-
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) sb.append(inputLine);
-        
-        in.close();
-        
-        String content = sb.toString();
-        
-        content = content.substring(content.indexOf("\"id\":\"")+6, content.indexOf("\",\"name\""));
-        
-        //1dc3a9dcb24e445db4a6e3ad5cccd997
-        //1dc3a9dc-b24e-445d-b4a6-e3ad5cccd997
-        
-        content = new StringBuilder(content).insert(content.length()-24, "-").toString();
-        content = new StringBuilder(content).insert(content.length()-20, "-").toString();
-        content = new StringBuilder(content).insert(content.length()-16, "-").toString();
-        content = new StringBuilder(content).insert(content.length()-12, "-").toString();
-        
-        return content;
+	    if(sb.toString().equalsIgnoreCase("")){
+	    	return "";
 	    }
+	    
+	    String content = sb.toString();
+	    
+	    content = content.substring(content.indexOf("\"id\":\"")+6, content.indexOf("\",\"name\""));
+	    
+	    content = new StringBuilder(content).insert(content.length()-24, "-").toString();
+	    content = new StringBuilder(content).insert(content.length()-20, "-").toString();
+	    content = new StringBuilder(content).insert(content.length()-16, "-").toString();
+	    content = new StringBuilder(content).insert(content.length()-12, "-").toString();
+	    
+	    return content;
+    }
 	
+	public void copyFileFromJarToOutside(String inputPath, String destPath){
+		URL inputUrl = getClass().getResource(inputPath);
+		File dest = new File(destPath);
+		try {
+			FileUtils.copyURLToFile(inputUrl, dest);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
+	public void createLanguageFiles(){
+		File file = new File(plugin.getDataFolder()+File.separator+"/locate/");
+		System.out.println(file.getPath());
+		if(!file.exists()){
+			file.mkdir();
+		}
+		file = new File(plugin.getDataFolder()+File.separator+"/locate/deutsch.yml");
+		if(!file.exists()){
+			copyFileFromJarToOutside("/locate/deutsch.yml", plugin.getDataFolder()+File.separator+"/locate/deutsch.yml");
+		}
+		System.out.println(file.getPath());
+		file = new File(plugin.getDataFolder()+File.separator+"/locate/english.yml");
+		if(!file.exists()){
+			copyFileFromJarToOutside("/locate/english.yml", plugin.getDataFolder()+File.separator+"/locate/english.yml");
+		}
+		System.out.println(file.getPath());
+	}
 	
 	
 	

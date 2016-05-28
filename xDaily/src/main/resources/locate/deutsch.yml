@@ -1,0 +1,28 @@
+##########################################################################################
+#####Hier kannst du alle Nachrichten, welche zum Spieler geschickt werden, ändern.  ######
+#####Du kannst mir eine PM schicken mit deiner Übersetzung, falls du andere Sprachen######
+#####im Plugin hinzugefügt haben möchtest.                                          ######
+#####Sende mir einfach, mit Hilfe dieser Schablone, deine Sprachdatei im Forum zu.  ######
+#####Dank dir =)                                                                    ######
+##########################################################################################
+Txt:
+    DailyLoginInventar: Tägliche Bonus Belohnung
+    DateFormat: DD MMM YYYY
+Player:
+    DontHavePermission: Du hast nicht das Recht um dies zu tun!
+    GetAlreadyReward: Du hast heute bereits deine Belohnung erhalten!
+    DontLoginYesterday: Du hast dich gestern nicht eingeloggt. Deine Belohnungen wurden zurückgesetzt!
+    GetThisReward: Du hast %value% mal %reward% erhalten!
+Console:
+    CantDoThat: Die Konsole kann diesen Befehl nicht ausführen!
+    VIPPlayerUpdated: Die VIP Spieler wurden aktuallisiert!
+Admin:
+    PlayerAlreadyInVIPFile: Der Spieler %player% ist bereits in der VIP Datei gespeichert!
+    PlayerAddedToVIPFile: Der Spieler %player% wurde zur VIP Datei hinzugefügt!
+Info:
+    VaultNotAvailable: Vault wurde nicht gefunden. XDaily läuft ohne Vault!
+#Warning:
+Error:
+    MojangAPINotAvailable: Die Mojang API ist derzeit nicht verfügbar!
+    CantCreateFile: Die Datei %file% konnte nicht erstellt werden!
+    CantFindFile: Die Datei %file% konnte nicht gefunden werden!

@@ -1,0 +1,29 @@
+##########################################################################################
+#####Here you can change all messages which the player can get from the plugin      ######
+#####You can send me a PM with your translated file, if you want more languages     ######
+#####in this plugin.                                                                ######
+#####                                                                               ######
+#####Thank You =)                                                                   ######
+##########################################################################################
+Txt:
+    DailyLoginInventar: Daily Login Bonus
+    DateFormat: MMM DD YYYY
+Player:
+    DontHavePermission: You don't have the permission to do that!
+    GetAlreadyReward: You have got this reward already
+    DontLoginYesterday: You dont't have login yesterday. Your rewards were resetted
+    GetThisReward: You have got %value% x %reward%!
+Console:
+    CantDoThat: The console cant do that!
+    VIPPlayerUpdated: The VIP players were updated!
+Admin:
+    PlayerAlreadyInVIPFile: The player %player% is already in the VIP file! 
+    PlayerAddedToVIPFile: The player %player% was added to the VIP file!
+Info:
+    VaultNotAvailable: Vault can't be found. xDaily is running without Vault!
+
+#Warning:
+Error:
+    MojangAPINotAvailable: The Mojang API is currently not available!
+    CantCreateFile: Can't create the file %file%!
+    CantFindFile: Can't find the file %file%!

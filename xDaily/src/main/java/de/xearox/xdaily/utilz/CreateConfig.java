@@ -23,6 +23,8 @@ public class CreateConfig {
 		yamlFile = YamlConfiguration.loadConfiguration(file);
 		
 		yamlFile.options().header("Config File");
+		yamlFile.addDefault("Config.Daily.UseMultiLanguage", true);
+		yamlFile.addDefault("Config.Daily.ServerLanguage", "english");
 		yamlFile.addDefault("Config.AutoUpdate.Enable", false);
 		yamlFile.addDefault("Config.AutoUpdate.Version", "Stable");
 		yamlFile.addDefault("Config.DailyBonus.Days", 7);
