@@ -97,8 +97,8 @@ public class GuiActions {
 		if(event.getCurrentItem().getType() == Material.AIR && event.getInventory().getName() == ChatColor.stripColor(inventoryName+"New Calendar")){
 			return;
 		}
-		plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+XDaily.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).toString());
-		plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+XDaily.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).toString());
+		plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+"UUID = 804ca5ca-1828-30a7-bd62-831f2ba49731 "+XDaily.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).toString());
+		plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+"UUID = c62a6949-b7e2-3efb-8067-a7e846c40236 "+XDaily.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).toString());
 	}
 	
 	public Inventory createIndex(){
