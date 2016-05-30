@@ -3,12 +3,15 @@ package de.xearox.xdaily;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -41,6 +44,8 @@ public class XDaily extends JavaPlugin{
 	
 	public static Economy econ = null;
 	public static Permission perm = null;
+	
+	public static Map<UUID, ArrayList<Inventory>> lastInventoryMap = new HashMap<>();
 
 
 	
