@@ -41,7 +41,7 @@ public class CreateRewards {
 		
 		inv = Bukkit.createInventory(null, 54, ChatColor.BLUE+"xDaily Admin GUI - Index");
 		
-		lore1.add(ChatColor.YELLOW + "Shows the player list");
+		lore1.add(ChatColor.YELLOW + "Create new rewards");
 		lore2.add(ChatColor.YELLOW + "Shows the reward list");
 		lore3.add(ChatColor.YELLOW + "Reload the Server");
 		
