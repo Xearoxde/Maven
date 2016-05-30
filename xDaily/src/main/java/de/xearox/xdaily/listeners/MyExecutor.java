@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
+import de.xearox.xdaily.adminGUI.GuiActions;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
@@ -33,6 +34,7 @@ public class MyExecutor implements CommandExecutor {
 	private CreateFiles createFiles;
 	private Utilz utilz;
 	private SetLanguageClass langClass;
+	private GuiActions guiActions;
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
@@ -40,6 +42,7 @@ public class MyExecutor implements CommandExecutor {
 		this.createFiles = plugin.getCreateFiles();
 		this.utilz = plugin.getUtilz();
 		this.langClass = plugin.getLanguageClass();
+		this.guiActions = plugin.getGuiActions();
 		
 	}
 	
@@ -183,7 +186,8 @@ public class MyExecutor implements CommandExecutor {
 					}
 					Player player = (Player) sender;
 					
-					createRewards.createAdminGUI(player);
+					//createRewards.createAdminGUI(player);
+					guiActions.runActions(player);
 					return true;
 				}
 			}else if(args.length == 2){

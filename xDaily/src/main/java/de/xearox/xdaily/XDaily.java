@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import de.xearox.xdaily.admgui.CreateRewards;
+import de.xearox.xdaily.adminGUI.GuiActions;
 import de.xearox.xdaily.listeners.InventoryClickEventListener;
 import de.xearox.xdaily.listeners.MyExecutor;
 import de.xearox.xdaily.listeners.PlayerJoinListener;
@@ -35,6 +36,7 @@ public class XDaily extends JavaPlugin{
 	private CreateFiles createFiles;
 	private VaultIntegration vaultIntegration;
 	private DailyReset dailyReset;
+	private GuiActions guiActions;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
@@ -70,6 +72,10 @@ public class XDaily extends JavaPlugin{
 		return dailyReset;
 	}
 	
+	public GuiActions getGuiActions(){
+		return guiActions;
+	}
+	
 	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
@@ -91,6 +97,7 @@ public class XDaily extends JavaPlugin{
 			this.vaultIntegration = new VaultIntegration(this);
 			this.utilz = new Utilz(this);
 			this.langClass = new SetLanguageClass(this);
+			this.guiActions = new GuiActions(this);
 			this.createRewards = new CreateRewards(this);
 			this.createFiles = new CreateFiles(this);
 			this.dailyReset = new DailyReset(this);
