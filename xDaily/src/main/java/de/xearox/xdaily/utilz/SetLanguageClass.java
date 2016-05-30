@@ -68,7 +68,9 @@ public class SetLanguageClass {
 			
 			case "nl":		return "nederlands";
 			
-			case "cn":		return "chinese";
+			case "cn":		return "chinese-simplified";
+			
+			case "tw":		return "chinese-traditional";
 			
 			default:		return "english";
 		}
@@ -89,8 +91,9 @@ public class SetLanguageClass {
 				msgLanguage = yamlConfigFile.getString("Config.Daily.ServerLanguage");
 			} else if(yamlConfigFile.getBoolean("Config.Daily.UseMultiLanguage")){
 				playerLanguage = utilz.getPlayerLanguage(player);
+				
 				if((playerLanguage.substring(0,  playerLanguage.indexOf("_"))).equalsIgnoreCase("zh")){
-					playerLanguage.substring(playerLanguage.indexOf("_"), playerLanguage.length());
+					playerLanguage = playerLanguage.substring(playerLanguage.indexOf("_")+1, playerLanguage.length()).toLowerCase();
 				} else {
 					playerLanguage = playerLanguage.substring(0,  playerLanguage.indexOf("_"));
 				}

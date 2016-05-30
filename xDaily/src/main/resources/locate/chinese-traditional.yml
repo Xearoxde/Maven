@@ -1,0 +1,29 @@
+﻿##########################################################################################
+#####Here you can change all messages which the player can get from the plugin      ######
+#####You can send me a PM with your translated file, if you want more languages     ######
+#####in this plugin.                                                                ######
+#####                                                                               ######
+#####Thank You =)                                                                   ######
+##########################################################################################
+Txt:
+    DailyLoginInventar: 每日上線獎勵
+    DateFormat: yyyy MM dd
+Player:
+    DontHavePermission: 你沒有許可權作這個操作!
+    GetAlreadyReward: 你已經領取過獎勵了
+    DontLoginYesterday: 你昨天沒有上線,你的獎勵已被重置.
+    GetThisReward: 你獲得了 %value% x %reward%!
+Console:
+    CantDoThat: 該操作不能在控制台執行!
+    VIPPlayerUpdated: VIP玩家數據已更新!
+Admin:
+    PlayerAlreadyInVIPFile: 玩家 %player% 已經存在於VIP記錄檔案了!
+    PlayerAddedToVIPFile: 玩家 %player% 已被存入VIP記錄檔案中!
+Info:
+    VaultNotAvailable: 沒有檢測到 Vault 挿件. xDaily 正在以無 Vault 模式運行!
+
+#Warning:
+Error:
+    MojangAPINotAvailable: Mojang 介面現在不可用!
+    CantCreateFile: 不能創建檔案 %file%!
+    CantFindFile: 找不到檔案 %file%!

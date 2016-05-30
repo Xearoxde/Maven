@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
@@ -63,9 +64,13 @@ public class InventoryClickEventListener implements Listener{
 				player.closeInventory();
 				return;
 			}
-			String dateATM = utilz.getDate();
+			System.out.println(Locale.forLanguageTag(utilz.getPlayerLanguage(player)));
+			String dateATM = utilz.getDate(SetLanguageClass.TxtDateFormat, Locale.forLanguageTag(utilz.getPlayerLanguage(player)));
 			int rewardValue = 0;
 			String rewardType = "";
+			
+			System.out.println(dateATM);
+			System.out.println(list.toString());
 			
 			for(String date : list){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)

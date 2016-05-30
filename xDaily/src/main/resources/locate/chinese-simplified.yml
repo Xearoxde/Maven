@@ -1,3 +1,13 @@
+##########################################################################################
+#####Here you can change all messages which the player can get from the plugin      ######
+#####You can send me a PM with your translated file, if you want more languages     ######
+#####in this plugin.                                                                ######
+#####                                                                               ######
+#####Thank You =)                                                                   ######
+##########################################################################################
+Txt:
+    DailyLoginInventar: 每日上线奖励
+    DateFormat: yyyy-MM-dd
 Player:
     DontHavePermission: 你没有权限作这个操作!
     GetAlreadyReward: 你已经领取过奖励了

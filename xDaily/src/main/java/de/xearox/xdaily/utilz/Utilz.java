@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
@@ -181,8 +182,13 @@ public class Utilz {
 		return ChatColor.translateAlternateColorCodes('$', format);
 	}
 	
-	public String getDate(){
-		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+	public String getDate(String dateFormat,Locale...locales){
+		SimpleDateFormat sdf;
+		if(locales.length == 0){
+			sdf = new SimpleDateFormat(dateFormat);
+		} else {
+			sdf = new SimpleDateFormat(dateFormat,locales[0]);
+		}
 		String date = sdf.format(Calendar.getInstance().getTime());
 		return date;
 	}
@@ -252,6 +258,14 @@ public class Utilz {
 		file = new File(plugin.getDataFolder()+File.separator+"/locate/english.yml");
 		if(!file.exists()){
 			copyFileFromJarToOutside("/locate/english.yml", plugin.getDataFolder()+File.separator+"/locate/english.yml");
+		}
+		file = new File(plugin.getDataFolder()+File.separator+"/locate/chinese-simplified.yml");
+		if(!file.exists()){
+			copyFileFromJarToOutside("/locate/chinese-simplified.yml", plugin.getDataFolder()+File.separator+"/locate/chinese-simplified.yml");
+		}
+		file = new File(plugin.getDataFolder()+File.separator+"/locate/chinese-traditional.yml");
+		if(!file.exists()){
+			copyFileFromJarToOutside("/locate/chinese-traditional.yml", plugin.getDataFolder()+File.separator+"/locate/chinese-traditional.yml");
 		}
 	}
 	

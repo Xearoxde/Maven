@@ -253,6 +253,11 @@ public class MyExecutor implements CommandExecutor {
 			if((sender instanceof Player)){
 				Player player = (Player) sender;
 				player.sendMessage(utilz.getPlayerLanguage(player));
+				
+				String playerLanguage = utilz.getPlayerLanguage(player);
+				playerLanguage = playerLanguage.substring(playerLanguage.indexOf("_")+1, playerLanguage.length()).toLowerCase();
+				
+				player.sendMessage(playerLanguage);
 			}
 			/*if((sender instanceof Player)){
 				Player player = (Player) sender;
