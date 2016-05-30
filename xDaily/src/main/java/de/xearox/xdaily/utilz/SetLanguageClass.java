@@ -2,6 +2,7 @@ package de.xearox.xdaily.utilz;
 
 import java.io.File;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
