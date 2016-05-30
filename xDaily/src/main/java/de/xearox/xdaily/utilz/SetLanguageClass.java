@@ -18,29 +18,29 @@ public class SetLanguageClass {
 	}
 	
 	//GUI Text
-	static String TxtDailyLoginInventar;
-	static String TxtDateFormat;
+	public static String TxtDailyLoginInventar;
+	public static String TxtDateFormat;
 	
 	
 	//Player Messages
-	static String PlayerDontHavePermission;
-	static String PlayerGetAlreadyReward;
-	static String PlayerDontLoginYesterday;
-	static String PlayerGetThisReward;
+	public static String PlayerDontHavePermission;
+	public static String PlayerGetAlreadyReward;
+	public static String PlayerDontLoginYesterday;
+	public static String PlayerGetThisReward;
 	
 	
 	//Console Messages
 	
-	private static String ConsoleVIPPlayersUpdated;
-	static String ConsoleCantDoThat;
+	public static String ConsoleVIPPlayersUpdated;
+	public static String ConsoleCantDoThat;
 	
 	//Admin Messages
-	static String AdmPlayerAlreadyInVIPFile;
-	static String AdmPlayerAddedToVIPFile;
+	public static String AdmPlayerAlreadyInVIPFile;
+	public static String AdmPlayerAddedToVIPFile;
 	
 	
 	//Info Messages
-	static String InfoVaultNotAvailable;
+	public static String InfoVaultNotAvailable;
 	
 	
 	//Warning Messages
@@ -48,9 +48,9 @@ public class SetLanguageClass {
 	
 	
 	//Error Messages
-	static String ErrMojangAPINotAvailable;
-	static String ErrCantCreateFile;
-	static String ErrCantFindFile;
+	public static String ErrMojangAPINotAvailable;
+	public static String ErrCantCreateFile;
+	public static String ErrCantFindFile;
 	
 	public String getLanguageFileName(String language){
 		switch (language){			
@@ -67,6 +67,8 @@ public class SetLanguageClass {
 			case "fr":		return "francais";
 			
 			case "nl":		return "nederlands";
+			
+			case "cn":		return "chinese";
 			
 			default:		return "english";
 		}
@@ -87,7 +89,11 @@ public class SetLanguageClass {
 				msgLanguage = yamlConfigFile.getString("Config.Daily.ServerLanguage");
 			} else if(yamlConfigFile.getBoolean("Config.Daily.UseMultiLanguage")){
 				playerLanguage = utilz.getPlayerLanguage(player);
-				playerLanguage = playerLanguage.substring(0,  playerLanguage.indexOf("_"));
+				if((playerLanguage.substring(0,  playerLanguage.indexOf("_"))).equalsIgnoreCase("zh")){
+					playerLanguage.substring(playerLanguage.indexOf("_"), playerLanguage.length());
+				} else {
+					playerLanguage = playerLanguage.substring(0,  playerLanguage.indexOf("_"));
+				}
 				msgLanguage = getLanguageFileName(playerLanguage).toLowerCase();
 			}
 			
@@ -95,7 +101,7 @@ public class SetLanguageClass {
 			
 			//GUI Text
 			TxtDailyLoginInventar = yamlFile.getString("Txt.DailyLoginInventar");
-			TxtDateFormat = yamlFile.getString("Txt.Date");
+			TxtDateFormat = yamlFile.getString("Txt.DateFormat");
 			
 			
 			//Player Messages
@@ -105,7 +111,7 @@ public class SetLanguageClass {
 			PlayerGetThisReward = yamlFile.getString("Player.GetThisReward");
 			
 			//Console Messages
-			setConsoleVIPPlayersUpdated(yamlFile.getString("Console.VIPPlayerUpdated"));
+			ConsoleVIPPlayersUpdated = yamlFile.getString("Console.VIPPlayerUpdated");
 			ConsoleCantDoThat = yamlFile.getString("Console.CantDoThat");
 			
 			//Admin Messages
@@ -132,14 +138,6 @@ public class SetLanguageClass {
 			e.printStackTrace();
 		}
 		
-	}
-
-	public static String getConsoleVIPPlayersUpdated() {
-		return ConsoleVIPPlayersUpdated;
-	}
-
-	public static void setConsoleVIPPlayersUpdated(String consoleVIPPlayersUpdated) {
-		ConsoleVIPPlayersUpdated = consoleVIPPlayersUpdated;
 	}
 	
 	

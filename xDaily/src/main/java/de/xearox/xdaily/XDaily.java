@@ -3,10 +3,12 @@ package de.xearox.xdaily;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -95,21 +97,21 @@ public class XDaily extends JavaPlugin{
 			this.onPlayerJoinListener = new PlayerJoinListener(this);
 			this.createConfig = new CreateConfig(this);
 			this.createConfig.createConfig();
+			this.createFiles.createVIPFile();
 			utilz.createLanguageFiles();
 			registerListener();
 			createCommands();
-			this.createFiles.createVIPFile();
 			checkVIPFile();
 			
 			//Vault Stuff
 			if(!vaultIntegration.setupEconomy()){
-				log.warning("xDaily - WARNING - Economy plugin not available");
+				log.info("xDaily - INFO - Economy plugin not available");
 			} else {
 				log.info("xDaily - INFO - Economy plugin found!");
 			}
 			
 			if(!vaultIntegration.setupPermission()){
-				log.warning("xDaily - WARNING - Permission plugin not available");
+				log.info("xDaily - INFO - Permission plugin not available");
 			} else {
 				log.info("xDaily - INFO - Permission plugin found!");
 			}
@@ -120,7 +122,7 @@ public class XDaily extends JavaPlugin{
 			} catch (IOException e){
 				System.out.println("Failed to submit the stats");
 				//e.printStackTrace();
-			} 
+			}
 		} catch (NoClassDefFoundError e){
 			//e.printStackTrace();
 		} catch (Exception e){
@@ -140,11 +142,21 @@ public class XDaily extends JavaPlugin{
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				File file = new File(getDataFolder()+File.separator+"/data/vip-player.txt");
+				File dir = new File(getDataFolder()+File.separator+"/data/");
+				dir.mkdirs();
+
+				File file = new File(dir+"/vip-player.txt");
+				if(!file.exists()){
+					createFiles.createVIPFile();
+				}
+
 				ArrayList<String> list = utilz.readFileByLine(file);
 				for(String uuid : list){
 					try {
 						File playerFile = new File(getDataFolder()+File.separator+"/data/"+uuid+".yml");
+						if(!playerFile.exists()){
+							return;
+						}
 						YamlConfiguration yamlPlayerFile;
 						yamlPlayerFile = YamlConfiguration.loadConfiguration(playerFile);
 						if(yamlPlayerFile.getBoolean("Is_Player_VIP?")){
@@ -154,9 +166,8 @@ public class XDaily extends JavaPlugin{
 						yamlPlayerFile.set("Is_Player_VIP?", true);
 						
 						yamlPlayerFile.save(playerFile);
-						langClass.setLanguage(null, true);
-						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.ErrMojangAPINotAvailable)); 
-						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.getConsoleVIPPlayersUpdated()));
+						langClass.setLanguage(null, true); 
+						getServer().getConsoleSender().sendMessage(utilz.Format(SetLanguageClass.ConsoleVIPPlayersUpdated));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -166,6 +177,29 @@ public class XDaily extends JavaPlugin{
 				}
 			}
 		}, 0, yamlConfigFile.getInt("Config.DailyBonus.VIP.VIPFile.AutoUpdateInterval?")*20*60);
+	}
+	
+	public void createVIPFileRunTaskLater(UUID uuid){
+		class TestSchedulerTast implements Runnable{
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				File configFile = new File(getDataFolder()+File.separator+"/config/config.yml");
+				YamlConfiguration yamlConfigFile;
+				yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
+				
+				OfflinePlayer offPlayer = getServer().getOfflinePlayer(uuid);
+				Player player = offPlayer.getPlayer();
+				
+				player.sendMessage(utilz.getPlayerLanguage(player));
+				createFiles.CreatePlayerFile(player, false);
+				
+				if(yamlConfigFile.getBoolean("Config.DailyBonus.ResetIfPlayerDontLoginEveryDay?")) dailyReset.checkIfPlayerJoinedEveryDay(player);
+			}
+			
+		}
+		this.getServer().getScheduler().runTaskLaterAsynchronously(this, new TestSchedulerTast(), 20*5);
 	}
 	
 	@Override

@@ -14,10 +14,13 @@ public class CreateFiles {
 
 	private XDaily plugin;
 	private Utilz utilz;
+	private SetLanguageClass langClass;
 	
 	public CreateFiles (XDaily plugin){
 		this.plugin = plugin;
 		this.utilz = plugin.getUtilz();
+		this.langClass = plugin.getLanguageClass();
+		
 	}
 	
 	public void CreatePlayerFile(Player player, boolean rewriteFile){
@@ -28,8 +31,9 @@ public class CreateFiles {
 		String myDate;
 		boolean randomItems;
 		int days;
+		langClass.setLanguage(player, false);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat(SetLanguageClass.TxtDateFormat);
 		String date = sdf.format(Calendar.getInstance().getTime());
 		myDate = sdf.format(Calendar.getInstance().getTime());
 		Calendar calendar = Calendar.getInstance();
@@ -91,7 +95,12 @@ public class CreateFiles {
 	}
 	
 	public void createVIPFile(){
-		String pluginDir = plugin.getDataFolder().getAbsolutePath();
+		String pluginDir = plugin.getDataFolder()+File.separator;
+		
+		File dir = new File(pluginDir+"/data/");
+		if(!dir.exists()){
+			dir.mkdirs();
+		}
 		
 		File file = new File(pluginDir + "/data/vip-player.txt");
 		utilz.createFile(file);

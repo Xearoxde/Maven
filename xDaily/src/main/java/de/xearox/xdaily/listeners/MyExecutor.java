@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
 import de.xearox.xdaily.utilz.CreateFiles;
+import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 import net.md_5.bungee.api.ChatColor;
 
@@ -31,12 +32,14 @@ public class MyExecutor implements CommandExecutor {
 	private CreateRewards createRewards;
 	private CreateFiles createFiles;
 	private Utilz utilz;
+	private SetLanguageClass langClass;
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
 		this.createRewards = plugin.getCreateRewards();
 		this.createFiles = plugin.getCreateFiles();
 		this.utilz = plugin.getUtilz();
+		this.langClass = plugin.getLanguageClass();
 		
 	}
 	
@@ -44,15 +47,17 @@ public class MyExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(label.equalsIgnoreCase("daily")){
 			if(!sender.hasPermission("daily")){
-				sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
+				langClass.setLanguage((Player)sender, false);
+				sender.sendMessage(utilz.Format(SetLanguageClass.PlayerDontHavePermission));
 				return true;
 			}
 			if(args.length == 0){
 				if(!(sender instanceof Player)){
-					sender.sendMessage(ChatColor.RED+"The console can't do this!");
+					sender.sendMessage(utilz.Format(SetLanguageClass.ConsoleCantDoThat));
 					return true;
 				}
 				Player player = (Player) sender;
+				langClass.setLanguage(player, false);
 				Inventory inv;
 				
 				ItemStack slot1 = new ItemStack(Material.BEDROCK);
@@ -99,7 +104,7 @@ public class MyExecutor implements CommandExecutor {
 					dailyDays = 54;
 				}
 				
-				inv = Bukkit.createInventory(null, maxDays, ChatColor.BLUE+"Daily Login Bonus");
+				inv = Bukkit.createInventory(null, maxDays, utilz.Format(SetLanguageClass.TxtDailyLoginInventar));
 				
 				Set<String> list = yamlFile.getConfigurationSection("Rewards").getKeys(false);
 				
@@ -169,11 +174,11 @@ public class MyExecutor implements CommandExecutor {
 			} else if(args.length == 1){
 				if(args[0].equalsIgnoreCase("admin")){
 					if(!(sender instanceof Player)){
-						sender.sendMessage(ChatColor.RED+"The console can't do this!");
+						sender.sendMessage(utilz.Format(SetLanguageClass.ConsoleCantDoThat));
 						return true;
 					}
 					if(!sender.hasPermission("daily.admin")){
-						sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
+						sender.sendMessage(utilz.Format(SetLanguageClass.PlayerDontHavePermission));
 						return true;
 					}
 					Player player = (Player) sender;
@@ -184,11 +189,11 @@ public class MyExecutor implements CommandExecutor {
 			}else if(args.length == 2){
 				if(args[0].equalsIgnoreCase("admin") && args[1].equalsIgnoreCase("rewriteplayerfiles")){
 					if(!(sender instanceof Player)){
-						sender.sendMessage(ChatColor.RED+"The console can't do this!");
+						sender.sendMessage(utilz.Format(SetLanguageClass.ConsoleCantDoThat));
 						return true;
 					}
 					if(!sender.hasPermission("daily.admin.rewriteplayerfiles")){
-						sender.sendMessage(ChatColor.DARK_RED+"You don't have the permission to do that!");
+						sender.sendMessage(utilz.Format(SetLanguageClass.PlayerDontHavePermission));
 						return true;
 					}
 					Player player = (Player) sender;
@@ -209,8 +214,7 @@ public class MyExecutor implements CommandExecutor {
 						String addingPlayer = utilz.getUUIDFromMojang(args[2]);
 						
 						if(addingPlayer.equalsIgnoreCase("")){
-							sender.sendMessage(ChatColor.RED+"The player "+ChatColor.YELLOW+args[2]
-									+ChatColor.RED+" can't be found or the Mojang API not temporarly not available!");
+							sender.sendMessage(utilz.Format(SetLanguageClass.ErrMojangAPINotAvailable));
 							writer.close();
 							return true;
 						}
@@ -219,8 +223,10 @@ public class MyExecutor implements CommandExecutor {
 						ArrayList<String> fileContent = utilz.readFileByLine(new File(plugin.getDataFolder()+File.separator+"/data/vip-player.txt"));
 						
 						if(fileContent.contains(addingPlayer)){
-							sender.sendMessage(ChatColor.DARK_PURPLE+"The player "+ChatColor.YELLOW+args[2]
-									+ChatColor.DARK_PURPLE+" is already in the VIP file!");
+							String message = utilz.Format(SetLanguageClass.AdmPlayerAlreadyInVIPFile);
+							message.replace("%player%", args[2]);
+
+							sender.sendMessage(message);
 							writer.close();
 							return true;
 						}
@@ -229,8 +235,10 @@ public class MyExecutor implements CommandExecutor {
 						writer.write(addingPlayer);
 						writer.write(System.lineSeparator());
 						writer.close();
-						sender.sendMessage(ChatColor.DARK_AQUA+"The player "+ChatColor.YELLOW+args[2]+ChatColor.DARK_AQUA+" with the UUID "
-								+ ChatColor.YELLOW+addingPlayer+ChatColor.DARK_AQUA+" has been added to the VIP File");
+						String message = utilz.Format(SetLanguageClass.AdmPlayerAddedToVIPFile);
+						message.replace("%player%", args[2]);
+						message.replace("%uuid%", addingPlayer);
+						sender.sendMessage(message);
 						return true;
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -244,22 +252,29 @@ public class MyExecutor implements CommandExecutor {
 		if(label.equalsIgnoreCase("test")){
 			if((sender instanceof Player)){
 				Player player = (Player) sender;
+				player.sendMessage(utilz.getPlayerLanguage(player));
+			}
+			/*if((sender instanceof Player)){
+				Player player = (Player) sender;
+				langClass.setLanguage(player, false);
+			} else {
+				langClass.setLanguage(null, true);
 			}
 			
 			try {
 				String addingPlayer = utilz.getUUIDFromMojang(args[0]);
 				if(addingPlayer.equalsIgnoreCase("")){
-					sender.sendMessage(ChatColor.RED+"The player "+ChatColor.YELLOW+args[0]
-							+ChatColor.RED+" can't be found or the Mojang API not temporarly not available!");
+					sender.sendMessage(utilz.Format(SetLanguageClass.ErrMojangAPINotAvailable));
 					return true;
 				}
 				sender.sendMessage("Test : "+addingPlayer);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			System.out.println ((char)27 + "[31mThis is just a test" + (char)27 +"[0m");
-			System.out.println ((char)27 + "[31;1mThis is just a test" + (char)27 +"[0m");
+			}*/
+			
+			//System.out.println ((char)27 + "[31mThis is just a test" + (char)27 +"[0m");
+			//System.out.println ((char)27 + "[31;1mThis is just a test" + (char)27 +"[0m");
 			
 			//XDaily.econ.depositPlayer(player, 100);
 			//player.sendMessage("test33");

@@ -7,12 +7,12 @@
 ##########################################################################################
 Txt:
     DailyLoginInventar: Tägliche Bonus Belohnung
-    DateFormat: DD MMM YYYY
+    DateFormat: dd MMM yyyy
 Player:
     DontHavePermission: Du hast nicht das Recht um dies zu tun!
     GetAlreadyReward: Du hast heute bereits deine Belohnung erhalten!
     DontLoginYesterday: Du hast dich gestern nicht eingeloggt. Deine Belohnungen wurden zurückgesetzt!
-    GetThisReward: Du hast %value% mal %reward% erhalten!
+    GetThisReward: $9Du hast %value% mal %reward% erhalten!
 Console:
     CantDoThat: Die Konsole kann diesen Befehl nicht ausführen!
     VIPPlayerUpdated: Die VIP Spieler wurden aktuallisiert!

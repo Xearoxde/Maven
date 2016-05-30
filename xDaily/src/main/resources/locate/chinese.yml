@@ -1,0 +1,19 @@
+Player:
+    DontHavePermission: 你没有权限作这个操作!
+    GetAlreadyReward: 你已经领取过奖励了
+    DontLoginYesterday: 你昨天没有上线, 你的奖励已被重置.
+    GetThisReward: 你获得了 %value% x %reward%!
+Console:
+    CantDoThat: 该操作不能在控制台执行!
+    VIPPlayerUpdated: VIP玩家数据已更新!
+Admin:
+    PlayerAlreadyInVIPFile: 玩家 %player% 已经存在于VIP记录文件了!
+    PlayerAddedToVIPFile: 玩家 %player% 已被存入VIP记录文件中!
+Info:
+    VaultNotAvailable: 没有检测到 Vault 插件. xDaily 正在以无 Vault 模式运行!
+
+#Warning:
+Error:
+    MojangAPINotAvailable: Mojang 接口现在不可用!
+    CantCreateFile: 不能创建文件 %file%!
+    CantFindFile: 找不到文件 %file%!

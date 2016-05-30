@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.xearox.xdaily.XDaily;
+import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 import net.md_5.bungee.api.ChatColor;
 
@@ -25,15 +26,18 @@ public class InventoryClickEventListener implements Listener{
 	
 	private XDaily plugin;
 	private Utilz utilz;
+	private SetLanguageClass langClass;
 	
 	public InventoryClickEventListener(XDaily plugin) {
 		this.plugin = plugin;
 		this.utilz = plugin.getUtilz();
+		this.langClass = plugin.getLanguageClass();
 	}
 	
 	@EventHandler
 	public void onInventoryClick(final InventoryClickEvent event){
-		if(ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Daily Login Bonus")){
+		langClass.setLanguage((Player) event.getWhoClicked(), false);
+		if(ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase(utilz.Format(SetLanguageClass.TxtDailyLoginInventar))){
 
 			Player player = (Player) event.getWhoClicked();
 			event.setCancelled(true);
@@ -60,14 +64,16 @@ public class InventoryClickEventListener implements Listener{
 				return;
 			}
 			String dateATM = utilz.getDate();
+			int rewardValue = 0;
+			String rewardType = "";
 			
 			for(String date : list){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
 						&& !yamlFile.getBoolean("Rewards."+date+".Get_Reward?") && date.equalsIgnoreCase(dateATM)){
 					
 					boolean isVIP = yamlFile.getBoolean("Is_Player_VIP?");
-					String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type").toUpperCase();
-					int rewardValue = yamlFile.getInt("Rewards."+date+".Reward_Value");
+					rewardType = yamlFile.getString("Rewards."+date+".Reward_Type").toUpperCase();
+					rewardValue = yamlFile.getInt("Rewards."+date+".Reward_Value");
 					int vipMulti = yamlConfigFile.getInt("Config.DailyBonus.VIP.Multiplier");
 					
 					if(isVIP){
@@ -90,12 +96,14 @@ public class InventoryClickEventListener implements Listener{
 						} catch (Exception e){
 							e.printStackTrace();
 						}
-						System.out.println("Test");
 						ItemStack itemStack = new ItemStack(rewardMatType);
 						itemStack.setAmount(rewardValue);
 						player.getInventory().addItem(itemStack);
 						yamlFile.set("Rewards."+date+".Get_Reward?", true);
 						event.getCurrentItem().setType(Material.BARRIER);
+						String msg = SetLanguageClass.PlayerGetThisReward.replace("%value%", Integer.toString(rewardValue));
+						msg = msg.replace("%reward%", rewardType.toLowerCase());
+						player.sendMessage(utilz.Format(msg));
 						try {
 							yamlFile.save(file);
 						} catch (IOException e) {
@@ -109,27 +117,13 @@ public class InventoryClickEventListener implements Listener{
 				} else if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
 						&& yamlFile.getBoolean("Rewards."+date+".Get_Reward?")){
 					
-					event.getWhoClicked().sendMessage(ChatColor.DARK_RED+"You have got this reward already!");
+					event.getWhoClicked().sendMessage(utilz.Format(SetLanguageClass.PlayerGetAlreadyReward));
 					event.setCancelled(true);
 					break;
 				} else{
 					event.setCancelled(true);
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			
 			final ArrayList<Material> matList = new ArrayList<Material>();
 			
@@ -147,10 +141,8 @@ public class InventoryClickEventListener implements Listener{
 			matList.add(Material.COAL);
 			
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat(SetLanguageClass.TxtDateFormat);
 			String string = sdf.format(Calendar.getInstance().getTime());
-			
-			System.out.println(string);
 			
 			for(int i = 0; i < dailyDays+1; i++){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Day "+i)){

@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import de.xearox.xdaily.DailyReset;
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.utilz.CreateFiles;
+import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 
 public class PlayerJoinListener implements Listener{
@@ -28,12 +29,7 @@ public class PlayerJoinListener implements Listener{
 	
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent event){
-		File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
-		YamlConfiguration yamlConfigFile;
-		yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
-		
-		createFiles.CreatePlayerFile(event.getPlayer(), false);
-		if(yamlConfigFile.getBoolean("Config.DailyBonus.ResetIfPlayerDontLoginEveryDay?")) dailyReset.checkIfPlayerJoinedEveryDay(event.getPlayer());
+		plugin.createVIPFileRunTaskLater(event.getPlayer().getUniqueId());
 		
 	}
 }

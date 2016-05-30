@@ -242,7 +242,6 @@ public class Utilz {
 	
 	public void createLanguageFiles(){
 		File file = new File(plugin.getDataFolder()+File.separator+"/locate/");
-		System.out.println(file.getPath());
 		if(!file.exists()){
 			file.mkdir();
 		}
@@ -250,12 +249,10 @@ public class Utilz {
 		if(!file.exists()){
 			copyFileFromJarToOutside("/locate/deutsch.yml", plugin.getDataFolder()+File.separator+"/locate/deutsch.yml");
 		}
-		System.out.println(file.getPath());
 		file = new File(plugin.getDataFolder()+File.separator+"/locate/english.yml");
 		if(!file.exists()){
 			copyFileFromJarToOutside("/locate/english.yml", plugin.getDataFolder()+File.separator+"/locate/english.yml");
 		}
-		System.out.println(file.getPath());
 	}
 	
 	

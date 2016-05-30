@@ -7,7 +7,7 @@
 ##########################################################################################
 Txt:
     DailyLoginInventar: Daily Login Bonus
-    DateFormat: MMM DD YYYY
+    DateFormat: MMM dd yyyy
 Player:
     DontHavePermission: You don't have the permission to do that!
     GetAlreadyReward: You have got this reward already
