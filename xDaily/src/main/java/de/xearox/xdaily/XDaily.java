@@ -191,8 +191,7 @@ public class XDaily extends JavaPlugin{
 				
 				OfflinePlayer offPlayer = getServer().getOfflinePlayer(uuid);
 				Player player = offPlayer.getPlayer();
-				
-				player.sendMessage(utilz.getPlayerLanguage(player));
+
 				createFiles.CreatePlayerFile(player, false);
 				
 				if(yamlConfigFile.getBoolean("Config.DailyBonus.ResetIfPlayerDontLoginEveryDay?")) dailyReset.checkIfPlayerJoinedEveryDay(player);

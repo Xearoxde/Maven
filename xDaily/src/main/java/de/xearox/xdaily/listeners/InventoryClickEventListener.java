@@ -64,13 +64,9 @@ public class InventoryClickEventListener implements Listener{
 				player.closeInventory();
 				return;
 			}
-			System.out.println(Locale.forLanguageTag(utilz.getPlayerLanguage(player)));
 			String dateATM = utilz.getDate(SetLanguageClass.TxtDateFormat, Locale.forLanguageTag(utilz.getPlayerLanguage(player)));
 			int rewardValue = 0;
 			String rewardType = "";
-			
-			System.out.println(dateATM);
-			System.out.println(list.toString());
 			
 			for(String date : list){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
@@ -178,7 +174,6 @@ public class InventoryClickEventListener implements Listener{
 						return;
 					}
 				try{
-					System.out.println(event.getCurrentItem().getItemMeta().getDisplayName());
 					if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Reload Server")){
 						plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
 					}
