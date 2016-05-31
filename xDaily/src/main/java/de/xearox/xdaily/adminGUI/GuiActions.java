@@ -40,6 +40,8 @@ public class GuiActions {
 		
 		player = (Player) event.getWhoClicked();
 		
+		//If the hashmap "XDaily.lastInventoryMap" hasn't the key from the players UUID it will create a new key from the UUID
+		//If it has a key named the UUID from the player, it will load it in to the lastInventory in this class
 		if(!XDaily.lastInventoryMap.containsKey(player.getUniqueId())){
 			XDaily.lastInventoryMap.put(player.getUniqueId(), lastInventory);
 
