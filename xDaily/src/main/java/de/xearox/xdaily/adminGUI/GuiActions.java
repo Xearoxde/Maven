@@ -40,63 +40,61 @@ public class GuiActions {
 		
 		player = (Player) event.getWhoClicked();
 		
-		System.out.println("###################################");
-		System.out.println(event.getWhoClicked().getUniqueId().toString());
-		System.out.println("###################################");
-		
-		
-		
 		if(!XDaily.lastInventoryMap.containsKey(player.getUniqueId())){
 			XDaily.lastInventoryMap.put(player.getUniqueId(), lastInventory);
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.AQUA+"Created new Key for "+player.getUniqueId().toString());
+
 		} else {
 			lastInventory = XDaily.lastInventoryMap.get(player.getUniqueId());
-			System.out.println("get key from "+player.getUniqueId().toString());
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW+"Loaded key for "+player.getUniqueId().toString());
+			
 		}
 		
 		if(event.getCurrentItem().getType() == Material.AIR && event.getInventory().getName() != ChatColor.stripColor(inventoryName+"New Calendar")){
 			return;
 		}
+		
+		//Close the inventory
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Close Inventory")){
 			player.closeInventory();
 		}
+		
+		//Creates the "Create new..." inventory
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new...")){
 			lastInventory.add(event.getInventory());
-			System.out.println(player.getUniqueId().toString());
-			System.out.println(lastInventory.size());
 			XDaily.lastInventoryMap.replace(player.getUniqueId(), lastInventory);
 			player.openInventory(createNew());
 		}
+		
+		//Go one step back
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go one page back")){
 			try{
 				player.openInventory(lastInventory.get(lastInventory.size()-1));
 				lastInventory.remove((Integer) lastInventory.size()-1);
-				XDaily.lastInventoryMap.replace(player.getUniqueId(), lastInventory);
 				
 			} catch (IndexOutOfBoundsException e){
 				e.printStackTrace();
 			}
 			
+		//Go to the index page		
 		}
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go to index page")){
 			lastInventory.add(event.getInventory());
-			System.out.println(player.getUniqueId().toString());
-			System.out.println(lastInventory.size());
 			XDaily.lastInventoryMap.replace(player.getUniqueId(), lastInventory);
 			player.openInventory(createIndex());
 		}
+		
+		//Creates the new reward calendar inventory
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new reward calendar")){
 			lastInventory.add(event.getInventory());
-			System.out.println(player.getUniqueId().toString());
-			System.out.println(lastInventory.size());
 			XDaily.lastInventoryMap.replace(player.getUniqueId(), lastInventory);
 			player.openInventory(createNewRewardCalendar());
 		}
 		
+		
 		if(event.getCurrentItem().getType() == Material.AIR && event.getInventory().getName() == ChatColor.stripColor(inventoryName+"New Calendar")){
 			return;
 		}
+		
+		//Some debug messages
 		plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+"UUID = 804ca5ca-1828-30a7-bd62-831f2ba49731 "+XDaily.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).toString());
 		plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+"UUID = c62a6949-b7e2-3efb-8067-a7e846c40236 "+XDaily.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).toString());
 	}
