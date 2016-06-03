@@ -45,14 +45,14 @@ public class XDaily extends JavaPlugin{
 	public static Economy econ = null;
 	public static Permission perm = null;
 	
-	//private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
-	/*public HashMap<UUID, ArrayList<Inventory>> getLastInventoryMap(){
-		return lastInventoryMap;
-	}*/
-	private HashMap<UUID, Inventory> lastInventoryMap;
-	public HashMap<UUID, Inventory> getLastInventoryMap(){
+	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
+	public HashMap<UUID, ArrayList<Inventory>> getLastInventoryMap(){
 		return lastInventoryMap;
 	}
+	/*private HashMap<UUID, Inventory> lastInventoryMap;
+	public HashMap<UUID, Inventory> getLastInventoryMap(){
+		return lastInventoryMap;
+	}*/
 	
 	public Utilz getUtilz(){
 		return utilz;

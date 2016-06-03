@@ -18,7 +18,7 @@ public class GuiActions {
 
 	private XDaily plugin;
 	
-	private HashMap<UUID, Inventory> lastInventoryMap;
+	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
 	
 	private String inventoryName = "xDaily Admin - ";
 	
@@ -29,9 +29,31 @@ public class GuiActions {
 	
 	public void runActions(Player player,InventoryClickEvent...events){
 		InventoryClickEvent event;
+		ArrayList<Inventory> inventory = new ArrayList<>();
 		
 		if(player.getOpenInventory().getType() == InventoryType.CRAFTING){
 			player.openInventory(createIndex());
+			inventory.add(createIndex());
+			
+			if(!this.lastInventoryMap.containsKey(player.getUniqueId())){
+				this.lastInventoryMap.put(player.getUniqueId(), inventory);
+			} else {
+				this.lastInventoryMap.replace(player.getUniqueId(), inventory);
+			}
+			try{
+				plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+"UUID = 804ca5ca-1828-30a7-bd62-831f2ba49731 "
+						+ChatColor.YELLOW+(this.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).size()));
+				
+				plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+"UUID = c62a6949-b7e2-3efb-8067-a7e846c40236 "
+						+ChatColor.AQUA+this.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).size());
+				
+				plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_PURPLE+"UUID = c7ed7753-1d64-3c8c-9780-af3c664a0be9 "
+						+ChatColor.LIGHT_PURPLE+this.lastInventoryMap.get(UUID.fromString("c7ed7753-1d64-3c8c-9780-af3c664a0be9")).size());
+				
+				plugin.getServer().getConsoleSender().sendMessage("");
+			} catch (Exception e){
+				
+			}
 			return;
 		}
 		if(events.length == 0){
@@ -41,6 +63,10 @@ public class GuiActions {
 		}
 		
 		player = (Player) event.getWhoClicked();
+		
+		if(lastInventoryMap.containsKey(player.getUniqueId())){
+			inventory = lastInventoryMap.get(player.getUniqueId());
+		}
 		
 		//If the hashmap "XDaily.lastInventoryMap" hasn't the key from the players UUID it will create a new key from the UUID
 		//If it has a key named the UUID from the player, it will load it in to the lastInventory in this class
@@ -52,40 +78,32 @@ public class GuiActions {
 		//Close the inventory
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Close Inventory")){
 			player.closeInventory();
+			
 		}
 		
 		//Creates the "Create new..." inventory
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new...")){
-			lastInventoryMap.put(player.getUniqueId(), event.getInventory());
-			plugin.getServer().getConsoleSender().sendMessage(event.getInventory().getTitle());
-			plugin.getServer().getConsoleSender().sendMessage(player.getUniqueId().toString());
+			inventory.add(event.getInventory());
 			player.openInventory(createNew());
 		}
 		
-		//Go one step back
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go one page back")){
-			plugin.getServer().getConsoleSender().sendMessage(event.getInventory().getTitle());
-			plugin.getServer().getConsoleSender().sendMessage(player.getUniqueId().toString());
-			player.openInventory(lastInventoryMap.get(player.getUniqueId()));
-			lastInventoryMap.put(player.getUniqueId(), event.getInventory());
-		}	
 		//Go to the index page		
-		
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go to index page")){
-			lastInventoryMap.put(player.getUniqueId(),event.getInventory());
-			plugin.getServer().getConsoleSender().sendMessage(event.getInventory().getTitle());
-			plugin.getServer().getConsoleSender().sendMessage(player.getUniqueId().toString());
+			inventory.add(event.getInventory());
 			player.openInventory(createIndex());
 		}
 		
 		//Creates the new reward calendar inventory
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new reward calendar")){
-			lastInventoryMap.put(player.getUniqueId(),event.getInventory());
-			plugin.getServer().getConsoleSender().sendMessage(event.getInventory().getTitle());
-			plugin.getServer().getConsoleSender().sendMessage(player.getUniqueId().toString());
+			inventory.add(event.getInventory());
 			player.openInventory(createNewRewardCalendar());
 		}
 		
+		//Go one step back
+		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go one page back")){
+			player.openInventory(inventory.get(inventory.size()-1));
+			inventory.remove(inventory.size()-1);
+		}
 		
 		if(event.getCurrentItem().getType() == Material.AIR && event.getInventory().getName() == ChatColor.stripColor(inventoryName+"New Calendar")){
 			return;
@@ -94,18 +112,24 @@ public class GuiActions {
 		//Some debug messages
 		try{
 			plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+"UUID = 804ca5ca-1828-30a7-bd62-831f2ba49731 "
-					+ChatColor.YELLOW+(this.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).getTitle()));
+					+ChatColor.YELLOW+(this.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).size()));
 			
 			plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+"UUID = c62a6949-b7e2-3efb-8067-a7e846c40236 "
-					+ChatColor.AQUA+this.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).getTitle());
+					+ChatColor.AQUA+this.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).size());
 			
 			plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_PURPLE+"UUID = c7ed7753-1d64-3c8c-9780-af3c664a0be9 "
-					+ChatColor.LIGHT_PURPLE+this.lastInventoryMap.get(UUID.fromString("c7ed7753-1d64-3c8c-9780-af3c664a0be9")).getTitle());
+					+ChatColor.LIGHT_PURPLE+this.lastInventoryMap.get(UUID.fromString("c7ed7753-1d64-3c8c-9780-af3c664a0be9")).size());
 			
 			plugin.getServer().getConsoleSender().sendMessage("");
 		} catch (Exception e){
 			
 		}
+		if(!this.lastInventoryMap.containsKey(player.getUniqueId())){
+			this.lastInventoryMap.put(player.getUniqueId(), inventory);
+		} else {
+			this.lastInventoryMap.replace(player.getUniqueId(), inventory);
+		}
+		
 	}
 	
 	public Inventory createIndex(){
