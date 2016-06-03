@@ -45,9 +45,14 @@ public class XDaily extends JavaPlugin{
 	public static Economy econ = null;
 	public static Permission perm = null;
 	
-	public static Map<UUID, ArrayList<Inventory>> lastInventoryMap = new HashMap<>();
-
-
+	//private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
+	/*public HashMap<UUID, ArrayList<Inventory>> getLastInventoryMap(){
+		return lastInventoryMap;
+	}*/
+	private HashMap<UUID, Inventory> lastInventoryMap;
+	public HashMap<UUID, Inventory> getLastInventoryMap(){
+		return lastInventoryMap;
+	}
 	
 	public Utilz getUtilz(){
 		return utilz;
@@ -99,6 +104,7 @@ public class XDaily extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		try{
+			this.lastInventoryMap = new HashMap<>();
 			this.vaultIntegration = new VaultIntegration(this);
 			this.utilz = new Utilz(this);
 			this.langClass = new SetLanguageClass(this);
