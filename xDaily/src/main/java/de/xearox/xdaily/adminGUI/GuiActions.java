@@ -13,18 +13,23 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import de.xearox.xdaily.XDaily;
+import de.xearox.xletter.TextureUrlList;
+import de.xearox.xletter.XLetter;
 
 public class GuiActions {
 
 	private XDaily plugin;
+	private XLetter xLetter;
 	
 	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
+	
 	
 	private String inventoryName = "xDaily Admin - ";
 	
 	public GuiActions(XDaily plugin) {
 		this.plugin = plugin;
 		this.lastInventoryMap = plugin.getLastInventoryMap();
+		this.xLetter = plugin.getXLetter();
 	}
 	
 	public void runActions(Player player,InventoryClickEvent...events){
@@ -149,10 +154,29 @@ public class GuiActions {
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Create New...");
 		
-		inventory.setItem(2, GuiItems.createNewCalendar());
-		inventory.setItem(51, GuiItems.pageGoBack());
-		inventory.setItem(52, GuiItems.pageGoIndex());
-		inventory.setItem(53, GuiItems.closeInventory());
+		//inventory.setItem(2, GuiItems.createNewCalendar());
+		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.Q.getURL(), "Q"));
+		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.W.getURL(), "W"));
+		inventory.setItem(2, xLetter.getItemStack(TextureUrlList.E.getURL(), "E"));
+		inventory.setItem(3, xLetter.getItemStack(TextureUrlList.R.getURL(), "R"));
+		inventory.setItem(4, xLetter.getItemStack(TextureUrlList.T.getURL(), "T"));
+		inventory.setItem(5, xLetter.getItemStack(TextureUrlList.Y.getURL(), "Y"));
+		inventory.setItem(6, xLetter.getItemStack(TextureUrlList.U.getURL(), "U"));
+		inventory.setItem(7, xLetter.getItemStack(TextureUrlList.I.getURL(), "I"));
+		inventory.setItem(8, xLetter.getItemStack(TextureUrlList.O.getURL(), "O"));
+		inventory.setItem(17, xLetter.getItemStack(TextureUrlList.P.getURL(), "P"));
+		inventory.setItem(18, xLetter.getItemStack(TextureUrlList.A.getURL(), "A"));
+		inventory.setItem(19, xLetter.getItemStack(TextureUrlList.S.getURL(), "S"));
+		inventory.setItem(20, xLetter.getItemStack(TextureUrlList.D.getURL(), "D"));
+		inventory.setItem(21, xLetter.getItemStack(TextureUrlList.F.getURL(), "F"));
+		inventory.setItem(22, xLetter.getItemStack(TextureUrlList.G.getURL(), "G"));
+		inventory.setItem(23, xLetter.getItemStack(TextureUrlList.H.getURL(), "H"));
+		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.J.getURL(), "J"));
+		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.K.getURL(), "K"));
+		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.L.getURL(), "L"));
+		//inventory.setItem(51, GuiItems.pageGoBack());
+		//inventory.setItem(52, GuiItems.pageGoIndex());
+		//inventory.setItem(53, GuiItems.closeInventory());
 		
 		return inventory;
 	}

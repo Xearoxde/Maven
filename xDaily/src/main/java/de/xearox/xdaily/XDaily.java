@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -25,6 +24,7 @@ import de.xearox.xdaily.utilz.CreateConfig;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
+import de.xearox.xletter.XLetter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -40,6 +40,7 @@ public class XDaily extends JavaPlugin{
 	private VaultIntegration vaultIntegration;
 	private DailyReset dailyReset;
 	private GuiActions guiActions;
+	private XLetter xLetter;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
@@ -56,6 +57,10 @@ public class XDaily extends JavaPlugin{
 	
 	public Utilz getUtilz(){
 		return utilz;
+	}
+	
+	public XLetter getXLetter(){
+		return xLetter;
 	}
 	
 	public SetLanguageClass getLanguageClass(){
@@ -106,6 +111,7 @@ public class XDaily extends JavaPlugin{
 		try{
 			this.lastInventoryMap = new HashMap<>();
 			this.vaultIntegration = new VaultIntegration(this);
+			this.xLetter = new XLetter();
 			this.utilz = new Utilz(this);
 			this.langClass = new SetLanguageClass(this);
 			this.guiActions = new GuiActions(this);
@@ -142,7 +148,7 @@ public class XDaily extends JavaPlugin{
 				//e.printStackTrace();
 			}
 		} catch (NoClassDefFoundError e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		} catch (Exception e){
 			e.printStackTrace();
 		}
