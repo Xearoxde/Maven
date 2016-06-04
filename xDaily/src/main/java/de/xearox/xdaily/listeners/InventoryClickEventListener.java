@@ -100,8 +100,12 @@ public class InventoryClickEventListener implements Listener{
 						ItemStack itemStack = new ItemStack(rewardMatType);
 						itemStack.setAmount(rewardValue);
 						player.getInventory().addItem(itemStack);
+						if(!yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+							event.getCurrentItem().setType(Material.BARRIER);
+						} else {
+							event.getCurrentItem().setType(Material.getMaterial(rewardType.toUpperCase()));
+						}
 						yamlFile.set("Rewards."+date+".Get_Reward?", true);
-						event.getCurrentItem().setType(Material.BARRIER);
 						String msg = SetLanguageClass.PlayerGetThisReward.replace("%value%", Integer.toString(rewardValue));
 						msg = msg.replace("%reward%", rewardType.toLowerCase());
 						player.sendMessage(utilz.Format(msg));

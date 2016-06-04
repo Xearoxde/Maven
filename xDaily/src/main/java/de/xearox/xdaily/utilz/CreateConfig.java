@@ -48,6 +48,9 @@ public class CreateConfig {
 		yamlFile.addDefault("Config.DailyBonus.RandomItem.11", "GOLD_BLOCK");
 		yamlFile.addDefault("Config.DailyBonus.RandomItem.12", "COAL");
 		
+		yamlFile.addDefault("Config.DailyBonus.Rewards.HideBonus?", false);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.ItemInstead", "BEDROCK");
+		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Name", "");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Reward", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Value", 100);

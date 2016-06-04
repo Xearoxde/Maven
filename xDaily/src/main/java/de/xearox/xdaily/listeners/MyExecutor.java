@@ -125,10 +125,15 @@ public class MyExecutor implements CommandExecutor {
 						} else if(getReward){
 							slot1.setType(Material.BARRIER);
 						} else {
-							slot1.setType(Material.getMaterial(rewardType.toUpperCase()));
+							if(yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+								slot1.setType(Material.getMaterial(yamlConfigFile.getString("Config.DailyBonus.Rewards.ItemInstead").toUpperCase()));
+								//lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
+							} else {
+								slot1.setType(Material.getMaterial(rewardType.toUpperCase()));
+								lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
+							}
 						}
 						//lore.set(0, ChatColor.YELLOW+date);
-						lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
 						if(yamlFile.getBoolean("Is_Player_VIP?")){
 							lore.add(ChatColor.GREEN+"VIP Bonus : x"+vipMulti);
 							slot1Meta.setLore(lore);
