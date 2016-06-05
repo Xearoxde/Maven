@@ -34,7 +34,8 @@ public enum TextureUrlList {
 	ArrowDown("http://textures.minecraft.net/texture/38ca7615cb837f694e496ff8a9853cd7db5fd85529dcad98c78ba26c3e4f687"),
 	ArrowRight("http://textures.minecraft.net/texture/1a4f68c8fb279e50ab786f9fa54c88ca4ecfe1eb5fd5f0c38c54c9b1c7203d7a"),
 	ArrowLeft("http://textures.minecraft.net/texture/737648ae7a564a5287792b05fac79c6b6bd47f616a559ce8b543e6947235bce"),
-	Computer("http://textures.minecraft.net/texture/70b569b6ac365d5a41f5cad072ff506af2397265249e2d55f89bac94e0c8");
+	Computer("http://textures.minecraft.net/texture/70b569b6ac365d5a41f5cad072ff506af2397265249e2d55f89bac94e0c8"),
+	Keypad("http://textures.minecraft.net/texture/2bc1284d273688a9613bffb13171e37b82f0d33be0f9c2fde17b7bec9e25f4");
 	
 	
 	private final String url;

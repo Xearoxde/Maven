@@ -144,11 +144,45 @@ public class GuiItems{
 		return itemStack;
 	}
 	
+	public static final ItemStack saveButton(String caption){
+		ItemStack itemStack = new ItemStack(Material.REDSTONE_TORCH_ON);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName(caption);
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
+	public static final ItemStack loadButton(String caption){
+		ItemStack itemStack = new ItemStack(Material.REDSTONE_TORCH_OFF);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName(caption);
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
+	public static final ItemStack reset(String caption){
+		ItemStack itemStack = new ItemStack(Material.EMPTY_MAP);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName(caption);
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
-	
-	
+	public static final ItemStack getNewItem(String materialName){
+		ItemStack itemStack = new ItemStack(Material.getMaterial(materialName));
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		
+
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
 	
 	

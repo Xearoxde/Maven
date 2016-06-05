@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.apache.commons.net.nntp.NewsgroupInfo;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -49,6 +51,16 @@ public class XDaily extends JavaPlugin{
 	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
 	public HashMap<UUID, ArrayList<Inventory>> getLastInventoryMap(){
 		return lastInventoryMap;
+	}
+	
+	private HashMap<String, ItemStack[]> inventoryContent;
+	public HashMap<String, ItemStack[]> getInventoryContent(){
+		return inventoryContent;
+	}
+	
+	private HashMap<String, ItemStack> newItemReward;
+	public HashMap<String, ItemStack> getNewItemReward(){
+		return newItemReward;
 	}
 	/*private HashMap<UUID, Inventory> lastInventoryMap;
 	public HashMap<UUID, Inventory> getLastInventoryMap(){
@@ -110,6 +122,8 @@ public class XDaily extends JavaPlugin{
 	public void onEnable(){
 		try{
 			this.lastInventoryMap = new HashMap<>();
+			this.inventoryContent = new HashMap<>();
+			this.newItemReward = new HashMap<>();
 			this.vaultIntegration = new VaultIntegration(this);
 			this.xLetter = new XLetter();
 			this.utilz = new Utilz(this);

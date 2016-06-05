@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
 import de.xearox.xdaily.adminGUI.GuiActions;
+import de.xearox.xdaily.adminGUI.GuiItems;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
@@ -254,24 +255,20 @@ public class MyExecutor implements CommandExecutor {
 		}
 		
 		if(label.equalsIgnoreCase("test")){
+			StringBuilder sb = new StringBuilder();
+			
 			if((sender instanceof Player)){
 				Player player = (Player) sender;
 				player.sendMessage(player.getUniqueId().toString());
 			}
-			
-			String exe = sender.getName();
-            if (args.length == 3)
-            {
-              exe = args[2];
-              if (Bukkit.getPlayer(exe) == null)
-              {
-                sender.sendMessage("�4The player doesn't exist!");
-                return true;
-              }
-            }
-            String Befehl = "give " + exe + " stained_glass_pane 1 3 {display:{Name:\"B\"},SkullOwner:{Id:\"d0f793ff-b041-427c-bc24-440834e986fa\",Properties:{textures:[{Value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTBjMWI1ODRmMTM5ODdiNDY2MTM5Mjg1YjJmM2YyOGRmNjc4NzEyM2QwYjMyMjgzZDg3OTRlMzM3NGUyMyJ9fX0=\"}]}}}";
-            Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), Befehl);
-            System.out.println();
+			for(int i = 0; i < 20000;i++){
+				try{
+					sb.append((Material.values()[i].name()+" "+i+"\n"));
+				} catch (Exception e){
+					
+				}
+			}
+			System.out.println(sb.toString());
             
 			/*if((sender instanceof Player)){
 				Player player = (Player) sender;

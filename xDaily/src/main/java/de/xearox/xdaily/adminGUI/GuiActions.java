@@ -1,5 +1,10 @@
 package de.xearox.xdaily.adminGUI;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -14,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import de.xearox.xdaily.XDaily;
+import de.xearox.xdaily.utilz.MatList;
 import de.xearox.xletter.TextureUrlList;
 import de.xearox.xletter.XLetter;
 
@@ -23,6 +29,7 @@ public class GuiActions {
 	private XLetter xLetter;
 	
 	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
+	private HashMap<String, ItemStack[]> inventoryContent;
 	
 	
 	private String inventoryName = "xDaily Admin - ";
@@ -32,12 +39,14 @@ public class GuiActions {
 	public GuiActions(XDaily plugin) {
 		this.plugin = plugin;
 		this.lastInventoryMap = plugin.getLastInventoryMap();
+		this.inventoryContent = plugin.getInventoryContent();
 		this.xLetter = plugin.getXLetter();
 	}
 	
 	public void runActions(Player player,InventoryClickEvent...events){
 		InventoryClickEvent event;
 		ArrayList<Inventory> inventory = new ArrayList<>();
+		ItemStack air = new ItemStack(Material.AIR);
 		
 		if(player.getOpenInventory().getType() == InventoryType.CRAFTING){
 			player.openInventory(createIndex());
@@ -62,88 +71,159 @@ public class GuiActions {
 			inventory = lastInventoryMap.get(player.getUniqueId());
 		}
 		
-		//If the hashmap "XDaily.lastInventoryMap" hasn't the key from the players UUID it will create a new key from the UUID
-		//If it has a key named the UUID from the player, it will load it in to the lastInventory in this class
-		
-		if(event.getCurrentItem().getType() == Material.AIR && event.getInventory().getName() != ChatColor.stripColor(inventoryName+"New Calendar")){
+		if(event.getCurrentItem().getType() == Material.AIR 
+				&& (!ChatColor.stripColor(event.getInventory().getTitle()).equalsIgnoreCase(inventoryName+"New Calendar")
+						&&!ChatColor.stripColor(event.getInventory().getTitle()).contains("|")
+						||ChatColor.stripColor(event.getInventory().getTitle()).contains("Page"))){
 			return;
 		}
-		
 		//Close the inventory
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Close Inventory")){
-			player.closeInventory();
+		if(event.getCurrentItem().getType() != Material.AIR){
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Close Inventory")){
+				player.closeInventory();
+				
+			}
 			
-		}
-		
-		//Creates the "Create new..." inventory
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new...")){
-			inventory.add(event.getInventory());
-			player.openInventory(createNew());
-		}
-		
-		//Go to the index page		
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go to index page")){
-			inventory.add(event.getInventory());
-			player.openInventory(createIndex());
-		}
-		
-		//Creates the new reward calendar inventory
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new reward calendar")){
-			inventory.add(event.getInventory());
-			player.openInventory(createNewRewardCalendar());
-		}
-		
-		//Creates a keyboard
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Keyboard")){
-			inventory.add(event.getInventory());
-			player.openInventory(createGuiKeyboard());
-		}
-		
-		//Change title
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock OFF")){
-			event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOn());
-			return;
-		}
-		
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock ON")){
-			event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOnly());
-			return;
-		}
-		
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock Only")){
-			event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
-			return;
-		}
-		
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).contains("|")){
-			String itemName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
-			String title = ChatColor.stripColor(event.getInventory().getName().substring(12));
-			if(itemName.equalsIgnoreCase("|BackSpace")){
-				if(title.length()>0){
-					title = title.substring(0, title.length()-1);
+			//Creates the "Create new..." inventory
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new...")){
+				inventory.add(event.getInventory());
+				player.openInventory(createNew());
+			}
+			
+			//Go to the index page		
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go to index page")){
+				inventory.add(event.getInventory());
+				player.openInventory(createIndex());
+			}
+			
+			//Creates the new reward calendar inventory
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new reward calendar")){
+				inventory.add(event.getInventory());
+				player.openInventory(createNewRewardCalendar());
+			}
+			
+			//Creates a keyboard
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Keyboard")){
+				inventory.add(event.getInventory());
+				player.openInventory(createGuiKeyboard());
+			}
+			
+			//Change title
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock OFF")){
+				event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOn());
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock ON")){
+				event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOnly());
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock Only")){
+				event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Reward")){
+				inventoryContent.put(event.getInventory().getName(), event.getInventory().getContents());
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Calendar Name")){
+				player.openInventory(NewRewardCalendar("| "+event.getInventory().getTitle().substring(12)));
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Post")){
+				File file = new File(plugin.getDataFolder()+File.separator+"/data/matlist.txt");
+				if(!file.exists()){
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-			} else {
-				if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock ON")){
-					title = title + itemName.substring(1);
-					event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
-				} else if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock Off")) {
-					title = title + itemName.substring(1).toLowerCase();
-					
-				} else if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock Only")) {
-					title = title + itemName.substring(1);
+				try {
+					Writer writer = new BufferedWriter(new FileWriter(plugin.getDataFolder()+File.separator+"/data/matlist.txt", true));
+					for(ItemStack item : event.getInventory().getContents()){
+						try{
+							writer.write(item.getType()+",");
+							writer.write(System.lineSeparator());
+						} catch (Exception e){
+							
+						}
+					}
+					writer.close();
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Next Page")){
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 1")) player.openInventory(CreateItemList(46,2));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 2")) player.openInventory(CreateItemList(91,3));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 3")) player.openInventory(CreateItemList(136,4));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 4")) player.openInventory(CreateItemList(181,5));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 5")) player.openInventory(CreateItemList(226,6));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 6")) player.openInventory(CreateItemList(271,7));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 7")) player.openInventory(CreateItemList(316,8));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 8")) player.openInventory(CreateItemList(0,1));
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Previous Page")){
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 1")) player.openInventory(CreateItemList(316,8));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 2")) player.openInventory(CreateItemList(0,1));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 3")) player.openInventory(CreateItemList(46,2));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 4")) player.openInventory(CreateItemList(92,3));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 5")) player.openInventory(CreateItemList(138,4));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 6")) player.openInventory(CreateItemList(184,5));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 7")) player.openInventory(CreateItemList(230,6));
+				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 8")) player.openInventory(CreateItemList(276,7));
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Reset Calendar")){
+				for(int i = 0; i < 45; i++){
+					event.getInventory().setItem(i, air);
 				}
 			}
-			player.openInventory(setInventoryTitleOnly(title, event.getInventory().getItem(CapsLockPosition)));
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).contains("|")){
+				String itemName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+				String title = ChatColor.stripColor(event.getInventory().getName().substring(12));
+				if(itemName.equalsIgnoreCase("|BackSpace")){
+					if(title.length()>0){
+						title = title.substring(0, title.length()-1);
+					}
+				} else {
+					if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock ON")){
+						title = title + itemName.substring(1);
+						event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
+					} else if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock Off")) {
+						title = title + itemName.substring(1).toLowerCase();
+						
+					} else if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock Only")) {
+						title = title + itemName.substring(1);
+					}
+				}
+				player.openInventory(setInventoryTitleOnly(title, event.getInventory().getItem(CapsLockPosition)));
+			}
+			
+			//Go one step back
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go one page back")){
+				player.openInventory(inventory.get(inventory.size()-1));
+				inventory.remove(inventory.size()-1);
+			}
 		}
 		
-		//Go one step back
-		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go one page back")){
-			player.openInventory(inventory.get(inventory.size()-1));
-			inventory.remove(inventory.size()-1);
-		}
-		
-		if(event.getCurrentItem().getType() == Material.AIR && event.getInventory().getName() == ChatColor.stripColor(inventoryName+"New Calendar")){
-			return;
+		if(event.getCurrentItem().getType() == Material.AIR 
+				&& (ChatColor.stripColor(event.getInventory().getTitle()).contains("|") 
+						|| ChatColor.stripColor(event.getInventory().getTitle()).contains("New Calendar"))){
+			player.openInventory(CreateItemList(1,1));
+			inventory.add(event.getInventory());
 		}
 		
 		if(!this.lastInventoryMap.containsKey(player.getUniqueId())){
@@ -211,7 +291,8 @@ public class GuiActions {
 		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.Y.getURL(), "|Y"));
 		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "|Z"));
 		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
-		inventory.setItem(CapsLockPosition, GuiItems.capsLockOff());
+		inventory.setItem(CapsLockPosition, GuiItems.capsLockOn());
+		inventory.setItem(51, GuiItems.saveButton("Save Calendar Name"));
 		inventory.setItem(52, GuiItems.pageGoBack());
 		inventory.setItem(53, GuiItems.closeInventory());
 		
@@ -222,9 +303,10 @@ public class GuiActions {
 		Inventory inventory;
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"New Calendar");
-		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.Computer.getURL(), "Keyboard"));
-		inventory.setItem(49, GuiItems.saveCalendar());
-		inventory.setItem(50, GuiItems.resetNewCalendar());
+		
+		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.Keypad.getURL(), "Keyboard"));
+		inventory.setItem(49, GuiItems.saveButton("Save Calendar"));
+		inventory.setItem(50, GuiItems.reset("Reset Calendar"));
 		inventory.setItem(51, GuiItems.pageGoBack());
 		inventory.setItem(52, GuiItems.pageGoIndex());
 		inventory.setItem(53, GuiItems.closeInventory());
@@ -232,14 +314,33 @@ public class GuiActions {
 		return inventory;
 	}
 	
-	public Inventory CreateItemListPage1(){
+	public Inventory NewRewardCalendar(String title){
 		Inventory inventory;
 		
-		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Available Item 1/x");
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+title);
 		
-		inventory.setItem(48, GuiItems.nextPage());
-		inventory.setItem(49, GuiItems.previuosPage());
+		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.Keypad.getURL(), "Keyboard"));
+		inventory.setItem(49, GuiItems.saveButton("Save Calendar"));
+		inventory.setItem(50, GuiItems.reset("Reset Calendar"));
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
 		
+		return inventory;
+	}
+	
+	public Inventory CreateItemList(int startInt, int pageNumber){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Page "+pageNumber+"/8");
+		
+		for(int i = startInt; i < startInt+45;i++){
+			inventory.setItem(i-startInt, GuiItems.getNewItem(MatList.values()[i].name()));
+			if(i == 418) break;
+		}
+		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "Previous Page"));
+		inventory.setItem(49, xLetter.getItemStack(TextureUrlList.ArrowRight.getURL(), "Next Page"));
+		inventory.setItem(50, xLetter.getItemStack(TextureUrlList.ArrowDown.getURL(), "Post"));
 		inventory.setItem(51, GuiItems.pageGoBack());
 		inventory.setItem(52, GuiItems.pageGoIndex());
 		inventory.setItem(53, GuiItems.closeInventory());
@@ -250,7 +351,7 @@ public class GuiActions {
 	public Inventory setInventoryTitleOnly(String title, ItemStack caps){
 		Inventory inventory;
 		
-		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Keyboard: "+ChatColor.YELLOW+title);
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Keyboard: "+ChatColor.RED+title);
 		
 		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.A.getURL(), "|A"));
 		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.B.getURL(), "|B"));
@@ -280,6 +381,7 @@ public class GuiActions {
 		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "|Z"));
 		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
 		inventory.setItem(CapsLockPosition, caps);
+		inventory.setItem(51, GuiItems.saveButton("Save Calendar Name"));
 		inventory.setItem(52, GuiItems.pageGoBack());
 		inventory.setItem(53, GuiItems.closeInventory());
 		
