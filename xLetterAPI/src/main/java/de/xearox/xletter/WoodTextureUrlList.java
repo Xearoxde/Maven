@@ -1,6 +1,6 @@
 package de.xearox.xletter;
 
-public enum TextureUrlList {
+public enum WoodTextureUrlList {
 	A("http://textures.minecraft.net/texture/a67d813ae7ffe5be951a4f41f2aa619a5e3894e85ea5d4986f84949c63d7672e"),
 	B("http://textures.minecraft.net/texture/50c1b584f13987b466139285b2f3f28df6787123d0b32283d8794e3374e23"),
 	C("http://textures.minecraft.net/texture/abe983ec478024ec6fd046fcdfa4842676939551b47350447c77c13af18e6f"),
@@ -29,12 +29,16 @@ public enum TextureUrlList {
 	Z("http://textures.minecraft.net/texture/90582b9b5d97974b11461d63eced85f438a3eef5dc3279f9c47e1e38ea54ae8d"),
 	Ä("http://textures.minecraft.net/texture/15cd6db9ec3c7d9113e6dd49a16f99a326b9f594ce987f919559ac7dbd3b555"),
 	Ö("http://textures.minecraft.net/texture/6edbb44c639b95308ffcdf8c4770dfe8b02d752dec4b3196f4a8f9ac2315393a"),
-	Ü("http://textures.minecraft.net/texture/7b52b94c6516cbe461fea621d316cee0b875f0fbc239d25273e824b613e73dd4");
+	Ü("http://textures.minecraft.net/texture/7b52b94c6516cbe461fea621d316cee0b875f0fbc239d25273e824b613e73dd4"),
+	ArrowUp("http://textures.minecraft.net/texture/73cf166a826d855454ed4d4ea5fe33f3deeaa44ccaa99a348d39685ba71e1a4f"),
+	ArrowDown("http://textures.minecraft.net/texture/38ca7615cb837f694e496ff8a9853cd7db5fd85529dcad98c78ba26c3e4f687"),
+	ArrowRight("http://textures.minecraft.net/texture/1a4f68c8fb279e50ab786f9fa54c88ca4ecfe1eb5fd5f0c38c54c9b1c7203d7a"),
+	ArrowLeft("http://textures.minecraft.net/texture/737648ae7a564a5287792b05fac79c6b6bd47f616a559ce8b543e6947235bce");
 	
 	
 	private final String url;
 	
-	private TextureUrlList(String url) {
+	private WoodTextureUrlList(String url) {
 	    this.url = url;
 	}
 	

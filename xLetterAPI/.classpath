@@ -32,6 +32,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Development/Java/Library/authlib.jar"/>
+	<classpathentry kind="lib" path="D:/Development/Java/Library/authlib-1.5.17.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
