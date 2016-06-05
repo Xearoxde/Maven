@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import de.xearox.xdaily.XDaily;
 import de.xearox.xletter.TextureUrlList;
@@ -25,6 +26,8 @@ public class GuiActions {
 	
 	
 	private String inventoryName = "xDaily Admin - ";
+	
+	int CapsLockPosition = 48;
 	
 	public GuiActions(XDaily plugin) {
 		this.plugin = plugin;
@@ -44,20 +47,6 @@ public class GuiActions {
 				this.lastInventoryMap.put(player.getUniqueId(), inventory);
 			} else {
 				this.lastInventoryMap.replace(player.getUniqueId(), inventory);
-			}
-			try{
-				plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+"UUID = 804ca5ca-1828-30a7-bd62-831f2ba49731 "
-						+ChatColor.YELLOW+(this.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).size()));
-				
-				plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+"UUID = c62a6949-b7e2-3efb-8067-a7e846c40236 "
-						+ChatColor.AQUA+this.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).size());
-				
-				plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_PURPLE+"UUID = c7ed7753-1d64-3c8c-9780-af3c664a0be9 "
-						+ChatColor.LIGHT_PURPLE+this.lastInventoryMap.get(UUID.fromString("c7ed7753-1d64-3c8c-9780-af3c664a0be9")).size());
-				
-				plugin.getServer().getConsoleSender().sendMessage("");
-			} catch (Exception e){
-				
 			}
 			return;
 		}
@@ -104,6 +93,49 @@ public class GuiActions {
 			player.openInventory(createNewRewardCalendar());
 		}
 		
+		//Creates a keyboard
+		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Keyboard")){
+			inventory.add(event.getInventory());
+			player.openInventory(createGuiKeyboard());
+		}
+		
+		//Change title
+		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock OFF")){
+			event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOn());
+			return;
+		}
+		
+		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock ON")){
+			event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOnly());
+			return;
+		}
+		
+		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock Only")){
+			event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
+			return;
+		}
+		
+		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).contains("|")){
+			String itemName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+			String title = ChatColor.stripColor(event.getInventory().getName().substring(12));
+			if(itemName.equalsIgnoreCase("|BackSpace")){
+				if(title.length()>0){
+					title = title.substring(0, title.length()-1);
+				}
+			} else {
+				if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock ON")){
+					title = title + itemName.substring(1);
+					event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
+				} else if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock Off")) {
+					title = title + itemName.substring(1).toLowerCase();
+					
+				} else if(event.getInventory().getItem(CapsLockPosition).getItemMeta().getDisplayName().equalsIgnoreCase("Capslock Only")) {
+					title = title + itemName.substring(1);
+				}
+			}
+			player.openInventory(setInventoryTitleOnly(title, event.getInventory().getItem(CapsLockPosition)));
+		}
+		
 		//Go one step back
 		if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Go one page back")){
 			player.openInventory(inventory.get(inventory.size()-1));
@@ -114,21 +146,6 @@ public class GuiActions {
 			return;
 		}
 		
-		//Some debug messages
-		try{
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.RED+"UUID = 804ca5ca-1828-30a7-bd62-831f2ba49731 "
-					+ChatColor.YELLOW+(this.lastInventoryMap.get(UUID.fromString("804ca5ca-1828-30a7-bd62-831f2ba49731")).size()));
-			
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.GREEN+"UUID = c62a6949-b7e2-3efb-8067-a7e846c40236 "
-					+ChatColor.AQUA+this.lastInventoryMap.get(UUID.fromString("c62a6949-b7e2-3efb-8067-a7e846c40236")).size());
-			
-			plugin.getServer().getConsoleSender().sendMessage(ChatColor.DARK_PURPLE+"UUID = c7ed7753-1d64-3c8c-9780-af3c664a0be9 "
-					+ChatColor.LIGHT_PURPLE+this.lastInventoryMap.get(UUID.fromString("c7ed7753-1d64-3c8c-9780-af3c664a0be9")).size());
-			
-			plugin.getServer().getConsoleSender().sendMessage("");
-		} catch (Exception e){
-			
-		}
 		if(!this.lastInventoryMap.containsKey(player.getUniqueId())){
 			this.lastInventoryMap.put(player.getUniqueId(), inventory);
 		} else {
@@ -154,38 +171,49 @@ public class GuiActions {
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Create New...");
 		
-		//inventory.setItem(2, GuiItems.createNewCalendar());
-		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.A.getURL(), "A"));
-		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.B.getURL(), "B"));
-		inventory.setItem(2, xLetter.getItemStack(TextureUrlList.C.getURL(), "C"));
-		inventory.setItem(3, xLetter.getItemStack(TextureUrlList.D.getURL(), "D"));
-		inventory.setItem(4, xLetter.getItemStack(TextureUrlList.E.getURL(), "E"));
-		inventory.setItem(5, xLetter.getItemStack(TextureUrlList.F.getURL(), "F"));
-		inventory.setItem(6, xLetter.getItemStack(TextureUrlList.G.getURL(), "G"));
-		inventory.setItem(7, xLetter.getItemStack(TextureUrlList.H.getURL(), "H"));
-		inventory.setItem(8, xLetter.getItemStack(TextureUrlList.I.getURL(), "I"));
-		inventory.setItem(9, xLetter.getItemStack(TextureUrlList.J.getURL(), "J"));
-		inventory.setItem(10, xLetter.getItemStack(TextureUrlList.K.getURL(), "K"));
-		inventory.setItem(11, xLetter.getItemStack(TextureUrlList.L.getURL(), "L"));
-		inventory.setItem(12, xLetter.getItemStack(TextureUrlList.M.getURL(), "M"));
-		inventory.setItem(13, xLetter.getItemStack(TextureUrlList.N.getURL(), "N"));
-		inventory.setItem(14, xLetter.getItemStack(TextureUrlList.O.getURL(), "O"));
-		inventory.setItem(15, xLetter.getItemStack(TextureUrlList.P.getURL(), "P"));
-		inventory.setItem(16, xLetter.getItemStack(TextureUrlList.Q.getURL(), "Q"));
-		inventory.setItem(17, xLetter.getItemStack(TextureUrlList.R.getURL(), "R"));
-		inventory.setItem(18, xLetter.getItemStack(TextureUrlList.S.getURL(), "S"));
-		inventory.setItem(19, xLetter.getItemStack(TextureUrlList.T.getURL(), "T"));
-		inventory.setItem(20, xLetter.getItemStack(TextureUrlList.U.getURL(), "U"));
-		inventory.setItem(21, xLetter.getItemStack(TextureUrlList.V.getURL(), "V"));
-		inventory.setItem(22, xLetter.getItemStack(TextureUrlList.W.getURL(), "W"));
-		inventory.setItem(23, xLetter.getItemStack(TextureUrlList.X.getURL(), "X"));
-		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.Y.getURL(), "Y"));
-		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "Z"));
-		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "BackSpace"));
+		inventory.setItem(2, GuiItems.createNewCalendar());
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
 		
-		//inventory.setItem(51, GuiItems.pageGoBack());
-		//inventory.setItem(52, GuiItems.pageGoIndex());
-		//inventory.setItem(53, GuiItems.closeInventory());
+		return inventory;
+	}
+	
+	public Inventory createGuiKeyboard(){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Keyboard: ");
+		
+		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.A.getURL(), "|A"));
+		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.B.getURL(), "|B"));
+		inventory.setItem(2, xLetter.getItemStack(TextureUrlList.C.getURL(), "|C"));
+		inventory.setItem(3, xLetter.getItemStack(TextureUrlList.D.getURL(), "|D"));
+		inventory.setItem(4, xLetter.getItemStack(TextureUrlList.E.getURL(), "|E"));
+		inventory.setItem(5, xLetter.getItemStack(TextureUrlList.F.getURL(), "|F"));
+		inventory.setItem(6, xLetter.getItemStack(TextureUrlList.G.getURL(), "|G"));
+		inventory.setItem(7, xLetter.getItemStack(TextureUrlList.H.getURL(), "|H"));
+		inventory.setItem(8, xLetter.getItemStack(TextureUrlList.I.getURL(), "|I"));
+		inventory.setItem(9, xLetter.getItemStack(TextureUrlList.J.getURL(), "|J"));
+		inventory.setItem(10, xLetter.getItemStack(TextureUrlList.K.getURL(), "|K"));
+		inventory.setItem(11, xLetter.getItemStack(TextureUrlList.L.getURL(), "|L"));
+		inventory.setItem(12, xLetter.getItemStack(TextureUrlList.M.getURL(), "|M"));
+		inventory.setItem(13, xLetter.getItemStack(TextureUrlList.N.getURL(), "|N"));
+		inventory.setItem(14, xLetter.getItemStack(TextureUrlList.O.getURL(), "|O"));
+		inventory.setItem(15, xLetter.getItemStack(TextureUrlList.P.getURL(), "|P"));
+		inventory.setItem(16, xLetter.getItemStack(TextureUrlList.Q.getURL(), "|Q"));
+		inventory.setItem(17, xLetter.getItemStack(TextureUrlList.R.getURL(), "|R"));
+		inventory.setItem(18, xLetter.getItemStack(TextureUrlList.S.getURL(), "|S"));
+		inventory.setItem(19, xLetter.getItemStack(TextureUrlList.T.getURL(), "|T"));
+		inventory.setItem(20, xLetter.getItemStack(TextureUrlList.U.getURL(), "|U"));
+		inventory.setItem(21, xLetter.getItemStack(TextureUrlList.V.getURL(), "|V"));
+		inventory.setItem(22, xLetter.getItemStack(TextureUrlList.W.getURL(), "|W"));
+		inventory.setItem(23, xLetter.getItemStack(TextureUrlList.X.getURL(), "|X"));
+		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.Y.getURL(), "|Y"));
+		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "|Z"));
+		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
+		inventory.setItem(CapsLockPosition, GuiItems.capsLockOff());
+		inventory.setItem(52, GuiItems.pageGoBack());
+		inventory.setItem(53, GuiItems.closeInventory());
 		
 		return inventory;
 	}
@@ -194,6 +222,7 @@ public class GuiActions {
 		Inventory inventory;
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"New Calendar");
+		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.Computer.getURL(), "Keyboard"));
 		inventory.setItem(49, GuiItems.saveCalendar());
 		inventory.setItem(50, GuiItems.resetNewCalendar());
 		inventory.setItem(51, GuiItems.pageGoBack());
@@ -218,7 +247,44 @@ public class GuiActions {
 		return inventory;
 	}
 	
-	
+	public Inventory setInventoryTitleOnly(String title, ItemStack caps){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Keyboard: "+ChatColor.YELLOW+title);
+		
+		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.A.getURL(), "|A"));
+		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.B.getURL(), "|B"));
+		inventory.setItem(2, xLetter.getItemStack(TextureUrlList.C.getURL(), "|C"));
+		inventory.setItem(3, xLetter.getItemStack(TextureUrlList.D.getURL(), "|D"));
+		inventory.setItem(4, xLetter.getItemStack(TextureUrlList.E.getURL(), "|E"));
+		inventory.setItem(5, xLetter.getItemStack(TextureUrlList.F.getURL(), "|F"));
+		inventory.setItem(6, xLetter.getItemStack(TextureUrlList.G.getURL(), "|G"));
+		inventory.setItem(7, xLetter.getItemStack(TextureUrlList.H.getURL(), "|H"));
+		inventory.setItem(8, xLetter.getItemStack(TextureUrlList.I.getURL(), "|I"));
+		inventory.setItem(9, xLetter.getItemStack(TextureUrlList.J.getURL(), "|J"));
+		inventory.setItem(10, xLetter.getItemStack(TextureUrlList.K.getURL(), "|K"));
+		inventory.setItem(11, xLetter.getItemStack(TextureUrlList.L.getURL(), "|L"));
+		inventory.setItem(12, xLetter.getItemStack(TextureUrlList.M.getURL(), "|M"));
+		inventory.setItem(13, xLetter.getItemStack(TextureUrlList.N.getURL(), "|N"));
+		inventory.setItem(14, xLetter.getItemStack(TextureUrlList.O.getURL(), "|O"));
+		inventory.setItem(15, xLetter.getItemStack(TextureUrlList.P.getURL(), "|P"));
+		inventory.setItem(16, xLetter.getItemStack(TextureUrlList.Q.getURL(), "|Q"));
+		inventory.setItem(17, xLetter.getItemStack(TextureUrlList.R.getURL(), "|R"));
+		inventory.setItem(18, xLetter.getItemStack(TextureUrlList.S.getURL(), "|S"));
+		inventory.setItem(19, xLetter.getItemStack(TextureUrlList.T.getURL(), "|T"));
+		inventory.setItem(20, xLetter.getItemStack(TextureUrlList.U.getURL(), "|U"));
+		inventory.setItem(21, xLetter.getItemStack(TextureUrlList.V.getURL(), "|V"));
+		inventory.setItem(22, xLetter.getItemStack(TextureUrlList.W.getURL(), "|W"));
+		inventory.setItem(23, xLetter.getItemStack(TextureUrlList.X.getURL(), "|X"));
+		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.Y.getURL(), "|Y"));
+		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "|Z"));
+		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
+		inventory.setItem(CapsLockPosition, caps);
+		inventory.setItem(52, GuiItems.pageGoBack());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
+	}
 	
 	
 	

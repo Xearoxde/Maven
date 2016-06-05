@@ -114,7 +114,35 @@ public class GuiItems{
 		return itemStack;
 	}
 	
+	public static final ItemStack capsLockOn(){
+		ItemStack itemStack = new ItemStack(Material.WOOL, 1, (short) 5);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Capslock ON");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
+	public static final ItemStack capsLockOnly(){
+		ItemStack itemStack = new ItemStack(Material.WOOL, 1, (short) 4);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Capslock Only");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack capsLockOff(){
+		ItemStack itemStack = new ItemStack(Material.WOOL, 1, (short) 14);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Capslock OFF");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
 	
 	

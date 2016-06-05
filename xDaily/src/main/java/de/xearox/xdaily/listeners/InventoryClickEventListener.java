@@ -168,7 +168,7 @@ public class InventoryClickEventListener implements Listener{
 				}
 			}
 		} else {
-			if(ChatColor.stripColor(event.getInventory().getName()).contains("xDaily Admin")){
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("xDaily Admin")|| ChatColor.stripColor(event.getInventory().getName()).contains("Keyboard: ")){
 				Player player = (Player) event.getWhoClicked();
 				event.setCancelled(true);
 				
