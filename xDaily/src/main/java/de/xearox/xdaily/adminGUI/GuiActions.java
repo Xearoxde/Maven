@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,8 +18,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.xearox.xdaily.XDaily;
+import de.xearox.xdaily.XDaily.NewItem;
 import de.xearox.xdaily.utilz.MatList;
 import de.xearox.xletter.TextureUrlList;
 import de.xearox.xletter.XLetter;
@@ -27,9 +30,14 @@ public class GuiActions {
 
 	private XDaily plugin;
 	private XLetter xLetter;
+	private NewItem newItem;
 	
 	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
 	private HashMap<String, ItemStack[]> inventoryContent;
+	
+	private HashMap<UUID, ArrayList<NewItem>> newItemMap;
+	
+	private ArrayList<NewItem> newItemList = new ArrayList<>();
 	
 	
 	private String inventoryName = "xDaily Admin - ";
@@ -41,6 +49,8 @@ public class GuiActions {
 		this.lastInventoryMap = plugin.getLastInventoryMap();
 		this.inventoryContent = plugin.getInventoryContent();
 		this.xLetter = plugin.getXLetter();
+		this.newItemMap = plugin.getNewItemMap();
+		this.newItem = plugin.getNewItem();
 	}
 	
 	public void runActions(Player player,InventoryClickEvent...events){
@@ -77,8 +87,8 @@ public class GuiActions {
 						||ChatColor.stripColor(event.getInventory().getTitle()).contains("Page"))){
 			return;
 		}
-		//Close the inventory
 		if(event.getCurrentItem().getType() != Material.AIR){
+			//Close the inventory
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Close Inventory")){
 				player.closeInventory();
 				
@@ -131,6 +141,41 @@ public class GuiActions {
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Calendar Name")){
 				player.openInventory(NewRewardCalendar("| "+event.getInventory().getTitle().substring(12)));
 				return;
+			}
+			
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("Page")){
+				for(MatList material : MatList.values()){
+					if(event.getCurrentItem().getItemMeta().getDisplayName().equals(WordUtils.capitalizeFully(material.name().replaceAll("_", " ")))){
+						createRewardStep1(player, event.getSlot(), event.getCurrentItem());
+						player.openInventory(chooseRewardType());
+					}
+				}
+			}
+			
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("Choose Reward Type")){
+				createRewardStep2(player, event.getCurrentItem());
+				player.openInventory(setRewardValue());
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("Set Reward Value")){
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Incrase Value")){
+					int value = newItem.itemStack.getAmount();
+					if(value < 64){
+						value++;
+						newItem.itemStack.setAmount(value);
+						event.getInventory().setItem(4, newItem.itemStack);
+						player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
+					}
+				} else if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value")){
+					int value = newItem.itemStack.getAmount();
+					if(value > 1){
+						value--;
+						newItem.itemStack.setAmount(value);
+						event.getInventory().setItem(4, newItem.itemStack);
+						player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
+					}
+				}
 			}
 			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Post")){
@@ -348,6 +393,38 @@ public class GuiActions {
 		return inventory;
 	}
 	
+	public Inventory chooseRewardType(){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Choose Reward Type");
+		
+		inventory.setItem(1, GuiItems.rewardTypeDecoration());
+		inventory.setItem(4, GuiItems.rewardTypeMoney());
+		inventory.setItem(7, GuiItems.rewardTypeNormal());
+		
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
+	}
+	
+	public Inventory setRewardValue(){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Set Reward Value");
+		
+		inventory.setItem(1, GuiItems.incraseValue());
+		inventory.setItem(4, newItem.itemStack);
+		inventory.setItem(7, GuiItems.decraceValue());
+		
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
+	}
+	
 	public Inventory setInventoryTitleOnly(String title, ItemStack caps){
 		Inventory inventory;
 		
@@ -386,6 +463,49 @@ public class GuiActions {
 		inventory.setItem(53, GuiItems.closeInventory());
 		
 		return inventory;
+	}
+	
+	public void createRewardStep1(Player player,int position, ItemStack itemStack){
+		newItem.position = position;
+		newItem.itemStack = itemStack;
+		
+		newItemList.add(newItem);
+		
+		if(newItemMap.containsKey(player.getUniqueId())){
+			newItemMap.replace(player.getUniqueId(), newItemList);
+		} else {
+			newItemMap.put(player.getUniqueId(), newItemList);
+		}		
+	}
+	
+	public void createRewardStep2(Player player, ItemStack itemStack){
+		newItemList = newItemMap.get(player.getUniqueId());
+		newItem.itemType = itemStack.getItemMeta().getDisplayName();
+		
+		newItemList.set(newItemList.size()-1, newItem);
+		
+		player.sendMessage(Integer.toString(newItem.position));
+		
+		if(newItemMap.containsKey(player.getUniqueId())){
+			newItemMap.replace(player.getUniqueId(), newItemList);
+		} else {
+			newItemMap.put(player.getUniqueId(), newItemList);
+		}		
+	}
+	
+	public void createRewardStep3(Player player, ItemStack itemStack){
+		newItemList = newItemMap.get(player.getUniqueId());
+		newItem.itemType = itemStack.getItemMeta().getDisplayName();
+		
+		newItemList.set(newItemList.size()-1, newItem);
+		
+		player.sendMessage(Integer.toString(newItem.position));
+		
+		if(newItemMap.containsKey(player.getUniqueId())){
+			newItemMap.replace(player.getUniqueId(), newItemList);
+		} else {
+			newItemMap.put(player.getUniqueId(), newItemList);
+		}		
 	}
 	
 	

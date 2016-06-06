@@ -43,6 +43,7 @@ public class XDaily extends JavaPlugin{
 	private DailyReset dailyReset;
 	private GuiActions guiActions;
 	private XLetter xLetter;
+	private NewItem newItem;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
@@ -62,6 +63,23 @@ public class XDaily extends JavaPlugin{
 	public HashMap<String, ItemStack> getNewItemReward(){
 		return newItemReward;
 	}
+	
+	private HashMap<UUID, ArrayList<NewItem>> newItemMap;
+	public HashMap<UUID, ArrayList<NewItem>> getNewItemMap(){
+		return newItemMap;
+	}
+	
+	public class NewItem{
+		  public String displayName;
+		  public String itemType;
+		  public ItemStack itemStack;
+		  public int position;
+		  public int value = 1;
+		}
+	public NewItem getNewItem(){
+		return newItem;
+	}
+	
 	/*private HashMap<UUID, Inventory> lastInventoryMap;
 	public HashMap<UUID, Inventory> getLastInventoryMap(){
 		return lastInventoryMap;
@@ -121,6 +139,8 @@ public class XDaily extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		try{
+			this.newItem = new NewItem();
+			this.newItemMap = new HashMap<>();
 			this.lastInventoryMap = new HashMap<>();
 			this.inventoryContent = new HashMap<>();
 			this.newItemReward = new HashMap<>();

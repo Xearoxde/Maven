@@ -2,6 +2,7 @@ package de.xearox.xdaily.adminGUI;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
@@ -177,13 +178,68 @@ public class GuiItems{
 	public static final ItemStack getNewItem(String materialName){
 		ItemStack itemStack = new ItemStack(Material.getMaterial(materialName));
 		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
 		
-
+		String displayName = Material.getMaterial(materialName).name().replaceAll("_", " ");
+		displayName = WordUtils.capitalizeFully(displayName);
+		
+		itemMeta.setDisplayName(displayName);
+		itemStack.setItemMeta(itemMeta);
+		
 		itemStack.setItemMeta(itemMeta);
 		
 		return itemStack;
 	}
 	
+	public static final ItemStack incraseValue(){
+		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Incrase Value");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack decraceValue(){
+		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Decrase Value");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack rewardTypeDecoration(){
+		ItemStack itemStack = new ItemStack(Material.WOOL, 1, (short) 4);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Type Decoration");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack rewardTypeNormal(){
+		ItemStack itemStack = new ItemStack(Material.WOOL, 1, (short) 5);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Type Normal");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack rewardTypeMoney(){
+		ItemStack itemStack = new ItemStack(Material.DOUBLE_PLANT);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Type Money");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
 	
 	
