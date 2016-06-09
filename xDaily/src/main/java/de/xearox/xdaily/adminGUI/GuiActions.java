@@ -1,10 +1,5 @@
 package de.xearox.xdaily.adminGUI;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -18,7 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.XDaily.NewItem;
@@ -33,7 +27,7 @@ public class GuiActions {
 	private NewItem newItem;
 	
 	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
-	private HashMap<String, ItemStack[]> inventoryContent;
+	private HashMap<UUID, ItemStack[]> inventoryContent;
 	
 	private HashMap<UUID, ArrayList<NewItem>> newItemMap;
 	
@@ -135,7 +129,7 @@ public class GuiActions {
 			}
 			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Reward")){
-				inventoryContent.put(event.getInventory().getName(), event.getInventory().getContents());
+				inventoryContent.put(player.getUniqueId(), event.getInventory().getContents());
 			}
 			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Calendar Name")){
@@ -146,7 +140,7 @@ public class GuiActions {
 			if(ChatColor.stripColor(event.getInventory().getName()).contains("Page")){
 				for(MatList material : MatList.values()){
 					if(event.getCurrentItem().getItemMeta().getDisplayName().equals(WordUtils.capitalizeFully(material.name().replaceAll("_", " ")))){
-						createRewardStep1(player, event.getSlot(), event.getCurrentItem());
+						createRewardStep1(player, event.getCurrentItem());
 						player.openInventory(chooseRewardType());
 					}
 				}
@@ -154,31 +148,58 @@ public class GuiActions {
 			
 			if(ChatColor.stripColor(event.getInventory().getName()).contains("Choose Reward Type")){
 				createRewardStep2(player, event.getCurrentItem());
-				player.openInventory(setRewardValue());
-				return;
+				if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Normal") 
+						|| event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Money")){
+					player.openInventory(setRewardValue());
+					return;
+				} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Decoration")){
+					if(newItemMap.containsKey(player.getUniqueId())){
+						newItemList.set(newItemList.size() -1, newItem);
+						newItemMap.replace(player.getUniqueId(), newItemList);
+					} else {
+						newItemList.set(newItemList.size() -1, newItem);
+						newItemMap.put(player.getUniqueId(), newItemList);
+					}
+					Inventory inv = createNewRewardCalendar();
+					if(inventoryContent.containsKey(player.getUniqueId())){
+						inv.setContents(inventoryContent.get(player.getUniqueId()));
+					}
+					inv.setItem(newItem.position, newItem.itemStack);
+					if(inventoryContent.containsKey(player.getUniqueId())){
+						inventoryContent.replace(player.getUniqueId(), inv.getContents());
+					} else {
+						inventoryContent.put(player.getUniqueId(), inv.getContents());
+					}
+					player.openInventory(inv);
+				}
+				
 			}
 			
 			if(ChatColor.stripColor(event.getInventory().getName()).contains("Set Reward Value")){
-				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Incrase Value")){
-					int value = newItem.itemStack.getAmount();
-					if(value < 64){
-						value++;
-						newItem.itemStack.setAmount(value);
-						event.getInventory().setItem(4, newItem.itemStack);
-						player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
+				if(newItem.itemType.equalsIgnoreCase("Type Normal")){
+					if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Incrase Value +1")){
+						int value = newItem.itemStack.getAmount();
+						if(value < 64){
+							value++;
+							newItem.itemStack.setAmount(value);
+							event.getInventory().setItem(4, newItem.itemStack);
+							player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
+						}
+					} else if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value -1")){
+						int value = newItem.itemStack.getAmount();
+						if(value > 1){
+							value--;
+							newItem.itemStack.setAmount(value);
+							event.getInventory().setItem(4, newItem.itemStack);
+							player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
+						}
 					}
-				} else if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value")){
-					int value = newItem.itemStack.getAmount();
-					if(value > 1){
-						value--;
-						newItem.itemStack.setAmount(value);
-						event.getInventory().setItem(4, newItem.itemStack);
-						player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
-					}
-				}
+				} else if(newItem.itemType.equalsIgnoreCase("Type Money")){
+					
+				} 
 			}
 			
-			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Post")){
+			/*if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Post")){
 				File file = new File(plugin.getDataFolder()+File.separator+"/data/matlist.txt");
 				if(!file.exists()){
 					try {
@@ -204,7 +225,7 @@ public class GuiActions {
 				}
 				
 				return;
-			}
+			}*/
 			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Next Page")){
 				if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Page 1")) player.openInventory(CreateItemList(46,2));
@@ -234,6 +255,7 @@ public class GuiActions {
 				for(int i = 0; i < 45; i++){
 					event.getInventory().setItem(i, air);
 				}
+				inventoryContent.replace(player.getUniqueId(), event.getInventory().getContents());
 			}
 			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).contains("|")){
@@ -267,6 +289,7 @@ public class GuiActions {
 		if(event.getCurrentItem().getType() == Material.AIR 
 				&& (ChatColor.stripColor(event.getInventory().getTitle()).contains("|") 
 						|| ChatColor.stripColor(event.getInventory().getTitle()).contains("New Calendar"))){
+			newItem.position = event.getSlot();
 			player.openInventory(CreateItemList(1,1));
 			inventory.add(event.getInventory());
 		}
@@ -385,7 +408,7 @@ public class GuiActions {
 		}
 		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "Previous Page"));
 		inventory.setItem(49, xLetter.getItemStack(TextureUrlList.ArrowRight.getURL(), "Next Page"));
-		inventory.setItem(50, xLetter.getItemStack(TextureUrlList.ArrowDown.getURL(), "Post"));
+		//inventory.setItem(50, xLetter.getItemStack(TextureUrlList.ArrowDown.getURL(), "Post"));
 		inventory.setItem(51, GuiItems.pageGoBack());
 		inventory.setItem(52, GuiItems.pageGoIndex());
 		inventory.setItem(53, GuiItems.closeInventory());
@@ -414,9 +437,9 @@ public class GuiActions {
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Set Reward Value");
 		
-		inventory.setItem(1, GuiItems.incraseValue());
+		inventory.setItem(1, GuiItems.incraseValue1());
 		inventory.setItem(4, newItem.itemStack);
-		inventory.setItem(7, GuiItems.decraceValue());
+		inventory.setItem(7, GuiItems.decraceValue1());
 		
 		inventory.setItem(51, GuiItems.pageGoBack());
 		inventory.setItem(52, GuiItems.pageGoIndex());
@@ -465,8 +488,7 @@ public class GuiActions {
 		return inventory;
 	}
 	
-	public void createRewardStep1(Player player,int position, ItemStack itemStack){
-		newItem.position = position;
+	public void createRewardStep1(Player player, ItemStack itemStack){
 		newItem.itemStack = itemStack;
 		
 		newItemList.add(newItem);

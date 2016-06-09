@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import org.apache.commons.net.nntp.NewsgroupInfo;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -54,8 +53,8 @@ public class XDaily extends JavaPlugin{
 		return lastInventoryMap;
 	}
 	
-	private HashMap<String, ItemStack[]> inventoryContent;
-	public HashMap<String, ItemStack[]> getInventoryContent(){
+	private HashMap<UUID, ItemStack[]> inventoryContent;
+	public HashMap<UUID, ItemStack[]> getInventoryContent(){
 		return inventoryContent;
 	}
 	

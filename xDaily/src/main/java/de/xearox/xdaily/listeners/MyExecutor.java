@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -22,7 +24,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
 import de.xearox.xdaily.adminGUI.GuiActions;
-import de.xearox.xdaily.adminGUI.GuiItems;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
@@ -257,17 +258,8 @@ public class MyExecutor implements CommandExecutor {
 		if(label.equalsIgnoreCase("test")){
 			StringBuilder sb = new StringBuilder();
 			
-			if((sender instanceof Player)){
-				Player player = (Player) sender;
-				player.sendMessage(player.getUniqueId().toString());
-			}
-			for(int i = 0; i < 20000;i++){
-				try{
-					sb.append((Material.values()[i].name()+" "+i+"\n"));
-				} catch (Exception e){
-					
-				}
-			}
+			sb.append("haaaalo").append(" muhahahaha");
+			
 			System.out.println(sb.toString());
             
 			/*if((sender instanceof Player)){

@@ -191,21 +191,61 @@ public class GuiItems{
 		return itemStack;
 	}
 	
-	public static final ItemStack incraseValue(){
+	public static final ItemStack incraseValue1(){
 		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
-		itemMeta.setDisplayName("Incrase Value");
+		itemMeta.setDisplayName("Incrase Value +1");
 		itemStack.setItemMeta(itemMeta);
 		
 		return itemStack;
 	}
 	
-	public static final ItemStack decraceValue(){
+	public static final ItemStack incraseValue10(){
+		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Incrase Value +10");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack incraseValue100(){
+		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Incrase Value +100");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack decraceValue1(){
 		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
-		itemMeta.setDisplayName("Decrase Value");
+		itemMeta.setDisplayName("Decrase Value -1");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack decraceValue10(){
+		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Decrase Value -10");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	public static final ItemStack decraceValue100(){
+		ItemStack itemStack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Decrase Value -100");
 		itemStack.setItemMeta(itemMeta);
 		
 		return itemStack;
