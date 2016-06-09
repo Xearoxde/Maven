@@ -42,7 +42,7 @@ public class XDaily extends JavaPlugin{
 	private DailyReset dailyReset;
 	private GuiActions guiActions;
 	private XLetter xLetter;
-	private NewItem newItem;
+	private de.xearox.xdaily.adminGUI.NewItem newItem;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
@@ -63,21 +63,26 @@ public class XDaily extends JavaPlugin{
 		return newItemReward;
 	}
 	
-	private HashMap<UUID, ArrayList<NewItem>> newItemMap;
-	public HashMap<UUID, ArrayList<NewItem>> getNewItemMap(){
+	private HashMap<UUID, ArrayList<de.xearox.xdaily.adminGUI.NewItem>> newItemMap;
+	public HashMap<UUID, ArrayList<de.xearox.xdaily.adminGUI.NewItem>> getNewItemMap(){
 		return newItemMap;
 	}
 	
-	public class NewItem{
+	private HashMap<UUID, de.xearox.xdaily.adminGUI.NewItem> newItem2;
+	public HashMap<UUID, de.xearox.xdaily.adminGUI.NewItem> getNewItem2(){
+		return newItem2;
+	}
+	
+	/*public class NewItem{
 		  public String displayName;
 		  public String itemType;
 		  public ItemStack itemStack;
 		  public int position;
 		  public int value = 1;
-		}
+	}
 	public NewItem getNewItem(){
 		return newItem;
-	}
+	}*/
 	
 	/*private HashMap<UUID, Inventory> lastInventoryMap;
 	public HashMap<UUID, Inventory> getLastInventoryMap(){
@@ -138,7 +143,8 @@ public class XDaily extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		try{
-			this.newItem = new NewItem();
+			this.newItem = new de.xearox.xdaily.adminGUI.NewItem();
+			this.newItem2 = new HashMap<>();
 			this.newItemMap = new HashMap<>();
 			this.lastInventoryMap = new HashMap<>();
 			this.inventoryContent = new HashMap<>();

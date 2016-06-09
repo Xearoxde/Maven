@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,9 +14,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.xearox.xdaily.XDaily;
-import de.xearox.xdaily.XDaily.NewItem;
 import de.xearox.xdaily.utilz.MatList;
 import de.xearox.xletter.TextureUrlList;
 import de.xearox.xletter.XLetter;
@@ -31,6 +32,8 @@ public class GuiActions {
 	
 	private HashMap<UUID, ArrayList<NewItem>> newItemMap;
 	
+	private HashMap<UUID, NewItem> newItem2;
+	
 	private ArrayList<NewItem> newItemList = new ArrayList<>();
 	
 	
@@ -44,7 +47,7 @@ public class GuiActions {
 		this.inventoryContent = plugin.getInventoryContent();
 		this.xLetter = plugin.getXLetter();
 		this.newItemMap = plugin.getNewItemMap();
-		this.newItem = plugin.getNewItem();
+		this.newItem2 = plugin.getNewItem2();
 	}
 	
 	public void runActions(Player player,InventoryClickEvent...events){
@@ -128,12 +131,119 @@ public class GuiActions {
 				return;
 			}
 			
+			if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Set Money")){
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Incrase Value +1")){
+					int value = newItem.value;
+					value++;
+					newItem.value = value;
+					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
+					player.sendMessage(newItem.itemStack.getItemMeta().getDisplayName());
+					event.getInventory().setItem(4, newItem.itemStack);
+					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
+				}
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Incrase Value +10")){
+					int value = newItem.value;
+					value+= 10;
+					newItem.value = value;
+					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
+					event.getInventory().setItem(4, newItem.itemStack);
+					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
+				}
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Incrase Value +100")){
+					int value = newItem.value;
+					value+=100;
+					newItem.value = value;
+					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
+					event.getInventory().setItem(4, newItem.itemStack);
+					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
+				}
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value -1")){
+					int value = newItem.value;
+					value--;
+					newItem.value = value;
+					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
+					event.getInventory().setItem(4, newItem.itemStack);
+					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
+				}
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value -10")){
+					int value = newItem.value;
+					value-= 10;
+					newItem.value = value;
+					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
+					event.getInventory().setItem(4, newItem.itemStack);
+					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
+				}
+				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value -100")){
+					int value = newItem.value;
+					value-=100;
+					newItem.value = value;
+					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
+					event.getInventory().setItem(4, newItem.itemStack);
+					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
+				}
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Apply Value")){
+				if(newItemMap.containsKey(player.getUniqueId())){
+					newItemList.set(newItemList.size() -1, newItem);
+					newItemMap.replace(player.getUniqueId(), newItemList);
+				} else {
+					newItemList.set(newItemList.size() -1, newItem);
+					newItemMap.put(player.getUniqueId(), newItemList);
+				}
+				Inventory inv = createNewRewardCalendar();
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inv.setContents(inventoryContent.get(player.getUniqueId()));
+				}
+				inv.setItem(newItem.position, newItem.itemStack);
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inventoryContent.replace(player.getUniqueId(), inv.getContents());
+				} else {
+					inventoryContent.put(player.getUniqueId(), inv.getContents());
+				}
+				player.openInventory(inv);
+				newItem = null;
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Apply Money")){
+				newItem.itemStack.getItemMeta().setDisplayName(event.getInventory().getItem(4).getItemMeta().getDisplayName());
+				ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
+				itemMeta.setDisplayName(event.getInventory().getItem(4).getItemMeta().getDisplayName());
+				newItem.itemStack.setItemMeta(itemMeta);
+				if(newItemMap.containsKey(player.getUniqueId())){
+					newItemList.set(newItemList.size() -1, newItem);
+					newItemMap.replace(player.getUniqueId(), newItemList);
+				} else {
+					newItemList.set(newItemList.size() -1, newItem);
+					newItemMap.put(player.getUniqueId(), newItemList);
+				}
+				Inventory inv = createNewRewardCalendar();
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inv.setContents(inventoryContent.get(player.getUniqueId()));
+				}
+				inv.setItem(newItem.position, newItem.itemStack);
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inventoryContent.replace(player.getUniqueId(), inv.getContents());
+				} else {
+					inventoryContent.put(player.getUniqueId(), inv.getContents());
+				}
+				player.sendMessage(newItem.itemStack.getItemMeta().getDisplayName());
+				player.openInventory(inv);
+				newItem = null;
+				return;
+			}
+			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Reward")){
 				inventoryContent.put(player.getUniqueId(), event.getInventory().getContents());
 			}
 			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Calendar Name")){
-				player.openInventory(NewRewardCalendar("| "+event.getInventory().getTitle().substring(12)));
+				Inventory inv = NewRewardCalendar("| "+event.getInventory().getTitle().substring(12));
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inv.setContents(inventoryContent.get(player.getUniqueId()));
+				}
+				player.openInventory(inv);
 				return;
 			}
 			
@@ -148,9 +258,14 @@ public class GuiActions {
 			
 			if(ChatColor.stripColor(event.getInventory().getName()).contains("Choose Reward Type")){
 				createRewardStep2(player, event.getCurrentItem());
-				if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Normal") 
-						|| event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Money")){
+				if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Normal")){
 					player.openInventory(setRewardValue());
+					return;
+				} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Money")){
+					newItem.itemStack = GuiItems.rewardTypeMoney("Money: ");
+					player.sendMessage(newItem.itemStack.getType().toString());
+					player.sendMessage(newItem.itemStack.getItemMeta().getDisplayName());
+					player.openInventory(setMoneyValue());
 					return;
 				} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Decoration")){
 					if(newItemMap.containsKey(player.getUniqueId())){
@@ -289,6 +404,7 @@ public class GuiActions {
 		if(event.getCurrentItem().getType() == Material.AIR 
 				&& (ChatColor.stripColor(event.getInventory().getTitle()).contains("|") 
 						|| ChatColor.stripColor(event.getInventory().getTitle()).contains("New Calendar"))){
+			this.newItem = new NewItem();
 			newItem.position = event.getSlot();
 			player.openInventory(CreateItemList(1,1));
 			inventory.add(event.getInventory());
@@ -422,7 +538,7 @@ public class GuiActions {
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Choose Reward Type");
 		
 		inventory.setItem(1, GuiItems.rewardTypeDecoration());
-		inventory.setItem(4, GuiItems.rewardTypeMoney());
+		inventory.setItem(4, GuiItems.rewardTypeMoney("Type Money"));
 		inventory.setItem(7, GuiItems.rewardTypeNormal());
 		
 		inventory.setItem(51, GuiItems.pageGoBack());
@@ -441,6 +557,49 @@ public class GuiActions {
 		inventory.setItem(4, newItem.itemStack);
 		inventory.setItem(7, GuiItems.decraceValue1());
 		
+		inventory.setItem(50, GuiItems.saveButton("Apply Value"));
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
+	}
+	
+	public Inventory setMoneyValue(){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Set Money: 0");
+		
+		inventory.setItem(0, GuiItems.incraseValue1());
+		inventory.setItem(1, GuiItems.incraseValue10());
+		inventory.setItem(2, GuiItems.incraseValue100());
+		inventory.setItem(4, GuiItems.rewardTypeMoney("Money: 0"));
+		inventory.setItem(6, GuiItems.decraceValue100());
+		inventory.setItem(7, GuiItems.decraceValue10());
+		inventory.setItem(8, GuiItems.decraceValue1());
+		
+		inventory.setItem(50, GuiItems.saveButton("Apply Value"));
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
+	}
+	
+	public Inventory setMoneyValueUpdateInv(String title){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Set Money: "+title);
+		
+		inventory.setItem(0, GuiItems.incraseValue1());
+		inventory.setItem(1, GuiItems.incraseValue10());
+		inventory.setItem(2, GuiItems.incraseValue100());
+		inventory.setItem(4, GuiItems.rewardTypeMoney("Money: "+title));
+		inventory.setItem(6, GuiItems.decraceValue100());
+		inventory.setItem(7, GuiItems.decraceValue10());
+		inventory.setItem(8, GuiItems.decraceValue1());
+		
+		inventory.setItem(50, GuiItems.saveButton("Apply Money"));
 		inventory.setItem(51, GuiItems.pageGoBack());
 		inventory.setItem(52, GuiItems.pageGoIndex());
 		inventory.setItem(53, GuiItems.closeInventory());

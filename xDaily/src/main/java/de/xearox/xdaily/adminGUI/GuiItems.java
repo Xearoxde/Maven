@@ -271,11 +271,11 @@ public class GuiItems{
 		return itemStack;
 	}
 	
-	public static final ItemStack rewardTypeMoney(){
+	public static final ItemStack rewardTypeMoney(String caption){
 		ItemStack itemStack = new ItemStack(Material.DOUBLE_PLANT);
 		ItemMeta itemMeta = itemStack.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
-		itemMeta.setDisplayName("Type Money");
+		itemMeta.setDisplayName(caption);
 		itemStack.setItemMeta(itemMeta);
 		
 		return itemStack;
