@@ -7,7 +7,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xDaily</artifactId>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.4.3-SNAPSHOT</version>
 	<build>
         <plugins>
             <plugin>
