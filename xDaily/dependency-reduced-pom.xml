@@ -52,7 +52,7 @@
                   <version>${project.version}</version>
                 </artifactItem>
               </artifactItems>
-              <outputDirectory>D:\Development\Minecraft\MCServer\plugins</outputDirectory>
+              <outputDirectory>C:\Users\chahn\Desktop\MCServer\plugins</outputDirectory>
               <stripVersion>true</stripVersion>
             </configuration>
           </execution>

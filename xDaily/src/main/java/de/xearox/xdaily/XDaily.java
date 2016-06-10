@@ -18,6 +18,7 @@ import org.mcstats.Metrics;
 
 import de.xearox.xdaily.admgui.CreateRewards;
 import de.xearox.xdaily.adminGUI.GuiActions;
+import de.xearox.xdaily.adminGUI.ParseInventory;
 import de.xearox.xdaily.listeners.InventoryClickEventListener;
 import de.xearox.xdaily.listeners.MyExecutor;
 import de.xearox.xdaily.listeners.PlayerJoinListener;
@@ -42,6 +43,7 @@ public class XDaily extends JavaPlugin{
 	private DailyReset dailyReset;
 	private GuiActions guiActions;
 	private XLetter xLetter;
+	private ParseInventory parseInventory;
 	private de.xearox.xdaily.adminGUI.NewItem newItem;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
@@ -125,6 +127,10 @@ public class XDaily extends JavaPlugin{
 		return guiActions;
 	}
 	
+	public ParseInventory getParseInventory(){
+		return parseInventory;
+	}
+	
 	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
@@ -152,6 +158,7 @@ public class XDaily extends JavaPlugin{
 			this.vaultIntegration = new VaultIntegration(this);
 			this.xLetter = new XLetter();
 			this.utilz = new Utilz(this);
+			this.parseInventory = new ParseInventory(this);
 			this.langClass = new SetLanguageClass(this);
 			this.guiActions = new GuiActions(this);
 			this.createRewards = new CreateRewards(this);

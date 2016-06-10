@@ -26,6 +26,7 @@ public class GuiActions {
 	private XDaily plugin;
 	private XLetter xLetter;
 	private NewItem newItem;
+	private ParseInventory parseInventory;
 	
 	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
 	private HashMap<UUID, ItemStack[]> inventoryContent;
@@ -48,6 +49,7 @@ public class GuiActions {
 		this.xLetter = plugin.getXLetter();
 		this.newItemMap = plugin.getNewItemMap();
 		this.newItem2 = plugin.getNewItem2();
+		this.parseInventory = plugin.getParseInventory();
 	}
 	
 	public void runActions(Player player,InventoryClickEvent...events){
@@ -129,6 +131,19 @@ public class GuiActions {
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Capslock Only")){
 				event.getInventory().setItem(CapsLockPosition, GuiItems.capsLockOff());
 				return;
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Reward")){
+				Inventory inv = event.getInventory();
+				if(inv == null){
+					return;
+				}
+				if(parseInventory.createNewRewardFile(inv, player)){
+					return;
+				} else {
+					player.openInventory(inv);
+				}
+				
 			}
 			
 			if(ChatColor.stripColor(event.getInventory().getTitle()).contains("Set Money")){
