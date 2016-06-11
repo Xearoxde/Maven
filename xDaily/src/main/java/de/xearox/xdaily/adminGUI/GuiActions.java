@@ -1,14 +1,16 @@
 package de.xearox.xdaily.adminGUI;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -93,6 +95,46 @@ public class GuiActions {
 				
 			}
 			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Change Config")){
+				inventory.add(event.getInventory());
+				player.openInventory(changeConfig());
+			}
+			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Change Default Calendar")){
+				inventory.add(event.getInventory());
+				player.openInventory(changeDefaultCalendar());
+			}
+			
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("Change Default Calendar")){
+				File folder = new File(plugin.getDataFolder()+File.separator+"/data/rewards/");
+				File[] listOfFiles = folder.listFiles();
+
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(listOfFiles[i].getName())){
+						File file = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
+						YamlConfiguration yamlFile;
+						yamlFile = YamlConfiguration.loadConfiguration(file);
+						
+						String calendarName = listOfFiles[i].getName();
+						calendarName = calendarName.split(".yml")[0];
+						
+						yamlFile.set("Config.DailyBonus.UseSpecificCalendar", calendarName);
+						
+						try {
+							yamlFile.save(file);
+							player.sendMessage("The default calendar has been changed");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				} else if (listOfFiles[i].isDirectory()) {
+					System.out.println("Directory " + listOfFiles[i].getName());
+					}
+				}
+			}
+			
 			//Creates the "Create new..." inventory
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new...")){
 				inventory.add(event.getInventory());
@@ -113,6 +155,11 @@ public class GuiActions {
 				
 				if(inventoryContent.containsKey(player.getUniqueId())){
 					inv.setContents(inventoryContent.get(player.getUniqueId()));
+				} else {
+					if(newItemMap.containsKey(player.getUniqueId())){
+						
+						newItemMap.remove(player.getUniqueId());
+					}
 				}
 				player.openInventory(inv);
 			}
@@ -155,6 +202,10 @@ public class GuiActions {
 						event.getInventory().setItem(i, air);
 					}
 					inventoryContent.remove(player.getUniqueId());
+					newItemMap.remove(player.getUniqueId());
+					newItemList = new ArrayList<>();
+					
+					
 					player.closeInventory();
 					return;
 				} else {
@@ -169,7 +220,6 @@ public class GuiActions {
 					value++;
 					newItem.value = value;
 					newItem.itemStack.getItemMeta().setDisplayName("Money: "+value);
-					player.sendMessage(newItem.itemStack.getItemMeta().getDisplayName());
 					event.getInventory().setItem(4, newItem.itemStack);
 					player.openInventory(setMoneyValueUpdateInv(Integer.toString(value)));
 				}
@@ -260,7 +310,6 @@ public class GuiActions {
 				} else {
 					inventoryContent.put(player.getUniqueId(), inv.getContents());
 				}
-				player.sendMessage(newItem.itemStack.getItemMeta().getDisplayName());
 				player.openInventory(inv);
 				newItem = null;
 				return;
@@ -295,8 +344,6 @@ public class GuiActions {
 					return;
 				} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Money")){
 					newItem.itemStack = GuiItems.rewardTypeMoney("Money: ");
-					player.sendMessage(newItem.itemStack.getType().toString());
-					player.sendMessage(newItem.itemStack.getItemMeta().getDisplayName());
 					player.openInventory(setMoneyValue());
 					return;
 				} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("Type Decoration")){
@@ -454,10 +501,47 @@ public class GuiActions {
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Index");
 		
 		inventory.setItem(45, GuiItems.createNew());
+		inventory.setItem(46, GuiItems.changeConfig());
 		inventory.setItem(53, GuiItems.closeInventory());
 		
 		return inventory;
 		
+	}
+	
+	public Inventory changeConfig(){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Change Config");
+		
+		inventory.setItem(2, GuiItems.changeDefaultCalendar());
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
+	}
+	
+	public Inventory changeDefaultCalendar(){
+		Inventory inventory;
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Change Default Calendar");
+		
+		File folder = new File(plugin.getDataFolder()+File.separator+"/data/rewards/");
+		File[] listOfFiles = folder.listFiles();
+
+		    for (int i = 0; i < listOfFiles.length; i++) {
+		      if (listOfFiles[i].isFile()) {
+		        inventory.setItem(i, GuiItems.rewardCalendarName(listOfFiles[i].getName()));
+		      } else if (listOfFiles[i].isDirectory()) {
+		        System.out.println("Directory " + listOfFiles[i].getName());
+		      }
+		    }
+		
+		inventory.setItem(51, GuiItems.pageGoBack());
+		inventory.setItem(52, GuiItems.pageGoIndex());
+		inventory.setItem(53, GuiItems.closeInventory());
+		
+		return inventory;
 	}
 	
 	public Inventory createNew(){
@@ -727,8 +811,6 @@ public class GuiActions {
 		
 		newItemList.set(newItemList.size()-1, newItem);
 		
-		player.sendMessage(Integer.toString(newItem.position));
-		
 		if(newItemMap.containsKey(player.getUniqueId())){
 			newItemMap.replace(player.getUniqueId(), newItemList);
 		} else {
@@ -741,8 +823,6 @@ public class GuiActions {
 		newItem.itemType = itemStack.getItemMeta().getDisplayName();
 		
 		newItemList.set(newItemList.size()-1, newItem);
-		
-		player.sendMessage(Integer.toString(newItem.position));
 		
 		if(newItemMap.containsKey(player.getUniqueId())){
 			newItemMap.replace(player.getUniqueId(), newItemList);

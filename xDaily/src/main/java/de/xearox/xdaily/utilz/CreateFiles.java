@@ -2,6 +2,7 @@ package de.xearox.xdaily.utilz;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -43,7 +44,17 @@ public class CreateFiles {
 		YamlConfiguration yamlFile;
 		yamlFile = YamlConfiguration.loadConfiguration(file);
 		
-		if(utilz.fileExist(file) && !rewriteFile) return;
+		if(utilz.fileExist(file) && !rewriteFile){
+			return;
+		} else if(rewriteFile) {
+			yamlFile.set("Rewards", null);
+			try {
+				yamlFile.save(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		//Loading config File
 		File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
@@ -91,12 +102,17 @@ public class CreateFiles {
 			
 			if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
 				try{
+					String rewardType;
+					if(yamlDefaultFile.getString("Rewards.Day."+(i+1)+".Type").equalsIgnoreCase("double_plant")){
+						rewardType = "money";
+					} else {
+						rewardType = yamlDefaultFile.getString("Rewards.Day."+(i+1)+".Type");
+					}
 					yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
 					yamlFile.addDefault("Rewards."+myDate+".Reward_Name", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Name"));
-					yamlFile.addDefault("Rewards."+myDate+".Reward_Type", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Type"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Type", rewardType);
 					yamlFile.addDefault("Rewards."+myDate+".Reward_Value", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Value"));
 					yamlFile.addDefault("Rewards."+myDate+".Reward_Slot", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Slot"));
-					System.out.println("UseSpecific= "+i);
 				} catch(Exception e){
 					e.printStackTrace();
 				}
@@ -118,7 +134,6 @@ public class CreateFiles {
 				yamlFile.addDefault("Decoration."+decoIndex+".Type", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Type"));
 				yamlFile.addDefault("Decoration."+decoIndex+".Value", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Value"));
 				yamlFile.addDefault("Decoration."+decoIndex+".Slot", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Slot"));
-				System.out.println("Decoration= "+decoIndex);
 				decoIndex++;
 			}
 		}

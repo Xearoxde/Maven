@@ -139,6 +139,17 @@ public class MyExecutor implements CommandExecutor {
 				lore.add(""); // 0 Date or Description
 				lore.add(""); // 1 Reward Type
 				
+				if(yamlConfigFile.getBoolean("Config.DailyBonus.ResetIfPlayerGotAllRewards?")){
+					boolean getAllRewards = false;
+					for(String date : list){
+						if(yamlFile.getBoolean("Rewards."+date+".Get_Reward?")) getAllRewards = true; else getAllRewards = false;
+						player.sendMessage(Boolean.toString(getAllRewards));
+					}
+					if(getAllRewards) createFiles.CreatePlayerFile(player, true);
+					yamlFile = YamlConfiguration.loadConfiguration(file);
+					player.sendMessage("You have got all rewards. Your rewards was resetted");
+				}
+				
 				try{
 					for(String date : list){
 						int i = yamlFile.getInt("Rewards."+date+".Reward_Slot");
@@ -151,6 +162,7 @@ public class MyExecutor implements CommandExecutor {
 						
 						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
 							slot1.setType(Material.DOUBLE_PLANT);
+							rewardType = "money";
 						} else if(getReward){
 							slot1.setType(Material.BARRIER);
 						} else {
@@ -175,17 +187,14 @@ public class MyExecutor implements CommandExecutor {
 				}
 				
 				try{
-					slot1Meta.getLore().removeAll(slot1Meta.getLore());
+					lore.remove(1);
+					slot1Meta.setLore(lore);
 					for(int i = 0; i<decoMaxSlot-1;i++){
 						String decoName = yamlFile.getString("Decoration."+(i+1)+".Name");
 						int decoValue = yamlFile.getInt("Decoration."+(i+1)+".Value");
 						int decoSlot = yamlFile.getInt("Decoration."+(i+1)+".Slot");
 						
-						player.sendMessage(decoName);
-						player.sendMessage(Integer.toString(decoValue));
-						player.sendMessage(Integer.toString(decoSlot));
-						
-						slot1Meta.setDisplayName("-");
+						slot1Meta.setDisplayName(" ");
 						slot1.setType(Material.getMaterial(decoName));
 						slot1.setItemMeta(slot1Meta);
 						inv.setItem(decoSlot, slot1);

@@ -168,7 +168,8 @@ public class InventoryClickEventListener implements Listener{
 				}
 			}
 		} else {
-			if(ChatColor.stripColor(event.getInventory().getName()).contains("xDaily Admin")|| ChatColor.stripColor(event.getInventory().getName()).contains("Keyboard: ")){
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("xDaily Admin")|| ChatColor.stripColor(event.getInventory().getName()).contains("Keyboard: ") 
+					|| ChatColor.stripColor(event.getInventory().getName()).contains("Change Default Calendar")){
 				Player player = (Player) event.getWhoClicked();
 				event.setCancelled(true);
 				

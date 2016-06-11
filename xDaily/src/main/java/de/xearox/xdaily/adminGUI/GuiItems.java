@@ -281,9 +281,35 @@ public class GuiItems{
 		return itemStack;
 	}
 	
+	public static final ItemStack rewardCalendarName(String caption){
+		ItemStack itemStack = new ItemStack(Material.MAP);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName(caption);
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
+	public static final ItemStack changeConfig(){
+		ItemStack itemStack = new ItemStack(Material.MAP);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Change Config");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
-	
+	public static final ItemStack changeDefaultCalendar(){
+		ItemStack itemStack = new ItemStack(Material.MAP);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Change Default Calendar");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
 	
 	
 	

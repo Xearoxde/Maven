@@ -31,8 +31,6 @@ public class ParseInventory {
 		String inventoryName = ChatColor.stripColor(inv.getTitle()).substring(17);
 		NewItem[] newItem = newItemList.toArray(new NewItem[newItemList.size()]);
 		
-		System.out.println(newItemList.size());
-		
 		File file = new File(plugin.getDataFolder()+File.separator+"/data/rewards/" + inventoryName + ".yml");
 		YamlConfiguration yamlFile;
 		yamlFile = YamlConfiguration.loadConfiguration(file);
@@ -62,7 +60,7 @@ public class ParseInventory {
 			}
 			
 			if(itemType.equalsIgnoreCase("decoration")){
-				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Name", itemName);
+				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Name", material.name());
 				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Type", itemType);
 				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Value", itemValue);
 				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Slot", itemSlot);
@@ -81,7 +79,6 @@ public class ParseInventory {
 		yamlFile.options().copyDefaults(true);
 		
 		try{
-			System.out.println(file.getAbsolutePath());
 			yamlFile.save(file);
 			return true;
 		} catch (Exception e){
