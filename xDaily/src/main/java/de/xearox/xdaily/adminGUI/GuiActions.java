@@ -133,12 +133,17 @@ public class GuiActions {
 				return;
 			}
 			
-			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Reward")){
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Calendar")){
 				Inventory inv = event.getInventory();
 				if(inv == null){
 					return;
 				}
-				if(parseInventory.createNewRewardFile(inv, player)){
+				if(!ChatColor.stripColor(inv.getTitle()).contains("|")){
+					player.sendMessage("Please enter a title");
+					return;
+				}
+				newItemList = newItemMap.get(player.getUniqueId());
+				if(parseInventory.createNewRewardFile(inv, player, newItemList)){
 					return;
 				} else {
 					player.openInventory(inv);
@@ -324,9 +329,7 @@ public class GuiActions {
 							player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
 						}
 					}
-				} else if(newItem.itemType.equalsIgnoreCase("Type Money")){
-					
-				} 
+				}
 			}
 			
 			/*if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Post")){
@@ -463,6 +466,7 @@ public class GuiActions {
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Keyboard: ");
 		
+		//Letters
 		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.A.getURL(), "|A"));
 		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.B.getURL(), "|B"));
 		inventory.setItem(2, xLetter.getItemStack(TextureUrlList.C.getURL(), "|C"));
@@ -489,7 +493,22 @@ public class GuiActions {
 		inventory.setItem(23, xLetter.getItemStack(TextureUrlList.X.getURL(), "|X"));
 		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.Y.getURL(), "|Y"));
 		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "|Z"));
-		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
+		
+		//Numbers
+		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.Zero.getURL(), "|0"));
+		inventory.setItem(27, xLetter.getItemStack(TextureUrlList.One.getURL(), "|1"));
+		inventory.setItem(28, xLetter.getItemStack(TextureUrlList.Two.getURL(), "|2"));
+		inventory.setItem(29, xLetter.getItemStack(TextureUrlList.Three.getURL(), "|3"));
+		inventory.setItem(30, xLetter.getItemStack(TextureUrlList.Four.getURL(), "|4"));
+		inventory.setItem(31, xLetter.getItemStack(TextureUrlList.Five.getURL(), "|5"));
+		inventory.setItem(32, xLetter.getItemStack(TextureUrlList.Six.getURL(), "|6"));
+		inventory.setItem(33, xLetter.getItemStack(TextureUrlList.Seven.getURL(), "|7"));
+		inventory.setItem(34, xLetter.getItemStack(TextureUrlList.Eight.getURL(), "|8"));
+		inventory.setItem(35, xLetter.getItemStack(TextureUrlList.Nine.getURL(), "|9"));
+		
+		//Other
+		inventory.setItem(40, xLetter.getItemStack(TextureUrlList.Minus.getURL(), "|-"));
+		inventory.setItem(44, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
 		inventory.setItem(CapsLockPosition, GuiItems.capsLockOn());
 		inventory.setItem(51, GuiItems.saveButton("Save Calendar Name"));
 		inventory.setItem(52, GuiItems.pageGoBack());
@@ -627,6 +646,7 @@ public class GuiActions {
 		
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+"Keyboard: "+ChatColor.RED+title);
 		
+		//Letters
 		inventory.setItem(0, xLetter.getItemStack(TextureUrlList.A.getURL(), "|A"));
 		inventory.setItem(1, xLetter.getItemStack(TextureUrlList.B.getURL(), "|B"));
 		inventory.setItem(2, xLetter.getItemStack(TextureUrlList.C.getURL(), "|C"));
@@ -653,7 +673,22 @@ public class GuiActions {
 		inventory.setItem(23, xLetter.getItemStack(TextureUrlList.X.getURL(), "|X"));
 		inventory.setItem(24, xLetter.getItemStack(TextureUrlList.Y.getURL(), "|Y"));
 		inventory.setItem(25, xLetter.getItemStack(TextureUrlList.Z.getURL(), "|Z"));
-		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
+		
+		//Numbers
+		inventory.setItem(26, xLetter.getItemStack(TextureUrlList.Zero.getURL(), "|0"));
+		inventory.setItem(27, xLetter.getItemStack(TextureUrlList.One.getURL(), "|1"));
+		inventory.setItem(28, xLetter.getItemStack(TextureUrlList.Two.getURL(), "|2"));
+		inventory.setItem(29, xLetter.getItemStack(TextureUrlList.Three.getURL(), "|3"));
+		inventory.setItem(30, xLetter.getItemStack(TextureUrlList.Four.getURL(), "|4"));
+		inventory.setItem(31, xLetter.getItemStack(TextureUrlList.Five.getURL(), "|5"));
+		inventory.setItem(32, xLetter.getItemStack(TextureUrlList.Six.getURL(), "|6"));
+		inventory.setItem(33, xLetter.getItemStack(TextureUrlList.Seven.getURL(), "|7"));
+		inventory.setItem(34, xLetter.getItemStack(TextureUrlList.Eight.getURL(), "|8"));
+		inventory.setItem(35, xLetter.getItemStack(TextureUrlList.Nine.getURL(), "|9"));
+		
+		//Other
+		inventory.setItem(40, xLetter.getItemStack(TextureUrlList.Minus.getURL(), "|-"));
+		inventory.setItem(44, xLetter.getItemStack(TextureUrlList.ArrowLeft.getURL(), "|BackSpace"));
 		inventory.setItem(CapsLockPosition, caps);
 		inventory.setItem(51, GuiItems.saveButton("Save Calendar Name"));
 		inventory.setItem(52, GuiItems.pageGoBack());
