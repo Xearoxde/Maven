@@ -50,7 +50,24 @@ public class CreateFiles {
 		YamlConfiguration yamlConfigFile;
 		yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
 		
-		days = yamlConfigFile.getInt("Config.DailyBonus.Days");
+		String calendarName = yamlConfigFile.getString("Config.DailyBonus.UseSpecificCalendar");
+		
+		File defaultFile = new File(plugin.getDataFolder()+File.separator+"/data/rewards/"+calendarName+".yml");
+		YamlConfiguration yamlDefaultFile;
+		yamlDefaultFile = YamlConfiguration.loadConfiguration(defaultFile);
+		
+		if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
+			int i = 1;
+			days = 0;
+			while(yamlConfigFile.getString("Config.DailyBonus.Rewards.Day."+i) != null){
+				i++;
+				days++;
+			}
+		} else {
+			days = yamlConfigFile.getInt("Config.DailyBonus.Days");
+		}
+		
+		
 		if(yamlConfigFile.getBoolean("Config.DailyBonus.RandomItems")){
 			randomItems = true;
 		} else {
@@ -72,6 +89,17 @@ public class CreateFiles {
 			}
 			if(randomItems){
 				//
+			} 
+			
+			if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
+				try{
+					yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Name", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Name"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Type", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Type"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Value", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Value"));
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			} else {
 				try{
 					yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
@@ -104,6 +132,22 @@ public class CreateFiles {
 		
 		File file = new File(pluginDir + "/data/vip-player.txt");
 		utilz.createFile(file);
+	}
+	
+	public void createDirs(){
+		String pluginDir = plugin.getDataFolder()+File.separator;
+		File configDir = new File(pluginDir+"/config/");
+		File dataDir = new File(pluginDir+"/data/");
+		File locateDir = new File(pluginDir+"/locate/");
+		File rewardsDir = new File(pluginDir+"/rewards/");
+		
+		if(!configDir.exists()) configDir.mkdirs();
+		
+		if(!dataDir.exists()) dataDir.mkdirs();
+		
+		if(!locateDir.exists()) locateDir.mkdirs();
+		
+		if(!rewardsDir.exists()) rewardsDir.mkdirs();
 	}
 	
 	

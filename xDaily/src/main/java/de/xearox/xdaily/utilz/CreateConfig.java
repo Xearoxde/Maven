@@ -28,6 +28,8 @@ public class CreateConfig {
 		yamlFile.addDefault("Config.AutoUpdate.Enable", false);
 		yamlFile.addDefault("Config.AutoUpdate.Version", "Stable");
 		yamlFile.addDefault("Config.DailyBonus.Days", 7);
+		yamlFile.addDefault("Config.DailyBonus.UseSpecific?", false);
+		yamlFile.addDefault("Config.DailyBonus.UseSpecificCalendar", "default");
 		yamlFile.addDefault("Config.DailyBonus.ResetIfPlayerDontLoginEveryDay?", true);
 		yamlFile.addDefault("Config.DailyBonus.ResetIfPlayerGotAllRewards?", true);
 		yamlFile.addDefault("Config.DailyBonus.VIP.VIPFile.AutoUpdate?", false);

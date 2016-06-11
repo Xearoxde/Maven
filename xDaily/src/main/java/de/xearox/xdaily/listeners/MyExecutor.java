@@ -115,7 +115,6 @@ public class MyExecutor implements CommandExecutor {
 				
 				lore.add(""); // 0 Date or Description
 				lore.add(""); // 1 Reward Type
-				
 				int i = 0;
 				try{
 					for(String date : list){
@@ -125,6 +124,11 @@ public class MyExecutor implements CommandExecutor {
 						boolean getReward = yamlFile.getBoolean("Rewards."+date+".Get_Reward?");
 						//slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
 						slot1Meta.setDisplayName(ChatColor.RED+date);
+						System.out.println(yamlFile.toString());
+						System.out.println(file.getAbsolutePath());
+						System.out.println(date);
+						System.out.println(getReward);
+						System.out.println(yamlFile.getString("Rewards."+date+".Reward_Type"));
 						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
 							slot1.setType(Material.DOUBLE_PLANT);
 						} else if(getReward){

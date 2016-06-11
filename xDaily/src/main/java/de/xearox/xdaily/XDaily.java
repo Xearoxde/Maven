@@ -23,6 +23,7 @@ import de.xearox.xdaily.listeners.InventoryClickEventListener;
 import de.xearox.xdaily.listeners.MyExecutor;
 import de.xearox.xdaily.listeners.PlayerJoinListener;
 import de.xearox.xdaily.utilz.CreateConfig;
+import de.xearox.xdaily.utilz.CreateDefaultCalendar;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
@@ -44,6 +45,7 @@ public class XDaily extends JavaPlugin{
 	private GuiActions guiActions;
 	private XLetter xLetter;
 	private ParseInventory parseInventory;
+	private CreateDefaultCalendar createDefaultCalendar;
 	private de.xearox.xdaily.adminGUI.NewItem newItem;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
@@ -131,6 +133,9 @@ public class XDaily extends JavaPlugin{
 		return parseInventory;
 	}
 	
+	public CreateDefaultCalendar getCreateDefaultCalendar(){
+		return createDefaultCalendar;
+	}
 	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
@@ -166,9 +171,12 @@ public class XDaily extends JavaPlugin{
 			this.dailyReset = new DailyReset(this);
 			this.onPlayerJoinListener = new PlayerJoinListener(this);
 			this.createConfig = new CreateConfig(this);
+			this.createDefaultCalendar = new CreateDefaultCalendar(this);
+			this.createFiles.createDirs();
 			this.createConfig.createConfig();
 			this.createFiles.createVIPFile();
-			utilz.createLanguageFiles();
+			this.utilz.createLanguageFiles();
+			this.createDefaultCalendar.createDefault();
 			registerListener();
 			createCommands();
 			checkVIPFile();

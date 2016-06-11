@@ -2,9 +2,9 @@ package de.xearox.xdaily.adminGUI;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -38,30 +38,43 @@ public class ParseInventory {
 		yamlFile = YamlConfiguration.loadConfiguration(file);
 		
 		if(file.exists()){
-			player.sendMessage("The reward calender "+inventoryName+" already exists!");
+			player.sendMessage(ChatColor.RED+"The reward calender "+inventoryName+" already exists!");
 			return false;
 		}
 		yamlFile.addDefault("Calendar.Name", inventoryName);
+		int day = 1;
+		int decoIndex = 1;
 		
-		for(int i = 0; i < inv.getContents().length; i++){
-			if(i > 44) break;
-			System.out.println(i);
-			ItemStack itemStack[] = inv.getContents();
-			if(itemStack[i] == null) continue;
-			String itemName = itemStack[i].getItemMeta().getDisplayName();
-			String itemType = itemStack[i].getType().toString();
-			int itemValue = itemStack[i].getAmount();
+		for(NewItem item : newItemList){
+			ItemStack itemStack = item.itemStack;
+			Material material = itemStack.getType();
+			String itemName = item.displayName;
+			String itemType = item.itemType;
+			int itemSlot = item.position;
+			int itemValue = item.value;
 			
-			if(itemType.equalsIgnoreCase("DOUBLE_PLANT")){
-				itemType = "money";
-				itemValue = newItem[i].value;
-			} else if(newItem[i].itemType.equalsIgnoreCase("Type Decoration")){
+			if(itemName == null){
+				itemName = material.name();
+			}
+			
+			if(itemType.equalsIgnoreCase("Type Decoration")){
 				itemType = "decoration";
 			}
 			
-			yamlFile.addDefault("Rewards.Day."+(i+1)+".Name", itemName);
-			yamlFile.addDefault("Rewards.Day."+(i+1)+".Type", itemType);
-			yamlFile.addDefault("Rewards.Day."+(i+1)+".Value", itemValue);
+			if(itemType.equalsIgnoreCase("decoration")){
+				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Name", itemName);
+				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Type", itemType);
+				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Value", itemValue);
+				yamlFile.addDefault("Decoration.Slot."+decoIndex+".Slot", itemSlot);
+				decoIndex++;
+			} else {
+				yamlFile.addDefault("Rewards.Day."+day+".Name", itemName);
+				yamlFile.addDefault("Rewards.Day."+day+".Type", material.name());
+				yamlFile.addDefault("Rewards.Day."+day+".Value", itemValue);
+				yamlFile.addDefault("Rewards.Day."+day+".Slot", itemSlot);
+				day++;
+			}
+			
 			
 		}
 		

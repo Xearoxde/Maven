@@ -108,7 +108,13 @@ public class GuiActions {
 			//Creates the new reward calendar inventory
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new reward calendar")){
 				inventory.add(event.getInventory());
-				player.openInventory(createNewRewardCalendar());
+				
+				Inventory inv = createNewRewardCalendar();
+				
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inv.setContents(inventoryContent.get(player.getUniqueId()));
+				}
+				player.openInventory(inv);
 			}
 			
 			//Creates a keyboard
@@ -144,6 +150,12 @@ public class GuiActions {
 				}
 				newItemList = newItemMap.get(player.getUniqueId());
 				if(parseInventory.createNewRewardFile(inv, player, newItemList)){
+					player.sendMessage(ChatColor.DARK_GREEN+"The reward calendar "+inv.getTitle().substring(19)+ChatColor.DARK_GREEN+" was saved!");
+					for(int i = 0; i < 45; i++){
+						event.getInventory().setItem(i, air);
+					}
+					inventoryContent.remove(player.getUniqueId());
+					player.closeInventory();
 					return;
 				} else {
 					player.openInventory(inv);
@@ -317,16 +329,16 @@ public class GuiActions {
 						if(value < 64){
 							value++;
 							newItem.itemStack.setAmount(value);
+							newItem.value = value;
 							event.getInventory().setItem(4, newItem.itemStack);
-							player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
 						}
 					} else if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Decrase Value -1")){
 						int value = newItem.itemStack.getAmount();
 						if(value > 1){
 							value--;
 							newItem.itemStack.setAmount(value);
+							newItem.value = value;
 							event.getInventory().setItem(4, newItem.itemStack);
-							player.sendMessage(Integer.toString(newItem.itemStack.getAmount()));
 						}
 					}
 				}
