@@ -78,9 +78,7 @@ public class CreateFiles {
 		yamlFile.addDefault("Player_Name", playerName );
 		yamlFile.addDefault("Player_First_Login", myDate );
 		yamlFile.addDefault("Is_Player_VIP?", false);
-		
 		for(int i = 0; i < days; i++){
-			
 			if(i == 0){
 				myDate = sdf.format(calendar.getTime());
 			} else {
@@ -97,6 +95,8 @@ public class CreateFiles {
 					yamlFile.addDefault("Rewards."+myDate+".Reward_Name", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Name"));
 					yamlFile.addDefault("Rewards."+myDate+".Reward_Type", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Type"));
 					yamlFile.addDefault("Rewards."+myDate+".Reward_Value", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Value"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Slot", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Slot"));
+					System.out.println("UseSpecific= "+i);
 				} catch(Exception e){
 					e.printStackTrace();
 				}
@@ -111,6 +111,19 @@ public class CreateFiles {
 				}
 			}
 		}
+		if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
+			int decoIndex =1;
+			while(yamlDefaultFile.get("Decoration.Slot."+decoIndex+".") != null){
+				yamlFile.addDefault("Decoration."+decoIndex+".Name", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Name"));
+				yamlFile.addDefault("Decoration."+decoIndex+".Type", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Type"));
+				yamlFile.addDefault("Decoration."+decoIndex+".Value", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Value"));
+				yamlFile.addDefault("Decoration."+decoIndex+".Slot", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Slot"));
+				System.out.println("Decoration= "+decoIndex);
+				decoIndex++;
+			}
+		}
+		
+		
 		yamlFile.options().copyDefaults(true);
 		
 		try {
