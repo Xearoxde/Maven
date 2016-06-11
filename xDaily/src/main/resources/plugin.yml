@@ -1,6 +1,10 @@
 name: xDaily
 main: de.xearox.xdaily.XDaily
+<<<<<<< HEAD
 version: 0.4.3
+=======
+version: 0.5.0
+>>>>>>> adminGUI
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
 softdepend: [Vault]

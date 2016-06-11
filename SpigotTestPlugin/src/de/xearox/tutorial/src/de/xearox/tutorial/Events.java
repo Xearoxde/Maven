@@ -43,11 +43,11 @@ public class Events implements Listener {
 		event.setJoinMessage(ChatColor.GRAY + "[" + ChatColor.GREEN + "+" + ChatColor.GRAY + "] " + ChatColor.GOLD + player.getDisplayName());
 		System.out.println("Joined Player Name is: "+player.getDisplayName());
 		Float Value = database.GetValue("player_list", player.getDisplayName(), "Redling");
-		player.sendMessage("Hallo "+player.getDisplayName()+" Willkommen zurück auf Unserem Server");
+		player.sendMessage("Hallo "+player.getDisplayName()+" Willkommen zurï¿½ck auf Unserem Server");
 		player.sendMessage("Um auf Unseren TeamSpeak Server zu kommen, verwende "+ChatColor.DARK_RED+"ts.r3dbl4ck.de");
-		player.sendMessage("Wir wünschen dir noch viel Spaß auf Unserem Server");
+		player.sendMessage("Wir wï¿½nschen dir noch viel Spaï¿½ auf Unserem Server");
 		player.sendMessage("----------------------------------------------");
-		player.sendMessage(ChatColor.GREEN+"Dein Kontostand beträgt aktuell: "+Value.toString()+" Redlings");
+		player.sendMessage(ChatColor.GREEN+"Dein Kontostand betrï¿½gt aktuell: "+Value.toString()+" Redlings");
 		try {			
 			database.AddNewPlayer(player.getDisplayName());	
 		} catch (Exception e) {
@@ -181,7 +181,7 @@ public class Events implements Listener {
 			
 		
 		Player player			= event.getPlayer();
-				//Wieviel Geld der Käufer der Items hat, also der Schild Inhaber
+				//Wieviel Geld der Kï¿½ufer der Items hat, also der Schild Inhaber
 		try{			
 			//event.getPlayer().sendMessage(MD5Hash);
 			if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
@@ -197,7 +197,7 @@ public class Events implements Listener {
 				Float Price				= null;
 				Float TotalPrice		= null;
 				String SignOwner			= null;
-				Float SellerBalance		= null;		//Wieviel Geld der Verkäufer der Items hat, also der an das Schild verkauft
+				Float SellerBalance		= null;		//Wieviel Geld der Verkï¿½ufer der Items hat, also der an das Schild verkauft
 				Float SignOwnerBalance	= null;
 				int TotalAmount			= 0;
 				String Buyer			= event.getPlayer().getDisplayName();
@@ -235,7 +235,7 @@ public class Events implements Listener {
 									SellerBalance = SellerBalance + TotalPrice;
 									TotalSum = TotalAmount + AmountToSell;
 									if(!SignOwner.equals(event.getPlayer().getDisplayName())){
-										System.out.println("Geld des Verkäufers "+SellerBalance);
+										System.out.println("Geld des Verkï¿½ufers "+SellerBalance);
 									
 										database.UpdatePlayerCurrency(player.getDisplayName(), "Redling", SellerBalance );
 										System.out.println("Geld des Sign Owners "+SignOwnerBalance);

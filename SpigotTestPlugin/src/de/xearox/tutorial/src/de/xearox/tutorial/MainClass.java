@@ -26,7 +26,7 @@ public class MainClass extends JavaPlugin {
 		Database database = new Database(null);
 		if(this.getConfig().getString("Plugin.Configured").equalsIgnoreCase("false")){
 			System.out.println("Das Plugin muss Konfiguriert werden!");
-			System.out.println("Anschließend bei Database.Enable ein true und bei");
+			System.out.println("Anschlieï¿½end bei Database.Enable ein true und bei");
 			System.out.println("Plugin.Configured ebenfalls ein true setzen");
 			System.exit(0);
 		}else{
@@ -222,7 +222,7 @@ public class MainClass extends JavaPlugin {
 						return true;
 					}else if(args[0].equalsIgnoreCase("balance")){
 						Value = database.GetValue("player_list", player.getDisplayName(), "Redling");
-						sender.sendMessage(ChatColor.GREEN+"Dein Kontostand beträgt aktuell: "+df.format(Value).toString()+" Redlings");
+						sender.sendMessage(ChatColor.GREEN+"Dein Kontostand betrï¿½gt aktuell: "+df.format(Value).toString()+" Redlings");
 						return true;
 					}
 				}else if(args.length == 3){
@@ -239,13 +239,13 @@ public class MainClass extends JavaPlugin {
 							database.UpdatePlayerCurrency(args[1], "Redling", PlayerTo);
 							
 							player.sendMessage(ChatColor.GREEN+"Du hast "+args[1]+" "+df.format(Float.parseFloat(args[2]))+" Redlings gesendet");
-							player.sendMessage(ChatColor.GREEN+"Dein neuer Kontostand beträgt nun "+df.format(PlayerFrom)+" Redlings");
+							player.sendMessage(ChatColor.GREEN+"Dein neuer Kontostand betrï¿½gt nun "+df.format(PlayerFrom)+" Redlings");
 							Bukkit.getPlayer(args[1]).sendMessage(ChatColor.GREEN+"Du hast von "+player.getDisplayName()+
 							" "+df.format(Float.parseFloat(args[2]))+ " Redlings erhalten");
-							Bukkit.getPlayer(args[1]).sendMessage(ChatColor.GREEN+"Dein Neuer Kontostand beträgt nun "+df.format(PlayerTo)+" Redlings");
+							Bukkit.getPlayer(args[1]).sendMessage(ChatColor.GREEN+"Dein Neuer Kontostand betrï¿½gt nun "+df.format(PlayerTo)+" Redlings");
 							return true;
 						}else if(PlayerFrom < Value){
-							player.sendMessage(ChatColor.DARK_RED+"Leider reicht dein Guthaben nicht aus, um die Transaktion durchzuführen :(");
+							player.sendMessage(ChatColor.DARK_RED+"Leider reicht dein Guthaben nicht aus, um die Transaktion durchzufï¿½hren :(");
 							return true;
 						}
 					}
@@ -273,7 +273,7 @@ public class MainClass extends JavaPlugin {
 						return true;
 					}else if(args[0].equalsIgnoreCase("balance")){
 						Value = database.GetValue("player_list", player.getDisplayName(), "Xearling");
-						sender.sendMessage(ChatColor.GREEN+"Dein Kontostand beträgt aktuell: "+df.format(Value)+" Xearling");
+						sender.sendMessage(ChatColor.GREEN+"Dein Kontostand betrï¿½gt aktuell: "+df.format(Value)+" Xearling");
 						return true;
 					}
 				}else if(args.length == 0){
@@ -292,12 +292,12 @@ public class MainClass extends JavaPlugin {
 				if(args.length == 1){
 					if(args[0].equalsIgnoreCase("help")){
 						player.sendMessage("Mit dem Command /buy kannst du dir Items und Kommandos kaufen");
-						player.sendMessage("Bezahlen tust du mit Xearlings, die Premium Währung im Spiel");
+						player.sendMessage("Bezahlen tust du mit Xearlings, die Premium Wï¿½hrung im Spiel");
 						player.sendMessage("Um dir ein Item oder Kommando zu kaufen, kannst du /buy list aufrufen");
 						player.sendMessage("Dann bekommst du eine Liste der Aktuellen Items aufgelistet");
 						player.sendMessage("Mit /buy ItemName Menge kannst du dir entsprechend die Sachen kaufen");
-						player.sendMessage("Xearlings kannst du dir im übrigen erarbeiten oder kaufen");
-						player.sendMessage("Für weitere Infos komm besuch unsere Webseite www.nichtvorhanden.de");
+						player.sendMessage("Xearlings kannst du dir im ï¿½brigen erarbeiten oder kaufen");
+						player.sendMessage("Fï¿½r weitere Infos komm besuch unsere Webseite www.nichtvorhanden.de");
 					}else if(args[0].equalsIgnoreCase("list")){
 						player.sendMessage("Die Aktuellen Items und Kommandos");
 						player.sendMessage("Menge --- Name --- Preis");

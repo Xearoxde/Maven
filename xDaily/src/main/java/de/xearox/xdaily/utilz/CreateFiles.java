@@ -2,6 +2,7 @@ package de.xearox.xdaily.utilz;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -43,14 +44,41 @@ public class CreateFiles {
 		YamlConfiguration yamlFile;
 		yamlFile = YamlConfiguration.loadConfiguration(file);
 		
-		if(utilz.fileExist(file) && !rewriteFile) return;
+		if(utilz.fileExist(file) && !rewriteFile){
+			return;
+		} else if(rewriteFile) {
+			yamlFile.set("Rewards", null);
+			try {
+				yamlFile.save(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		//Loading config File
 		File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
 		YamlConfiguration yamlConfigFile;
 		yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
 		
-		days = yamlConfigFile.getInt("Config.DailyBonus.Days");
+		String calendarName = yamlConfigFile.getString("Config.DailyBonus.UseSpecificCalendar");
+		
+		File defaultFile = new File(plugin.getDataFolder()+File.separator+"/data/rewards/"+calendarName+".yml");
+		YamlConfiguration yamlDefaultFile;
+		yamlDefaultFile = YamlConfiguration.loadConfiguration(defaultFile);
+		
+		if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
+			int i = 1;
+			days = 0;
+			while(yamlConfigFile.getString("Config.DailyBonus.Rewards.Day."+i) != null){
+				i++;
+				days++;
+			}
+		} else {
+			days = yamlConfigFile.getInt("Config.DailyBonus.Days");
+		}
+		
+		
 		if(yamlConfigFile.getBoolean("Config.DailyBonus.RandomItems")){
 			randomItems = true;
 		} else {
@@ -61,9 +89,7 @@ public class CreateFiles {
 		yamlFile.addDefault("Player_Name", playerName );
 		yamlFile.addDefault("Player_First_Login", myDate );
 		yamlFile.addDefault("Is_Player_VIP?", false);
-		
 		for(int i = 0; i < days; i++){
-			
 			if(i == 0){
 				myDate = sdf.format(calendar.getTime());
 			} else {
@@ -72,6 +98,24 @@ public class CreateFiles {
 			}
 			if(randomItems){
 				//
+			} 
+			
+			if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
+				try{
+					String rewardType;
+					if(yamlDefaultFile.getString("Rewards.Day."+(i+1)+".Type").equalsIgnoreCase("double_plant")){
+						rewardType = "money";
+					} else {
+						rewardType = yamlDefaultFile.getString("Rewards.Day."+(i+1)+".Type");
+					}
+					yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Name", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Name"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Type", rewardType);
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Value", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Value"));
+					yamlFile.addDefault("Rewards."+myDate+".Reward_Slot", yamlDefaultFile.get("Rewards.Day."+(i+1)+".Slot"));
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			} else {
 				try{
 					yamlFile.addDefault("Rewards."+myDate+".Get_Reward?", false);
@@ -83,6 +127,18 @@ public class CreateFiles {
 				}
 			}
 		}
+		if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
+			int decoIndex =1;
+			while(yamlDefaultFile.get("Decoration.Slot."+decoIndex+".") != null){
+				yamlFile.addDefault("Decoration."+decoIndex+".Name", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Name"));
+				yamlFile.addDefault("Decoration."+decoIndex+".Type", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Type"));
+				yamlFile.addDefault("Decoration."+decoIndex+".Value", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Value"));
+				yamlFile.addDefault("Decoration."+decoIndex+".Slot", yamlDefaultFile.get("Decoration.Slot."+decoIndex+".Slot"));
+				decoIndex++;
+			}
+		}
+		
+		
 		yamlFile.options().copyDefaults(true);
 		
 		try {
@@ -104,6 +160,22 @@ public class CreateFiles {
 		
 		File file = new File(pluginDir + "/data/vip-player.txt");
 		utilz.createFile(file);
+	}
+	
+	public void createDirs(){
+		String pluginDir = plugin.getDataFolder()+File.separator;
+		File configDir = new File(pluginDir+"/config/");
+		File dataDir = new File(pluginDir+"/data/");
+		File locateDir = new File(pluginDir+"/locate/");
+		File rewardsDir = new File(pluginDir+"/rewards/");
+		
+		if(!configDir.exists()) configDir.mkdirs();
+		
+		if(!dataDir.exists()) dataDir.mkdirs();
+		
+		if(!locateDir.exists()) locateDir.mkdirs();
+		
+		if(!rewardsDir.exists()) rewardsDir.mkdirs();
 	}
 	
 	

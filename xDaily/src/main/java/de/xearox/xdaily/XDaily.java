@@ -3,24 +3,31 @@ package de.xearox.xdaily;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import de.xearox.xdaily.admgui.CreateRewards;
+import de.xearox.xdaily.adminGUI.GuiActions;
+import de.xearox.xdaily.adminGUI.ParseInventory;
 import de.xearox.xdaily.listeners.InventoryClickEventListener;
 import de.xearox.xdaily.listeners.MyExecutor;
 import de.xearox.xdaily.listeners.PlayerJoinListener;
 import de.xearox.xdaily.utilz.CreateConfig;
+import de.xearox.xdaily.utilz.CreateDefaultCalendar;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
+import de.xearox.xletter.XLetter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -35,15 +42,63 @@ public class XDaily extends JavaPlugin{
 	private CreateFiles createFiles;
 	private VaultIntegration vaultIntegration;
 	private DailyReset dailyReset;
+	private GuiActions guiActions;
+	private XLetter xLetter;
+	private ParseInventory parseInventory;
+	private CreateDefaultCalendar createDefaultCalendar;
+	private de.xearox.xdaily.adminGUI.NewItem newItem;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
 	public static Economy econ = null;
 	public static Permission perm = null;
-
-
+	
+	private HashMap<UUID, ArrayList<Inventory>> lastInventoryMap;
+	public HashMap<UUID, ArrayList<Inventory>> getLastInventoryMap(){
+		return lastInventoryMap;
+	}
+	
+	private HashMap<UUID, ItemStack[]> inventoryContent;
+	public HashMap<UUID, ItemStack[]> getInventoryContent(){
+		return inventoryContent;
+	}
+	
+	private HashMap<String, ItemStack> newItemReward;
+	public HashMap<String, ItemStack> getNewItemReward(){
+		return newItemReward;
+	}
+	
+	private HashMap<UUID, ArrayList<de.xearox.xdaily.adminGUI.NewItem>> newItemMap;
+	public HashMap<UUID, ArrayList<de.xearox.xdaily.adminGUI.NewItem>> getNewItemMap(){
+		return newItemMap;
+	}
+	
+	private HashMap<UUID, de.xearox.xdaily.adminGUI.NewItem> newItem2;
+	public HashMap<UUID, de.xearox.xdaily.adminGUI.NewItem> getNewItem2(){
+		return newItem2;
+	}
+	
+	/*public class NewItem{
+		  public String displayName;
+		  public String itemType;
+		  public ItemStack itemStack;
+		  public int position;
+		  public int value = 1;
+	}
+	public NewItem getNewItem(){
+		return newItem;
+	}*/
+	
+	/*private HashMap<UUID, Inventory> lastInventoryMap;
+	public HashMap<UUID, Inventory> getLastInventoryMap(){
+		return lastInventoryMap;
+	}*/
 	
 	public Utilz getUtilz(){
 		return utilz;
+	}
+	
+	public XLetter getXLetter(){
+		return xLetter;
 	}
 	
 	public SetLanguageClass getLanguageClass(){
@@ -70,6 +125,17 @@ public class XDaily extends JavaPlugin{
 		return dailyReset;
 	}
 	
+	public GuiActions getGuiActions(){
+		return guiActions;
+	}
+	
+	public ParseInventory getParseInventory(){
+		return parseInventory;
+	}
+	
+	public CreateDefaultCalendar getCreateDefaultCalendar(){
+		return createDefaultCalendar;
+	}
 	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
@@ -88,17 +154,29 @@ public class XDaily extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		try{
+			this.newItem = new de.xearox.xdaily.adminGUI.NewItem();
+			this.newItem2 = new HashMap<>();
+			this.newItemMap = new HashMap<>();
+			this.lastInventoryMap = new HashMap<>();
+			this.inventoryContent = new HashMap<>();
+			this.newItemReward = new HashMap<>();
 			this.vaultIntegration = new VaultIntegration(this);
+			this.xLetter = new XLetter();
 			this.utilz = new Utilz(this);
+			this.parseInventory = new ParseInventory(this);
 			this.langClass = new SetLanguageClass(this);
+			this.guiActions = new GuiActions(this);
 			this.createRewards = new CreateRewards(this);
 			this.createFiles = new CreateFiles(this);
 			this.dailyReset = new DailyReset(this);
 			this.onPlayerJoinListener = new PlayerJoinListener(this);
 			this.createConfig = new CreateConfig(this);
+			this.createDefaultCalendar = new CreateDefaultCalendar(this);
+			this.createFiles.createDirs();
 			this.createConfig.createConfig();
 			this.createFiles.createVIPFile();
-			utilz.createLanguageFiles();
+			this.utilz.createLanguageFiles();
+			this.createDefaultCalendar.createDefault();
 			registerListener();
 			createCommands();
 			checkVIPFile();
@@ -124,7 +202,7 @@ public class XDaily extends JavaPlugin{
 				//e.printStackTrace();
 			}
 		} catch (NoClassDefFoundError e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		} catch (Exception e){
 			e.printStackTrace();
 		}

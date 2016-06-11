@@ -1,6 +1,6 @@
 >>> ToDo List <<<
 
-- Automatisches erstellen von Player Dateien, ggf. im sp�teren werden alle Plugins �ber eine Datei angesteuert.
+- Automatisches erstellen von Player Dateien, ggf. im sp�teren werden alle Plugins �ber eine Datei angesteuert.
 - Wenn ein Spieler sich ein neuer Spieler das erste Mal auf den Server einloggt, wird eine Datei erstellt mit den entsprechenden Daten
 - 
 
@@ -16,6 +16,16 @@ Rewards:
 	03.01.1000:
 		Get_Reward: false
 		Reward_Type: none
+		
+Reward list
+	0 - 212
+	255 - 448
+		
+New Reward
+1.) Item Auswählen
+2.) Typ auswählen - ob Dekoration oder reward
+3.) Wenn Reward dann Menge auswählen - andernfalls wird dieser Schritt übersprungen
+4.) Namen auswählen - Wenn keine Eingabe dann frei lassen
 		
 old xDaily Command
 

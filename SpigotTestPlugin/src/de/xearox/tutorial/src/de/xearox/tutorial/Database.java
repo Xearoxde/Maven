@@ -19,9 +19,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Database{
 	
-	public static Plugin plugin;
+	public static MainClass plugin;
 	
-	public Database(Plugin plugin){
+	public Database(MainClass plugin){
 		Database.plugin = plugin;
 	}
 
@@ -136,7 +136,7 @@ public class Database{
 					TempInt3 = 0;
 				}					
 			}
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"Es wurden "+TempInt+" Spalten hinzugefügt");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"Es wurden "+TempInt+" Spalten hinzugefï¿½gt");
 			//plugin.getConfig().set("Database.TableName.PlayerTrading.Created", "true");
 		}catch ( SQLException e){
 			System.err.println( e.getClass().getName() + ": " + e.getMessage() );

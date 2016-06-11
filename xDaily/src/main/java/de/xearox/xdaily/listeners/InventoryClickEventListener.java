@@ -19,6 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.xearox.xdaily.XDaily;
+import de.xearox.xdaily.adminGUI.GuiActions;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 import net.md_5.bungee.api.ChatColor;
@@ -28,11 +29,13 @@ public class InventoryClickEventListener implements Listener{
 	private XDaily plugin;
 	private Utilz utilz;
 	private SetLanguageClass langClass;
+	private GuiActions guiActions;
 	
 	public InventoryClickEventListener(XDaily plugin) {
 		this.plugin = plugin;
 		this.utilz = plugin.getUtilz();
 		this.langClass = plugin.getLanguageClass();
+		this.guiActions = plugin.getGuiActions();
 	}
 	
 	@EventHandler
@@ -169,21 +172,28 @@ public class InventoryClickEventListener implements Listener{
 				}
 			}
 		} else {
-			if(ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("xDaily Admin GUI - Index")){
+			if(ChatColor.stripColor(event.getInventory().getName()).contains("xDaily Admin")|| ChatColor.stripColor(event.getInventory().getName()).contains("Keyboard: ") 
+					|| ChatColor.stripColor(event.getInventory().getName()).contains("Change Default Calendar")){
 				Player player = (Player) event.getWhoClicked();
 				event.setCancelled(true);
 				
-				if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()){
-						player.closeInventory();
+				if(event.getCurrentItem() == null){
+						//player.closeInventory();
 						return;
 					}
+				
+				guiActions.runActions(player,event);
+				/*
 				try{
 					if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Reload Server")){
 						plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "rl");
 					}
+					if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Close Inventory")){
+						player.closeInventory();
+					}
 				} catch (Exception e){
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 		return;

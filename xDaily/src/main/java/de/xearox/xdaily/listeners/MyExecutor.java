@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.admgui.CreateRewards;
+import de.xearox.xdaily.adminGUI.GuiActions;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
@@ -33,6 +36,7 @@ public class MyExecutor implements CommandExecutor {
 	private CreateFiles createFiles;
 	private Utilz utilz;
 	private SetLanguageClass langClass;
+	private GuiActions guiActions;
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
@@ -40,6 +44,7 @@ public class MyExecutor implements CommandExecutor {
 		this.createFiles = plugin.getCreateFiles();
 		this.utilz = plugin.getUtilz();
 		this.langClass = plugin.getLanguageClass();
+		this.guiActions = plugin.getGuiActions();
 		
 	}
 	
@@ -75,27 +80,50 @@ public class MyExecutor implements CommandExecutor {
 				int dailyDays = yamlConfigFile.getInt("Config.DailyBonus.Days");
 				int maxDays = 0;
 				
+				String calendarName = yamlConfigFile.getString("Config.DailyBonus.UseSpecificCalendar");
+				
+				File defaultFile = new File(plugin.getDataFolder()+File.separator+"/data/rewards/"+calendarName+".yml");
+				YamlConfiguration yamlDefaultFile;
+				yamlDefaultFile = YamlConfiguration.loadConfiguration(defaultFile);
+				
+				int maxSlot = 0;
+				int index = 1;
+				int decoMaxSlot = 1;
+				while(yamlDefaultFile.get("Decoration.Slot."+index+".") != null){
+					maxSlot++;
+					index++;
+					decoMaxSlot++;
+				}
+				
+				index = 1;
+				while(yamlDefaultFile.get("Rewards.Day."+index+".") != null){
+					maxSlot++;
+					index++;
+				}
+				
+				dailyDays = maxSlot;
+				
 				if(dailyDays <= 9){
 					maxDays = 9;
 				} else
 				
-				if(dailyDays > 9 && dailyDays < 18){
+				if(dailyDays > 9 && dailyDays <= 18){
 					maxDays = 18;
 				} else
 				
-				if(dailyDays > 18 && dailyDays < 27){
+				if(dailyDays > 18 && dailyDays <= 27){
 					maxDays = 27;
 				} else
 				
-				if(dailyDays > 27 && dailyDays < 36){
+				if(dailyDays > 27 && dailyDays <= 36){
 					maxDays = 36;
 				} else
 				
-				if(dailyDays > 36 && dailyDays < 45){
+				if(dailyDays > 36 && dailyDays <= 45){
 					maxDays = 45;
 				} else
 				
-				if(dailyDays > 45 && dailyDays < 54){
+				if(dailyDays > 45 && dailyDays <= 54){
 					maxDays = 54;
 				} else
 				
@@ -111,17 +139,30 @@ public class MyExecutor implements CommandExecutor {
 				lore.add(""); // 0 Date or Description
 				lore.add(""); // 1 Reward Type
 				
-				int i = 0;
+				if(yamlConfigFile.getBoolean("Config.DailyBonus.ResetIfPlayerGotAllRewards?")){
+					boolean getAllRewards = false;
+					for(String date : list){
+						if(yamlFile.getBoolean("Rewards."+date+".Get_Reward?")) getAllRewards = true; else getAllRewards = false;
+						player.sendMessage(Boolean.toString(getAllRewards));
+					}
+					if(getAllRewards) createFiles.CreatePlayerFile(player, true);
+					yamlFile = YamlConfiguration.loadConfiguration(file);
+					player.sendMessage("You have got all rewards. Your rewards was resetted");
+				}
+				
 				try{
 					for(String date : list){
+						int i = yamlFile.getInt("Rewards."+date+".Reward_Slot");
 						String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type");
 						String rewardValue = yamlFile.getString("Rewards."+date+".Reward_Value");
 						String vipMulti = yamlConfigFile.getString("Config.DailyBonus.VIP.Multiplier");
 						boolean getReward = yamlFile.getBoolean("Rewards."+date+".Get_Reward?");
 						//slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
 						slot1Meta.setDisplayName(ChatColor.RED+date);
+						
 						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
 							slot1.setType(Material.DOUBLE_PLANT);
+							rewardType = "money";
 						} else if(getReward){
 							slot1.setType(Material.BARRIER);
 						} else {
@@ -145,10 +186,25 @@ public class MyExecutor implements CommandExecutor {
 							slot1.setItemMeta(slot1Meta);
 							inv.setItem(i, slot1);
 						}
-						
-						i++;
 					}
 				} catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				try{
+					lore.remove(1);
+					slot1Meta.setLore(lore);
+					for(int i = 0; i<decoMaxSlot-1;i++){
+						String decoName = yamlFile.getString("Decoration."+(i+1)+".Name");
+						int decoValue = yamlFile.getInt("Decoration."+(i+1)+".Value");
+						int decoSlot = yamlFile.getInt("Decoration."+(i+1)+".Slot");
+						
+						slot1Meta.setDisplayName(" ");
+						slot1.setType(Material.getMaterial(decoName));
+						slot1.setItemMeta(slot1Meta);
+						inv.setItem(decoSlot, slot1);
+					}
+				} catch (Exception e){
 					e.printStackTrace();
 				}
 				
@@ -188,7 +244,8 @@ public class MyExecutor implements CommandExecutor {
 					}
 					Player player = (Player) sender;
 					
-					createRewards.createAdminGUI(player);
+					//createRewards.createAdminGUI(player);
+					guiActions.runActions(player);
 					return true;
 				}
 			}else if(args.length == 2){
@@ -255,15 +312,12 @@ public class MyExecutor implements CommandExecutor {
 		}
 		
 		if(label.equalsIgnoreCase("test")){
-			if((sender instanceof Player)){
-				Player player = (Player) sender;
-				player.sendMessage(utilz.getPlayerLanguage(player));
-				
-				String playerLanguage = utilz.getPlayerLanguage(player);
-				playerLanguage = playerLanguage.substring(playerLanguage.indexOf("_")+1, playerLanguage.length()).toLowerCase();
-				
-				player.sendMessage(playerLanguage);
-			}
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("haaaalo").append(" muhahahaha");
+			
+			System.out.println(sb.toString());
+            
 			/*if((sender instanceof Player)){
 				Player player = (Player) sender;
 				langClass.setLanguage(player, false);
