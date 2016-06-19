@@ -7,11 +7,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xDaily</artifactId>
-<<<<<<< HEAD
-	<version>0.4.3-SNAPSHOT</version>
-=======
-	<version>0.5.0-SNAPSHOT</version>
->>>>>>> adminGUI
+	<version>0.5.1-SNAPSHOT</version>
 	<build>
         <plugins>
             <plugin>

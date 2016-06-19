@@ -63,15 +63,12 @@
            <groupId>org.spigotmc</groupId>
            <artifactId>spigot-api</artifactId>
            <version>1.10-R0.1-SNAPSHOT</version>
-<<<<<<< HEAD
-=======
            <scope>provided</scope>
     </dependency>
     <dependency>
            <groupId>org.bukkit</groupId>
            <artifactId>bukkit</artifactId>
            <version>1.10-R0.1-SNAPSHOT</version>
->>>>>>> adminGUI
            <scope>provided</scope>
     </dependency>
     <dependency>

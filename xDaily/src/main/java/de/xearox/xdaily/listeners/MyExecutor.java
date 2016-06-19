@@ -143,11 +143,14 @@ public class MyExecutor implements CommandExecutor {
 					boolean getAllRewards = false;
 					for(String date : list){
 						if(yamlFile.getBoolean("Rewards."+date+".Get_Reward?")) getAllRewards = true; else getAllRewards = false;
-						player.sendMessage(Boolean.toString(getAllRewards));
 					}
-					if(getAllRewards) createFiles.CreatePlayerFile(player, true);
-					yamlFile = YamlConfiguration.loadConfiguration(file);
-					player.sendMessage("You have got all rewards. Your rewards was resetted");
+					if(getAllRewards){
+						createFiles.CreatePlayerFile(player, true);
+						yamlFile = YamlConfiguration.loadConfiguration(file);
+						player.sendMessage("You have got all rewards. Your rewards was resetted");
+					} else {
+						
+					}
 				}
 				
 				try{
