@@ -48,6 +48,7 @@ public class CreateFiles {
 			return;
 		} else if(rewriteFile) {
 			yamlFile.set("Rewards", null);
+			yamlFile.set("Decoration", null);
 			try {
 				yamlFile.save(file);
 			} catch (IOException e) {
@@ -70,7 +71,7 @@ public class CreateFiles {
 		if(yamlConfigFile.getBoolean("Config.DailyBonus.UseSpecific?")){
 			int i = 1;
 			days = 0;
-			while(yamlConfigFile.getString("Config.DailyBonus.Rewards.Day."+i) != null){
+			while(yamlDefaultFile.getString("Rewards.Day."+i) != null){
 				i++;
 				days++;
 			}
@@ -78,6 +79,7 @@ public class CreateFiles {
 			days = yamlConfigFile.getInt("Config.DailyBonus.Days");
 		}
 		
+		System.out.println(days);
 		
 		if(yamlConfigFile.getBoolean("Config.DailyBonus.RandomItems")){
 			randomItems = true;
@@ -168,6 +170,7 @@ public class CreateFiles {
 		File dataDir = new File(pluginDir+"/data/");
 		File locateDir = new File(pluginDir+"/locate/");
 		File rewardsDir = new File(pluginDir+"/rewards/");
+		File permGroupsDir = new File(pluginDir+"/data/permGroups/");
 		
 		if(!configDir.exists()) configDir.mkdirs();
 		
@@ -176,6 +179,8 @@ public class CreateFiles {
 		if(!locateDir.exists()) locateDir.mkdirs();
 		
 		if(!rewardsDir.exists()) rewardsDir.mkdirs();
+		
+		if(!permGroupsDir.exists()) permGroupsDir.mkdirs();
 	}
 	
 	

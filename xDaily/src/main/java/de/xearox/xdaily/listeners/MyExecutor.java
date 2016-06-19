@@ -77,6 +77,10 @@ public class MyExecutor implements CommandExecutor {
 				YamlConfiguration yamlFile;
 				yamlFile = YamlConfiguration.loadConfiguration(file);
 				
+				File permGroupsFile = new File(plugin.getDataFolder()+File.separator+"/data/permGroups/groups.yml");		
+				YamlConfiguration yamlpermGroupsFile;
+				yamlpermGroupsFile = YamlConfiguration.loadConfiguration(permGroupsFile);
+				
 				int dailyDays = yamlConfigFile.getInt("Config.DailyBonus.Days");
 				int maxDays = 0;
 				
@@ -159,6 +163,11 @@ public class MyExecutor implements CommandExecutor {
 						String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type");
 						String rewardValue = yamlFile.getString("Rewards."+date+".Reward_Value");
 						String vipMulti = yamlConfigFile.getString("Config.DailyBonus.VIP.Multiplier");
+						if(yamlConfigFile.getBoolean("Config.Daily.UsePermGroupsInsteadVIP?") && XDaily.perm != null){
+							vipMulti = yamlpermGroupsFile.getString(XDaily.perm.getPrimaryGroup(player)+".Multiplier");
+						} else {
+							vipMulti = yamlConfigFile.getString("Config.DailyBonus.VIP.Multiplier");
+						}
 						boolean getReward = yamlFile.getBoolean("Rewards."+date+".Get_Reward?");
 						//slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
 						slot1Meta.setDisplayName(ChatColor.RED+date);
@@ -178,7 +187,9 @@ public class MyExecutor implements CommandExecutor {
 							}
 						}
 						//lore.set(0, ChatColor.YELLOW+date);
-						if(yamlFile.getBoolean("Is_Player_VIP?")){
+						if(yamlFile.getBoolean("Is_Player_VIP?") 
+								|| (yamlConfigFile.getBoolean("Config.Daily.UsePermGroupsInsteadVIP?") 
+										&& yamlpermGroupsFile.getBoolean(XDaily.perm.getPrimaryGroup(player)+".CanUseMulti?"))){
 							lore.add(ChatColor.GREEN+"VIP Bonus : x"+vipMulti);
 							slot1Meta.setLore(lore);
 							slot1.setItemMeta(slot1Meta);
@@ -315,11 +326,8 @@ public class MyExecutor implements CommandExecutor {
 		}
 		
 		if(label.equalsIgnoreCase("test")){
-			StringBuilder sb = new StringBuilder();
 			
-			sb.append("haaaalo").append(" muhahahaha");
-			
-			System.out.println(sb.toString());
+			plugin.reloadConfig();
             
 			/*if((sender instanceof Player)){
 				Player player = (Player) sender;

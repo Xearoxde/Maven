@@ -147,6 +147,56 @@ public class GuiActions {
 				player.openInventory(createIndex());
 			}
 			
+			if(ChatColor.stripColor(event.getInventory().getTitle()).contains("New Calendar") &&
+					(event.isRightClick() && event.getCurrentItem().getType() != Material.AIR)){
+				event.setCurrentItem(air);
+				
+				Inventory inv = event.getInventory();
+				newItemList = newItemMap.get(player.getUniqueId());
+				
+				
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inventoryContent.replace(player.getUniqueId(), inv.getContents());
+				} else {
+					inventoryContent.put(player.getUniqueId(), inv.getContents());
+				}
+				
+				for(NewItem item : newItemList){
+					if(item.position == event.getSlot()){
+						newItemList.remove(newItemList.indexOf(item));
+						System.out.println("block found");
+						break;
+					}
+				}
+				newItemMap.replace(player.getUniqueId(), newItemList);
+				
+				return;
+			}
+			
+			if(ChatColor.stripColor(event.getInventory().getTitle()).contains("|") &&
+					(event.isRightClick() && event.getCurrentItem().getType() != Material.AIR)){
+				event.setCurrentItem(air);
+				
+				Inventory inv = event.getInventory();
+				newItemList = newItemMap.get(player.getUniqueId());
+				
+				if(inventoryContent.containsKey(player.getUniqueId())){
+					inventoryContent.replace(player.getUniqueId(), inv.getContents());
+				} else {
+					inventoryContent.put(player.getUniqueId(), inv.getContents());
+				}
+				
+				for(NewItem item : newItemList){
+					if(item.position == event.getSlot()){
+						newItemList.remove(newItemList.indexOf(item));
+						System.out.println("block found");
+						break;
+					}
+				}
+				newItemMap.replace(player.getUniqueId(), newItemList);
+				return;
+			}
+			
 			//Creates the new reward calendar inventory
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Create new reward calendar")){
 				inventory.add(event.getInventory());
@@ -613,10 +663,17 @@ public class GuiActions {
 		return inventory;
 	}
 	
-	public Inventory createNewRewardCalendar(){
+	public Inventory createNewRewardCalendar(String...caption){
 		Inventory inventory;
+		String currentInventoryName;
 		
-		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"New Calendar");
+		if(caption.length == 0){
+			currentInventoryName = "New Calendar";
+		} else {
+			currentInventoryName = caption[0];
+		}
+		
+		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+currentInventoryName);
 		
 		inventory.setItem(48, xLetter.getItemStack(TextureUrlList.Keypad.getURL(), "Keyboard"));
 		inventory.setItem(49, GuiItems.saveButton("Save Calendar"));

@@ -54,6 +54,10 @@ public class InventoryClickEventListener implements Listener{
 			YamlConfiguration yamlFile;
 			yamlFile = YamlConfiguration.loadConfiguration(file);
 			
+			File permGroupsFile = new File(plugin.getDataFolder()+File.separator+"/data/permGroups/groups.yml");		
+			YamlConfiguration yamlpermGroupsFile;
+			yamlpermGroupsFile = YamlConfiguration.loadConfiguration(permGroupsFile);
+			
 			int dailyDays = yamlConfigFile.getInt("Config.DailyBonus.Days");
 			
 			if(dailyDays > 54){
@@ -69,16 +73,29 @@ public class InventoryClickEventListener implements Listener{
 			}
 			String dateATM = utilz.getDate(SetLanguageClass.TxtDateFormat, Locale.forLanguageTag(utilz.getPlayerLanguage(player)));
 			int rewardValue = 0;
+			boolean isVIP = false;
 			String rewardType = "";
+			int vipMulti = 1;
 			
 			for(String date : list){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
 						&& !yamlFile.getBoolean("Rewards."+date+".Get_Reward?") && date.equalsIgnoreCase(dateATM)){
 					
-					boolean isVIP = yamlFile.getBoolean("Is_Player_VIP?");
+					if(yamlConfigFile.getBoolean("Config.Daily.UsePermGroupsInsteadVIP?")){
+						if(yamlpermGroupsFile.getBoolean(XDaily.perm.getPrimaryGroup(player)+".CanUseMulti?")){
+							isVIP = true;
+							vipMulti = yamlpermGroupsFile.getInt(XDaily.perm.getPrimaryGroup(player)+".Multiplier");
+						}
+					} else {
+						isVIP = yamlFile.getBoolean("Is_Player_VIP?");
+						if(isVIP){
+							vipMulti = yamlConfigFile.getInt("Config.DailyBonus.VIP.Multiplier");
+						}
+					}
+					
+					
 					rewardType = yamlFile.getString("Rewards."+date+".Reward_Type").toUpperCase();
 					rewardValue = yamlFile.getInt("Rewards."+date+".Reward_Value");
-					int vipMulti = yamlConfigFile.getInt("Config.DailyBonus.VIP.Multiplier");
 					
 					if(isVIP){
 						rewardValue *= vipMulti;
@@ -101,6 +118,11 @@ public class InventoryClickEventListener implements Listener{
 							e.printStackTrace();
 						}
 						ItemStack itemStack = new ItemStack(rewardMatType);
+						while(rewardValue > 64){
+							itemStack.setAmount(rewardValue);
+							player.getInventory().addItem(itemStack);
+							rewardValue -= 64;
+						}
 						itemStack.setAmount(rewardValue);
 						player.getInventory().addItem(itemStack);
 						if(!yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
@@ -109,7 +131,7 @@ public class InventoryClickEventListener implements Listener{
 							event.getCurrentItem().setType(Material.getMaterial(rewardType.toUpperCase()));
 						}
 						yamlFile.set("Rewards."+date+".Get_Reward?", true);
-						String msg = SetLanguageClass.PlayerGetThisReward.replace("%value%", Integer.toString(rewardValue));
+						String msg = SetLanguageClass.PlayerGetThisReward.replace("%value%", Integer.toString(rewardValue*vipMulti));
 						msg = msg.replace("%reward%", rewardType.toLowerCase());
 						player.sendMessage(utilz.Format(msg));
 						try {

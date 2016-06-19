@@ -25,6 +25,7 @@ import de.xearox.xdaily.listeners.PlayerJoinListener;
 import de.xearox.xdaily.utilz.CreateConfig;
 import de.xearox.xdaily.utilz.CreateDefaultCalendar;
 import de.xearox.xdaily.utilz.CreateFiles;
+import de.xearox.xdaily.utilz.PermissionGroups;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 import de.xearox.xletter.XLetter;
@@ -46,6 +47,7 @@ public class XDaily extends JavaPlugin{
 	private XLetter xLetter;
 	private ParseInventory parseInventory;
 	private CreateDefaultCalendar createDefaultCalendar;
+	private PermissionGroups permissionGroups;
 	private de.xearox.xdaily.adminGUI.NewItem newItem;
 	private static final Logger log = Logger.getLogger("Minecraft");
 	
@@ -137,6 +139,10 @@ public class XDaily extends JavaPlugin{
 		return createDefaultCalendar;
 	}
 	
+	public PermissionGroups getPermissionGroups(){
+		return permissionGroups;
+	}
+	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
 		getCommand("daily").setExecutor(myExecutor);
@@ -193,6 +199,8 @@ public class XDaily extends JavaPlugin{
 			} else {
 				log.info("xDaily - INFO - Permission plugin found!");
 			}
+			this.permissionGroups = new PermissionGroups(this);
+			this.permissionGroups.writePermGroups();
 			
 			try{
 				Metrics metrics = new Metrics(this);
