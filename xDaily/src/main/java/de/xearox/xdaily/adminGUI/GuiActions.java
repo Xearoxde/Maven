@@ -236,6 +236,12 @@ public class GuiActions {
 				return;
 			}
 			
+			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Reload Config")){
+				plugin.reloadConfig();
+				player.sendMessage(ChatColor.DARK_GREEN+"Config reloaded");
+				return;
+			}
+			
 			if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Save Calendar")){
 				Inventory inv = event.getInventory();
 				if(inv == null){
@@ -564,6 +570,9 @@ public class GuiActions {
 		inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE+inventoryName+"Change Config");
 		
 		inventory.setItem(2, GuiItems.changeDefaultCalendar());
+		
+		inventory.setItem(44, GuiItems.reloadConfig());
+		
 		inventory.setItem(51, GuiItems.pageGoBack());
 		inventory.setItem(52, GuiItems.pageGoIndex());
 		inventory.setItem(53, GuiItems.closeInventory());

@@ -311,6 +311,23 @@ public class GuiItems{
 		return itemStack;
 	}
 	
+	public static final ItemStack reloadConfig(){
+		ItemStack itemStack = new ItemStack(Material.GLOWSTONE_DUST);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		itemMeta.setDisplayName("Reload Config");
+		itemStack.setItemMeta(itemMeta);
+		
+		return itemStack;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

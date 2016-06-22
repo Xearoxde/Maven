@@ -20,19 +20,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.ChatColor;
 
 import de.xearox.xdaily.XDaily;
-import de.xearox.xdaily.admgui.CreateRewards;
 import de.xearox.xdaily.adminGUI.GuiActions;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
-import net.md_5.bungee.api.ChatColor;
+
 
 public class MyExecutor implements CommandExecutor {
 
 	private XDaily plugin;
-	private CreateRewards createRewards;
 	private CreateFiles createFiles;
 	private Utilz utilz;
 	private SetLanguageClass langClass;
@@ -40,12 +39,10 @@ public class MyExecutor implements CommandExecutor {
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
-		this.createRewards = plugin.getCreateRewards();
 		this.createFiles = plugin.getCreateFiles();
 		this.utilz = plugin.getUtilz();
 		this.langClass = plugin.getLanguageClass();
 		this.guiActions = plugin.getGuiActions();
-		
 	}
 	
 	@Override
@@ -73,7 +70,15 @@ public class MyExecutor implements CommandExecutor {
 				YamlConfiguration yamlConfigFile;
 				yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
 				
-				File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+				File file;
+				
+				if(XDaily.pluginVersion.contains("0.6")){
+					file = new File(plugin.getDataFolder()+File.separator+"/data/playerData/" + player.getUniqueId().toString() + ".yml");
+				} else {
+					file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+				}
+				
+				
 				YamlConfiguration yamlFile;
 				yamlFile = YamlConfiguration.loadConfiguration(file);
 				
@@ -172,21 +177,36 @@ public class MyExecutor implements CommandExecutor {
 						//slot1Meta.setDisplayName(ChatColor.RED+yamlFile.getString("Rewards."+date+".Reward_Name"));
 						slot1Meta.setDisplayName(ChatColor.RED+date);
 						
-						if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
-							slot1.setType(Material.DOUBLE_PLANT);
-							rewardType = "money";
-						} else if(getReward){
+						if(getReward){
 							slot1.setType(Material.BARRIER);
-						} else {
-							if(yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+							slot1Meta.setLore(lore);
+							slot1.setItemMeta(slot1Meta);
+							inv.setItem(i, slot1);
+							continue;
+						}
+						
+						
+						if(yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+							if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
 								slot1.setType(Material.getMaterial(yamlConfigFile.getString("Config.DailyBonus.Rewards.ItemInstead").toUpperCase()));
-								//lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
+								rewardType = "money";
+							} else {
+								slot1.setType(Material.getMaterial(yamlConfigFile.getString("Config.DailyBonus.Rewards.ItemInstead").toUpperCase()));
+							}	
+						}
+						
+						if(!yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+							if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
+								slot1.setType(Material.DOUBLE_PLANT);
+								rewardType = "money";
 							} else {
 								slot1.setType(Material.getMaterial(rewardType.toUpperCase()));
 								lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
 							}
 						}
-						//lore.set(0, ChatColor.YELLOW+date);
+						
+						
+						
 						if(yamlFile.getBoolean("Is_Player_VIP?") 
 								|| (yamlConfigFile.getBoolean("Config.Daily.UsePermGroupsInsteadVIP?") 
 										&& yamlpermGroupsFile.getBoolean(XDaily.perm.getPrimaryGroup(player)+".CanUseMulti?"))){
@@ -327,15 +347,11 @@ public class MyExecutor implements CommandExecutor {
 		
 		if(label.equalsIgnoreCase("test")){
 			
-			plugin.reloadConfig();
-            
-			/*if((sender instanceof Player)){
+			if((sender instanceof Player)){
 				Player player = (Player) sender;
-				langClass.setLanguage(player, false);
-			} else {
-				langClass.setLanguage(null, true);
+				player.sendMessage(XDaily.pluginVersion);
 			}
-			
+			/*
 			try {
 				String addingPlayer = utilz.getUUIDFromMojang(args[0]);
 				if(addingPlayer.equalsIgnoreCase("")){

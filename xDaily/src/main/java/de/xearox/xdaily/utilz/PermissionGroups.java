@@ -38,6 +38,7 @@ public class PermissionGroups {
 		for(int i = 0; i < permGroups.length; i++){
 			yamlFile.addDefault(permGroups[i]+".CanUseMulti?", false);
 			yamlFile.addDefault(permGroups[i]+".Multiplier", 1);
+			yamlFile.addDefault(permGroups[i]+".DefaultCalendar", "default");
 		}
 		
 		yamlFile.options().copyDefaults(true);

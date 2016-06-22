@@ -50,7 +50,15 @@ public class InventoryClickEventListener implements Listener{
 			YamlConfiguration yamlConfigFile;
 			yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
 			
-			File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+			
+			File file;
+			
+			if(XDaily.pluginVersion.contains("0.6")){
+				file = new File(plugin.getDataFolder()+File.separator+"/data/playerData/" + player.getUniqueId().toString() + ".yml");
+			} else {
+				file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+			}
+			
 			YamlConfiguration yamlFile;
 			yamlFile = YamlConfiguration.loadConfiguration(file);
 			
@@ -104,7 +112,14 @@ public class InventoryClickEventListener implements Listener{
 					if(rewardType.equalsIgnoreCase("money")){
 						XDaily.econ.depositPlayer(player, rewardValue);
 						yamlFile.set("Rewards."+date+".Get_Reward?", true);
-						event.getCurrentItem().setType(Material.BARRIER);
+						if(!yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+							event.getCurrentItem().setType(Material.BARRIER);
+						} else {
+							event.getCurrentItem().setType(Material.DOUBLE_PLANT);
+						}
+						String msg = SetLanguageClass.PlayerGetThisReward.replace("%value%", Integer.toString(rewardValue));
+						msg = msg.replace("%reward%", rewardType.toLowerCase());
+						player.sendMessage(utilz.Format(msg));
 						try {
 							yamlFile.save(file);
 						} catch (IOException e) {
@@ -125,6 +140,7 @@ public class InventoryClickEventListener implements Listener{
 						}
 						itemStack.setAmount(rewardValue);
 						player.getInventory().addItem(itemStack);
+						
 						if(!yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
 							event.getCurrentItem().setType(Material.BARRIER);
 						} else {

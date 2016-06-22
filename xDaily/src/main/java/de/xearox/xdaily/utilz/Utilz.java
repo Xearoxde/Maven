@@ -143,9 +143,9 @@ public class Utilz {
 	 * @param p Player
 	 * @return the Language of the players client
 	 */
-	public String getPlayerLanguage(Player p){		
+	public String getPlayerLanguage(Player player){		
 		try {
-			Object obj = getMethod("getHandle", p.getClass()).invoke(p, (Object[]) null);
+			Object obj = getMethod("getHandle", player.getClass()).invoke(player, (Object[]) null);
 			Field f = obj.getClass().getDeclaredField("locale");
 			f.setAccessible(true);
 			String language = (String) f.get(obj);
@@ -267,6 +267,29 @@ public class Utilz {
 		if(!file.exists()){
 			copyFileFromJarToOutside("/locate/chinese-traditional.yml", plugin.getDataFolder()+File.separator+"/locate/chinese-traditional.yml");
 		}
+	}
+	
+	public void movePlayerFiles(){
+		File source = new File(plugin.getDataFolder()+File.separator+"/data/");
+	    File desc = new File(plugin.getDataFolder()+File.separator+"/data/playerData/");
+	    File newFile;
+
+	    ArrayList<String> dontCopy=new ArrayList<String>();//contains all your directory filter names
+	    dontCopy.add("vip-player.txt");
+	    dontCopy.add("matlist.txt");
+	    try {
+
+	        for (File file : source.listFiles()) {
+	            if (!dontCopy.contains(file.getName())&&!file.isDirectory()) {
+	                FileUtils.copyFile(file, newFile = new File(desc.getAbsolutePath()+"/"+file.getName()));
+	                if(newFile.exists()){
+	                	file.delete();
+	                }
+	            }
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	

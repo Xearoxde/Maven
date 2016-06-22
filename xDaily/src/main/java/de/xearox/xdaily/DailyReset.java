@@ -32,7 +32,14 @@ private SetLanguageClass langClass;
 	}
 	
 	public void checkIfPlayerJoinedEveryDay(Player player){
-		File file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+		File file;
+		
+		if(XDaily.pluginVersion.contains("0.6")){
+			file = new File(plugin.getDataFolder()+File.separator+"/data/playerData/" + player.getUniqueId().toString() + ".yml");
+		} else {
+			file = new File(plugin.getDataFolder()+File.separator+"/data/" + player.getUniqueId().toString() + ".yml");
+		}
+		
 		YamlConfiguration yamlFile;
 		yamlFile = YamlConfiguration.loadConfiguration(file);
 		
