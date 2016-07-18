@@ -242,7 +242,12 @@ public class XDaily extends JavaPlugin{
 				ArrayList<String> list = utilz.readFileByLine(file);
 				for(String uuid : list){
 					try {
-						File playerFile = new File(getDataFolder()+File.separator+"/data/"+uuid+".yml");
+						File playerFile;
+						if(XDaily.pluginVersion.contains("0.6")){
+							playerFile = new File(getDataFolder()+File.separator+"/data/playerData/" + uuid + ".yml");
+						} else {
+							playerFile = new File(getDataFolder()+File.separator+"/data/" + uuid + ".yml");
+						}
 						if(!playerFile.exists()){
 							return;
 						}
@@ -287,7 +292,7 @@ public class XDaily extends JavaPlugin{
 			}
 			
 		}
-		this.getServer().getScheduler().runTaskLaterAsynchronously(this, new TestSchedulerTast(), 10);
+		this.getServer().getScheduler().runTaskLaterAsynchronously(this, new TestSchedulerTast(), 2*20);
 	}
 	
 	@Override

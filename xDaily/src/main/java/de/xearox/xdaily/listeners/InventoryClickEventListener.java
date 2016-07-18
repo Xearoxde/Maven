@@ -84,6 +84,7 @@ public class InventoryClickEventListener implements Listener{
 			boolean isVIP = false;
 			String rewardType = "";
 			int vipMulti = 1;
+			String rewardCommand = "";
 			
 			for(String date : list){
 				if(ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(date)
@@ -126,6 +127,23 @@ public class InventoryClickEventListener implements Listener{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+					} else if (rewardType.equalsIgnoreCase("command")){
+						rewardCommand = yamlFile.getString("Rewards."+date+".Reward_Value").replace("%player%", player.getDisplayName());
+						plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), rewardCommand);
+						yamlFile.set("Rewards."+date+".Get_Reward?", true);
+						
+						if(!yamlConfigFile.getBoolean("Config.DailyBonus.Rewards.HideBonus?")){
+							event.getCurrentItem().setType(Material.BARRIER);
+						} else {
+							event.getCurrentItem().setType(Material.COMMAND);
+						}
+						try {
+							yamlFile.save(file);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 					} else {
 						try{
 							rewardMatType = Material.getMaterial(rewardType);

@@ -267,6 +267,14 @@ public class Utilz {
 		if(!file.exists()){
 			copyFileFromJarToOutside("/locate/chinese-traditional.yml", plugin.getDataFolder()+File.separator+"/locate/chinese-traditional.yml");
 		}
+		file = new File(plugin.getDataFolder()+File.separator+"/locate/french.yml");
+		if(!file.exists()){
+			copyFileFromJarToOutside("/locate/french.yml", plugin.getDataFolder()+File.separator+"/locate/french.yml");
+		}
+		file = new File(plugin.getDataFolder()+File.separator+"/locate/polish.yml");
+		if(!file.exists()){
+			copyFileFromJarToOutside("/locate/polish.yml", plugin.getDataFolder()+File.separator+"/locate/polish.yml");
+		}
 	}
 	
 	public void movePlayerFiles(){

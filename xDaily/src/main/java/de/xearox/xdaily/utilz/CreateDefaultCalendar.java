@@ -27,8 +27,9 @@ public class CreateDefaultCalendar {
 		
 		while(yamlConfigFile.getString("Config.DailyBonus.Rewards.Day."+i) != null){
 			yamlDefaultFile.addDefault("Rewards.Day."+i+".Name", yamlConfigFile.get("Config.DailyBonus.Rewards.Day."+i+".Name"));
-			yamlDefaultFile.addDefault("Rewards.Day."+i+".Reward", yamlConfigFile.get("Config.DailyBonus.Rewards.Day."+i+".Reward"));
+			yamlDefaultFile.addDefault("Rewards.Day."+i+".Type", yamlConfigFile.get("Config.DailyBonus.Rewards.Day."+i+".Type"));
 			yamlDefaultFile.addDefault("Rewards.Day."+i+".Value", yamlConfigFile.get("Config.DailyBonus.Rewards.Day."+i+".Value"));
+			yamlDefaultFile.addDefault("Rewards.Day."+i+".Slot", yamlConfigFile.get("Config.DailyBonus.Rewards.Day."+i+".Slot"));
 			i++;
 		}
 		yamlDefaultFile.options().copyDefaults(true);

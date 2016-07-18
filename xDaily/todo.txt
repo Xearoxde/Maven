@@ -4,6 +4,8 @@
 - Wenn ein Spieler sich ein neuer Spieler das erste Mal auf den Server einloggt, wird eine Datei erstellt mit den entsprechenden Daten
 - 
 
+- Überflüssiger rewards orderner enterfernen
+
 Player_Name : Xearox
 Player_First_Login : 01.01.1000
 Rewards:

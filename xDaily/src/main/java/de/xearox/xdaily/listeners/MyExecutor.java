@@ -146,7 +146,8 @@ public class MyExecutor implements CommandExecutor {
 				Set<String> list = yamlFile.getConfigurationSection("Rewards").getKeys(false);
 				
 				lore.add(""); // 0 Date or Description
-				lore.add(""); // 1 Reward Type
+				lore.add(""); // 1 Reward Name
+				lore.add(""); // 2 Reward Type
 				
 				if(yamlConfigFile.getBoolean("Config.DailyBonus.ResetIfPlayerGotAllRewards?")){
 					boolean getAllRewards = false;
@@ -167,7 +168,9 @@ public class MyExecutor implements CommandExecutor {
 						int i = yamlFile.getInt("Rewards."+date+".Reward_Slot");
 						String rewardType = yamlFile.getString("Rewards."+date+".Reward_Type");
 						String rewardValue = yamlFile.getString("Rewards."+date+".Reward_Value");
+						String rewardName = yamlFile.getString("Rewards."+date+".Reward_Name");
 						String vipMulti = yamlConfigFile.getString("Config.DailyBonus.VIP.Multiplier");
+						
 						if(yamlConfigFile.getBoolean("Config.Daily.UsePermGroupsInsteadVIP?") && XDaily.perm != null){
 							vipMulti = yamlpermGroupsFile.getString(XDaily.perm.getPrimaryGroup(player)+".Multiplier");
 						} else {
@@ -199,8 +202,16 @@ public class MyExecutor implements CommandExecutor {
 							if(yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("money") && !getReward){
 								slot1.setType(Material.DOUBLE_PLANT);
 								rewardType = "money";
+							} else if (yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("command") && !getReward){
+								slot1.setType(Material.COMMAND);
+								if(!rewardName.equals(rewardType)){
+									lore.set(0, utilz.Format(rewardName));
+								}
 							} else {
 								slot1.setType(Material.getMaterial(rewardType.toUpperCase()));
+								if(!rewardName.equals(rewardType)){
+									lore.set(0, utilz.Format(rewardName));
+								}
 								lore.set(1, ChatColor.DARK_PURPLE+rewardType+" x"+rewardValue);
 							}
 						}
@@ -210,15 +221,30 @@ public class MyExecutor implements CommandExecutor {
 						if(yamlFile.getBoolean("Is_Player_VIP?") 
 								|| (yamlConfigFile.getBoolean("Config.Daily.UsePermGroupsInsteadVIP?") 
 										&& yamlpermGroupsFile.getBoolean(XDaily.perm.getPrimaryGroup(player)+".CanUseMulti?"))){
-							lore.add(ChatColor.GREEN+"VIP Bonus : x"+vipMulti);
-							slot1Meta.setLore(lore);
-							slot1.setItemMeta(slot1Meta);
-							inv.setItem(i, slot1);
-							lore.remove(2);
+							if(!yamlFile.getString("Rewards."+date+".Reward_Type").equalsIgnoreCase("command")){
+								lore.add(ChatColor.GREEN+"VIP Bonus : x"+vipMulti);
+								slot1Meta.setLore(lore);
+								slot1.setItemMeta(slot1Meta);
+								inv.setItem(i, slot1);
+								lore.set(0, "");
+								lore.set(1, "");
+								lore.set(2, "");
+								lore.remove(3);
+							} else {
+								slot1Meta.setLore(lore);
+								slot1.setItemMeta(slot1Meta);
+								inv.setItem(i, slot1);
+								lore.set(0, "");
+								lore.set(1, "");
+								lore.set(2, "");
+							}
 						} else {
 							slot1Meta.setLore(lore);
 							slot1.setItemMeta(slot1Meta);
 							inv.setItem(i, slot1);
+							lore.set(0, "");
+							lore.set(1, "");
+							lore.set(2, "");
 						}
 					}
 				} catch(Exception e){
@@ -241,28 +267,6 @@ public class MyExecutor implements CommandExecutor {
 				} catch (Exception e){
 					e.printStackTrace();
 				}
-				
-				
-				
-				
-				/*for(int i = 0; i < dailyDays; i++){
-					
-					slot1Meta.setDisplayName(ChatColor.RED+"Day "+(i+1));
-					if(i == 0){
-						myDate = sdf.format(calendar.getTime());
-					} else {
-						calendar.add(Calendar.DAY_OF_MONTH, 1);
-						myDate = sdf.format(calendar.getTime());
-					}
-					
-					lore.set(0, ChatColor.YELLOW + myDate);
-					
-					slot1Meta.setLore(lore);
-					
-					slot1.setItemMeta(slot1Meta);
-					
-					inv.setItem(i, slot1);
-				}*/
 				
 				player.openInventory(inv);
 				return true;

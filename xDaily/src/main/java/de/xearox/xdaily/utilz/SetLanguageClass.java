@@ -59,13 +59,13 @@ public class SetLanguageClass {
 			
 			case "en":		return "english";
 			
-			case "pl":		return "polski";
+			case "pl":		return "polish";
 			
 			case "it":		return "italiano";
 			
 			case "es":		return "espanol";
 			
-			case "fr":		return "francais";
+			case "fr":		return "french";
 			
 			case "nl":		return "nederlands";
 			

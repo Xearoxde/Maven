@@ -1,0 +1,29 @@
+######################################################################################
+#####Ici vous pourrez changer tous les messages que vos joueurs pourront voir   ######
+#####Vous pouvez m'envoyer un MP avec votre traduction, si vous souhaitez       ######
+#####plus de langues dans le plugin.                                            ######
+#####                                                                           ######
+#####Merci =)                                                                   ######
+######################################################################################
+Txt:
+    DailyLoginInventar: Bonus de connexion journalière
+    DateFormat: MMM dd yyyy
+Player:
+    DontHavePermission: Vous n'avez pas la permission!
+    GetAlreadyReward: Vous avez déjà obtenu cette récompense
+    DontLoginYesterday: Vous en vous êtes pas connecté hier. Vos récompenses ont été remises à zéro
+    GetThisReward: Vous avez obtenu %value% x %reward%!
+Console:
+    CantDoThat: La console ne peut pas effectuer cette action!
+    VIPPlayerUpdated: Les joueurs VIP viennent d'être mis à jour!
+Admin:
+    PlayerAlreadyInVIPFile: Le joueur %player% est déjà dans le fichier VIP!
+    PlayerAddedToVIPFile: Le joueur %player% a été ajouté au fichier VIP!
+Info:
+    VaultNotAvailable: Le plugin Vault n'a pas été trouvé. xDaily sera lancé sans Vault!
+ 
+#Attention:
+Error:
+    MojangAPINotAvailable: L'API de Mojang est actuellement indisponible!
+    CantCreateFile: Impossible de créer le fichier %file%!
+    CantFindFile: Impossible de trouver le fichier %file%!

@@ -55,32 +55,39 @@ public class CreateConfig {
 		yamlFile.addDefault("Config.DailyBonus.Rewards.ItemInstead", "BEDROCK");
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.1.Slot", 0);
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.2.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.2.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.2.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.2.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.2.Slot", 1);
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.3.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.3.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.3.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.3.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.3.Slot", 2);
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.4.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.4.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.4.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.4.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.4.Slot", 3);
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.5.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.5.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.5.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.5.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.5.Slot", 4);
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.6.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.6.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.6.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.6.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.6.Slot", 5);
 		
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.7.Name", "");
-		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.7.Reward", "money");
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.7.Type", "money");
 		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.7.Value", 100);
+		yamlFile.addDefault("Config.DailyBonus.Rewards.Day.7.Slot", 6);
 		
 		yamlFile.options().copyDefaults(true);
 		
