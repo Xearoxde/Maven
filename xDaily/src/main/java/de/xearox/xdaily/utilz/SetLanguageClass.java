@@ -73,6 +73,10 @@ public class SetLanguageClass {
 			
 			case "tw":		return "chinese-traditional";
 			
+			case "sv":		return "swedish";
+			
+			case "ru":		return "russian";
+			
 			default:		return "english";
 		}
 	}

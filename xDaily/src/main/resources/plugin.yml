@@ -1,6 +1,6 @@
 name: xDaily
 main: de.xearox.xdaily.XDaily
-version: 0.6.6
+version: 0.6.8
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
 softdepend: [Vault]

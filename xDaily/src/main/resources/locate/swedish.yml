@@ -1,0 +1,46 @@
+# EN
+##########################################################################################
+#####                   IN ENGLISH IN ENGLISH IN ENGLISH IN ENGLISH                 ######
+#####                                                                               ######
+##### Here you can change all messages which the player can get from the plugin     ######
+##### You can send me a PM with your translated file, if you want more languages    ######
+##### in this plugin.                                                               ######
+#####                                                                               ######
+##### Thank You =)                                                                  ######
+##########################################################################################
+
+# SV
+##########################################################################################
+#####             PÅ SVENSKA  PÅ SVENSKA  PÅ SVENSKA  PÅ SVENSKA  PÅ SVENSKA        ######
+#####                                                                               ######
+##### Här kan du ändra alla meddelanden som spelaren kan få från pluginen.          ######
+##### Du kan skicka ett PM med din översättade fil, om du vill ha mer språk i den   ######
+##### här pluginen.                                                                 ######
+#####                                                                               ######
+##### Tack =)                                                                       ######
+##########################################################################################
+
+#      SWEDISH/Svenska
+
+Txt:
+    DailyLoginInventar: Dagligt Login Bonus
+    DateFormat: MMM dd åååå
+Player:
+    DontHavePermission: Du har inte tillstånd att göra det!
+    GetAlreadyReward: Du har fått denna belöning redan!
+    DontLoginYesterday: Du har inte loggat in igår. Din belöning var återställd!
+    GetThisReward: Du har fått %value% x %reward%!
+Console:
+    CantDoThat: Konsolen kan inte göra det!
+    VIPPlayerUpdated: VIP spelarna har uppdaterats!
+Admin:
+    PlayerAlreadyInVIPFile: Spelaren %player% är redan i VIP filen!
+    PlayerAddedToVIPFile: Spelaren %player% är nu i VIP filen!
+Info:
+    VaultNotAvailable: Vault kan inte hittas. xDaily kör utan Vault!
+
+#Varning:
+Error:
+    MojangAPINotAvailable: Mojang API är inte tillgänglig just nu!
+    CantCreateFile: Kan inte skapa filen %file%!
+    CantFindFile: Kan inte hitta filen %file%!

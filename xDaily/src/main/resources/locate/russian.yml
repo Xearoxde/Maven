@@ -1,0 +1,29 @@
+##########################################################################################
+#####                     Перевёл на русский язык: MineDest                         ######
+#####                       Удачи в продвижении сервера!                            ######
+#####                                                                               ######
+#####                                                                               ######
+#####Спасибо =)                                                                     ######
+##########################################################################################
+Txt:
+    DailyLoginInventar: Ежедневный бонус
+    DateFormat: MMM dd yyyy
+Player:
+    DontHavePermission: У вас нет прав!
+    GetAlreadyReward: Вы уже получали бонус
+    DontLoginYesterday: Вы не заходили вчера в игру. Бонусы обнулены
+    GetThisReward: У вас есть %value% x %reward%!
+Console:
+    CantDoThat: Консоль не может выполнить это!
+    VIPPlayerUpdated: VIP игроки были обновлены!
+Admin:
+    PlayerAlreadyInVIPFile: Игрок %player% уже в VIP файле! 
+    PlayerAddedToVIPFile: Игрок %player% был добавлен в VIP файл!
+Info:
+    VaultNotAvailable: Vault не найден. xDaily работает без Vault!
+
+#Внимание:
+Error:
+    MojangAPINotAvailable: Mojang API в настроящее время не доступен!
+    CantCreateFile: Невозможно создать файл %file%!
+    CantFindFile: Не удаётся найти файл %file%!
