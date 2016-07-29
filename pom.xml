@@ -24,6 +24,7 @@
   	<module>xDaily</module>
   	<module>SpigotTestPlugin</module>
   	<module>xLetterAPI</module>
+  	<module>xTemp</module>
   </modules>
   <build>
     <plugins>
