@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import de.xearox.xdaily.XDaily;
 import de.xearox.xdaily.adminGUI.GuiActions;
 import de.xearox.xdaily.utilz.CreateFiles;
+import de.xearox.xdaily.utilz.RandomItem;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 
@@ -36,6 +37,7 @@ public class MyExecutor implements CommandExecutor {
 	private Utilz utilz;
 	private SetLanguageClass langClass;
 	private GuiActions guiActions;
+	private RandomItem randomItem;
 	
 	public MyExecutor(XDaily plugin){
 		this.plugin = plugin;
@@ -43,6 +45,7 @@ public class MyExecutor implements CommandExecutor {
 		this.utilz = plugin.getUtilz();
 		this.langClass = plugin.getLanguageClass();
 		this.guiActions = plugin.getGuiActions();
+		this.randomItem = plugin.getRandomItem();
 	}
 	
 	@Override
@@ -353,8 +356,14 @@ public class MyExecutor implements CommandExecutor {
 			
 			if((sender instanceof Player)){
 				Player player = (Player) sender;
-				player.sendMessage(XDaily.pluginVersion);
+				ItemStack is = randomItem.mainFunction();
+				player.getInventory().addItem(is);
+				player.sendMessage(is.toString());
+				return true;
 			}
+			
+			
+			System.out.println(randomItem.mainFunction());
 			/*
 			try {
 				String addingPlayer = utilz.getUUIDFromMojang(args[0]);
@@ -374,9 +383,7 @@ public class MyExecutor implements CommandExecutor {
 			//XDaily.econ.depositPlayer(player, 100);
 			//player.sendMessage("test33");
 			return true;
-		}
-		
+		}	
 		return false;
 	}
-
 }

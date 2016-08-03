@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>de.xearox.xplugin</groupId>
+    <artifactId>xMainModule</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>xEnchants</artifactId>
+    <build>
+    <plugins>
+    	<plugin>
+			    <artifactId>maven-dependency-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <id>install-jar</id>
+			            <phase>install</phase>
+			            <goals>
+			                <goal>copy</goal>
+			            </goals>
+			            <configuration>
+			                <artifactItems>
+			                    <!--  --><artifactItem>
+			                        <groupId>de.xearox.xplugin</groupId>
+			                        <artifactId>xEnchants</artifactId>
+			                        <version>${project.version}</version>
+			                    </artifactItem>
+			                </artifactItems>
+			                <!--<outputDirectory>D:\Development\Minecraft\MCServer\plugins</outputDirectory>-->
+			                <outputDirectory>C:\Users\chahn\Desktop\MCServer\plugins</outputDirectory>
+			                <stripVersion>true</stripVersion>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+    </plugins>
+    </build>
+</project>

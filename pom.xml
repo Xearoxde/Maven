@@ -25,6 +25,7 @@
   	<module>SpigotTestPlugin</module>
   	<module>xLetterAPI</module>
   	<module>xTemp</module>
+  	<module>xEnchants</module>
   </modules>
   <build>
     <plugins>
@@ -129,6 +130,18 @@
 		<groupId>org.bukkit</groupId>
 		<artifactId>craftbukkit</artifactId>
 		<version>1.10-R0.1-SNAPSHOT</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.jgoodies/forms -->
+	<dependency>
+	    <groupId>com.jgoodies</groupId>
+	    <artifactId>forms</artifactId>
+	    <version>1.2.1</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.miglayout</groupId>
+		<artifactId>miglayout-swing</artifactId>
+		<version>5.0</version>
 	</dependency>
   </dependencies>
 </project>

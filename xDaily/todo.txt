@@ -119,4 +119,27 @@ if(label.equalsIgnoreCase("daily")){
 Set<String> to Array		
 String[] dateArray = list.toArray(new String[list.size()]);
 String date = dateArray[i];
+
+
+
+
+
+/*for(int i = 0; i < 10; i++){
+			System.out.println(doubleArray.length);
+			System.out.println("Index = "+itemMap.get(doubleArray[choosenNumber]));
+			System.out.println(itemMap.size());
+		}*/
+		System.out.println("Choosen ItemStack = "+itemMap.get(doubleArray[choosenNumber]));
+		System.out.println("doubleArray[choosenNumber] = "+doubleArray[choosenNumber]);
+		System.out.println("###############################################");
+		for (Map.Entry<ItemStack, Double> entry : itemMap.entrySet()) {
+			  ItemStack key = entry.getKey();
+			  Double value = entry.getValue();
+			  // do stuff
+			  System.out.println("Key = "+key+" | Value = "+value);
+			}
+		System.out.println("###############################################");
+		for(ItemStack key : itemMap.keySet()){
+			System.out.println(key);
+		}
 	

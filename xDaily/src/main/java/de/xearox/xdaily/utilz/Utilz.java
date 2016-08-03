@@ -31,6 +31,10 @@ public class Utilz {
 		this.plugin = plugin;
 	}
 	
+	public Utilz() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 * @param fileName String
@@ -297,6 +301,7 @@ public class Utilz {
 	    ArrayList<String> dontCopy=new ArrayList<String>();//contains all your directory filter names
 	    dontCopy.add("vip-player.txt");
 	    dontCopy.add("matlist.txt");
+	    dontCopy.add("randomItemList.txt");
 	    try {
 
 	        for (File file : source.listFiles()) {

@@ -7,9 +7,20 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xDaily</artifactId>
-	<version>0.6.8-SNAPSHOT</version>
+	<version>0.6.9-SNAPSHOT</version>
 	<build>
         <plugins>
+	        <plugin>
+		        <artifactId>maven-jar-plugin</artifactId>
+		        <configuration>
+		          <archive>
+		            <manifest>
+		              <addClasspath>true</addClasspath>
+			          <mainClass>de.xearox.xdaily.jFrameGUI.HomeGUI</mainClass>
+		            </manifest>
+		          </archive>
+		        </configuration>
+	      	</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -53,7 +64,8 @@
 			                        <version>${project.version}</version>
 			                    </artifactItem>
 			                </artifactItems>
-			                <outputDirectory>D:\Development\Minecraft\MCServer\plugins</outputDirectory>
+			                <!--<outputDirectory>D:\Development\Minecraft\MCServer\plugins</outputDirectory>-->
+			                <outputDirectory>C:\Users\chahn\Desktop\MCServer\plugins</outputDirectory>
 			                <stripVersion>true</stripVersion>
 			            </configuration>
 			        </execution>

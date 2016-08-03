@@ -26,6 +26,7 @@ import de.xearox.xdaily.utilz.CreateConfig;
 import de.xearox.xdaily.utilz.CreateDefaultCalendar;
 import de.xearox.xdaily.utilz.CreateFiles;
 import de.xearox.xdaily.utilz.PermissionGroups;
+import de.xearox.xdaily.utilz.RandomItem;
 import de.xearox.xdaily.utilz.SetLanguageClass;
 import de.xearox.xdaily.utilz.Utilz;
 import de.xearox.xletter.XLetter;
@@ -47,6 +48,7 @@ public class XDaily extends JavaPlugin{
 	private ParseInventory parseInventory;
 	private CreateDefaultCalendar createDefaultCalendar;
 	private PermissionGroups permissionGroups;
+	private RandomItem randomItem;
 	private de.xearox.xdaily.adminGUI.NewItem newItem;
 	private PluginDescriptionFile pluginDecriptionFile;
 	private static final Logger log = Logger.getLogger("Minecraft");
@@ -144,6 +146,10 @@ public class XDaily extends JavaPlugin{
 		return pluginDecriptionFile;
 	}
 	
+	public RandomItem getRandomItem(){
+		return randomItem;
+	}
+	
 	public void createCommands(){
 		myExecutor = new MyExecutor(this);
 		getCommand("daily").setExecutor(myExecutor);
@@ -178,6 +184,7 @@ public class XDaily extends JavaPlugin{
 			this.onPlayerJoinListener = new PlayerJoinListener(this);
 			this.createConfig = new CreateConfig(this);
 			this.createDefaultCalendar = new CreateDefaultCalendar(this);
+			this.randomItem = new RandomItem(this);
 			this.createFiles.createDirs();
 			this.createConfig.createConfig();
 			this.createFiles.createVIPFile();
