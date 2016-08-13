@@ -65,13 +65,13 @@
            <groupId>org.spigotmc</groupId>
            <artifactId>spigot-api</artifactId>
            <version>1.10-R0.1-SNAPSHOT</version>
-           <scope>provided</scope>
+           <scope>compile</scope>
     </dependency>
     <dependency>
            <groupId>org.bukkit</groupId>
            <artifactId>bukkit</artifactId>
            <version>1.10-R0.1-SNAPSHOT</version>
-           <scope>provided</scope>
+           <scope>compile</scope>
     </dependency>
     <dependency>
     	<groupId>com.google.code.findbugs</groupId>
@@ -126,11 +126,12 @@
 		<artifactId>commons-lang3</artifactId>
 		<version>3.3.2</version>
 	</dependency>
+	<!-- 
 	<dependency>
 		<groupId>org.bukkit</groupId>
 		<artifactId>craftbukkit</artifactId>
 		<version>1.10-R0.1-SNAPSHOT</version>
-	</dependency>
+	</dependency>-->
 	<!-- https://mvnrepository.com/artifact/com.jgoodies/forms -->
 	<dependency>
 	    <groupId>com.jgoodies</groupId>
