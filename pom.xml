@@ -26,6 +26,7 @@
   	<module>xLetterAPI</module>
   	<module>xTemp</module>
   	<module>xEnchants</module>
+  	<module>xFriends</module>
   </modules>
   <build>
     <plugins>

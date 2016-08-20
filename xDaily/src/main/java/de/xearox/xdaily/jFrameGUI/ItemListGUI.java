@@ -36,6 +36,8 @@ public class ItemListGUI extends JFrame {
 	private HomeGUI homeGUI;
 	private ArrayList<String> fileContent = new ArrayList<String>();
 	private File file;
+	
+	static private final String newline = "\n";
 
 	/**
 	 * Create the panel.
@@ -102,10 +104,18 @@ public class ItemListGUI extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(file == null){
-					return;
+					int returnVal = fc.showSaveDialog(ItemListGUI.this);
+		            if (returnVal == JFileChooser.APPROVE_OPTION) {
+		                file = fc.getSelectedFile();
+		                System.out.println("Saving: " + file.getName() + "." + newline);
+		            } else {
+		            	System.out.println("Save command cancelled by user." + newline);
+		            	return;
+		            }
+				} else {
+					file.delete();
 				}
-				//File newFile = new File(file.getAbsolutePath());
-				file.delete();
+				
 				try {
 					Writer writer = new BufferedWriter(new FileWriter(file.getAbsolutePath(), true));
 					Component[] compoArray = randomItemListPanel.getComponents();

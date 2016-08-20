@@ -1,0 +1,13 @@
+name: xFriends
+main: de.xearox.xfriends.XFriends
+version: 0.0.1
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
+
+#commands:
+#  daily:
+#    description: TestCommand
+#    usage: /<command>, [admin], [admin] [rewriteplayerfiles], [admin] [addVIP] (PlayerName)
+#  test:
+#    description: TestCommand
+#    usage: /<command>
