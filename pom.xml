@@ -27,6 +27,7 @@
   	<module>xTemp</module>
   	<module>xEnchants</module>
   	<module>xFriends</module>
+  	<module>xFriendsServer</module>
   </modules>
   <build>
     <plugins>

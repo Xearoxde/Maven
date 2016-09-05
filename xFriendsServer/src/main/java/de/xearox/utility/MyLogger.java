@@ -1,4 +1,4 @@
-package de.xearox.xfriends.utility;
+package de.xearox.utility;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,30 +8,19 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.google.common.io.Files;
+import de.xearox.xfriendsserver.server.Server;
 
-import de.xearox.xfriends.XFriends;
-import de.xearox.xfriends.server.XFriendsServer;
+
 
 public class MyLogger {
 	
-	private XFriends plugin;
 	private File logFile;
 	private File logDir;
 	private String logFilePath;
 	private String logFileName;
-	
-	
-	public MyLogger(XFriends plugin) {
-		this.plugin = plugin;
-		this.logFilePath = plugin.getDataFolder()+File.separator+"/log/";
-	}
-	
-	public MyLogger(XFriendsServer mainClass) {
-		this.logFilePath = mainClass.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-	}
 
 	public void createLogFile(LogLevel logLevel, String input){
+		logFilePath = Server.class.getProtectionDomain().getCodeSource().getLocation().toString()+"/log/";
 		String date;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		date = sdf.format(Calendar.getInstance().getTime());

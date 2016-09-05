@@ -1,13 +1,20 @@
 package de.xearox.xfriends.utility;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,13 +28,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import de.xearox.xfriends.XFriends;
+import de.xearox.xfriends.client.DatabaseClient;
 
 public class Utility {
 	
 	private XFriends plugin;
+	private DatabaseClient myClient;
 	
 	public Utility(XFriends plugin) {
 		this.plugin = plugin;
+		this.myClient = plugin.getDatabaseClient();
 	}
 	
 	public boolean fileExist(String fileName){
@@ -246,6 +256,74 @@ public class Utility {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public String getMD5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+            // Now we need to zero pad it if you actually want the full 32 chars.
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+	
+	public String getExternalIP() {
+		URL whatismyip;
+		String ip = "";
+		try {
+			whatismyip = new URL("http://checkip.amazonaws.com");
+			BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));
+
+			ip = in.readLine(); // you get the IP as a String
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ip;
+	}
+	
+	public byte[] getBytesFromObject(Object object){
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		byte[] yourBytes = null;
+		try {
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(object);
+		  yourBytes = bos.toByteArray();
+		  
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+		  try {
+		    if (out != null) {
+		      out.close();
+		    }
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		  try {
+		    bos.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+		if(yourBytes != null){
+			return yourBytes;
+		} else {
+			return null;
 		}
 	}
 	

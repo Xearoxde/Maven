@@ -238,7 +238,7 @@ public class Database{
 		Statement statement = null;
 		String sql;
 		if((FindPlayer(PlayerName,1))&&(FindPlayer(PlayerName,2))&&(FindPlayer(PlayerName,3))){
-			System.out.println("Player allready in the Database");
+			System.out.println("Player already in the Database");
 		}else{
 			try{
 				

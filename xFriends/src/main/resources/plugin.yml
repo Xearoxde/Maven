@@ -4,10 +4,10 @@ version: 0.0.1
 authors: [Xearox]
 website: "http://minecraft.xearox.de"
 
-#commands:
-#  daily:
-#    description: TestCommand
-#    usage: /<command>, [admin], [admin] [rewriteplayerfiles], [admin] [addVIP] (PlayerName)
+commands:
+  friends:
+    description: Main function for the xFriends plugin
+    usage: /<command>, [admin], [register] (Password) (Email)
 #  test:
 #    description: TestCommand
 #    usage: /<command>
