@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.TimerTask;
 
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -29,7 +30,7 @@ public class XFriends extends JavaPlugin{
 	private MyExecutor myExecutor;
 	private DatabaseClient myClient;
 	private ChatClient chatClient;
-	private static Socket socket;
+	public static Socket socket;
 	public final static boolean DEBUG = false;
 	public final static String serverAddress = "94.114.6.167";//94.114.6.167
 	public final static int serverDBPort = 3141;
@@ -38,7 +39,8 @@ public class XFriends extends JavaPlugin{
 	private static boolean databaseServerOnline = false;
 	public static boolean chatClientRunning = false;
 	public static boolean databaseClientRunning = false;
-	private static BukkitTask startChatClientsTask;
+	public static boolean onlineMode = false;
+	public static BukkitTask startChatClientsTask;
 	private static int databaseServerCheckTries = 0;
 	private static int masterChatServerCheckTries = 0;
 	
@@ -110,9 +112,29 @@ public class XFriends extends JavaPlugin{
 					chatClient.run();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					System.out.println("The Master Chat Server is not Running. Try again in 60 seconds again! Tries = "+masterChatServerCheckTries);
+					System.out.println("The Master Chat Server is not Running. Try to reconnect.");
+					if(XFriends.socket != null){
+						try {
+							XFriends.socket.close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					XFriends.startChatClientsTask.cancel();
+					startTasks();
 				} catch (NullPointerException e){
-					System.out.println("The Master Chat Server is not Running. Try again in 60 seconds again! Tries = "+masterChatServerCheckTries);
+					System.out.println("The Master Chat Server is not Running. Try to reconnect.");
+					if(XFriends.socket != null){
+						try {
+							XFriends.socket.close();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					XFriends.startChatClientsTask.cancel();
+					startTasks();
 				}
 			}
 		});
@@ -125,11 +147,12 @@ public class XFriends extends JavaPlugin{
 	
 	@Override
 	public void onEnable(){
-		if(!DEBUG){
-			if(!this.getServer().getOnlineMode()){
-				this.getPluginLoader().disablePlugin(this);
-				return;
-			}
+		if(!this.getServer().getOnlineMode()){
+//			this.getPluginLoader().disablePlugin(this);
+//			return;
+			onlineMode = false;
+		} else {
+			onlineMode = true;
 		}
 		
 		this.utility = new Utility(this);
@@ -140,7 +163,7 @@ public class XFriends extends JavaPlugin{
 		this.chatClient = new ChatClient(this);
 		
 		this.registerListener();
-		
+		this.createConfig.createConfig();
 		this.createCommands();
 		
 		startTasks();

@@ -1,11 +1,14 @@
 package de.xearox.xfriends.utility;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
@@ -27,6 +30,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import de.xearox.myclasses.FriendListObject;
 import de.xearox.xfriends.XFriends;
 import de.xearox.xfriends.client.DatabaseClient;
 
@@ -259,6 +263,39 @@ public class Utility {
 		}
 	}
 	
+	public YamlConfiguration getYamlUUIDList(){
+		String pluginPath = plugin.getDataFolder().getAbsolutePath();
+		File dataDir = new File(pluginPath+File.separator+"/data/");
+		if(!dataDir.exists()){
+			dataDir.mkdirs();
+		}
+		File uuidList = new File(pluginPath+File.separator+"/data/uuidList.yml");
+		if(uuidList.exists()){
+			YamlConfiguration yamlCon = YamlConfiguration.loadConfiguration(uuidList);
+			return yamlCon;
+		} else {
+			YamlConfiguration yamlCon = YamlConfiguration.loadConfiguration(uuidList);
+			try {
+				saveYamlUUIDList(yamlCon);
+				return yamlCon;
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+	
+	public void saveYamlUUIDList(YamlConfiguration yamlFile) throws IOException, IllegalArgumentException{
+		String pluginPath = plugin.getDataFolder().getAbsolutePath();
+		File uuidList = new File(pluginPath+File.separator+"/data/uuidList.yml");
+		yamlFile.save(uuidList);
+	}
+	
 	public String getMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -322,6 +359,48 @@ public class Utility {
 		}
 		if(yourBytes != null){
 			return yourBytes;
+		} else {
+			return null;
+		}
+	}
+	
+	public static FriendListObject getFriendListObject(byte[] yourBytes){
+		if(yourBytes == null){
+			System.out.println("yourbytes = null");
+			return null;
+		}
+		ByteArrayInputStream bis = new ByteArrayInputStream(yourBytes);
+		ObjectInput in = null;
+		Object object = null;
+		FriendListObject friendListObject;
+		try {
+		  in = new ObjectInputStream(bis);
+		  object = in.readObject(); 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+		  try {
+		    bis.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		  try {
+		    if (in != null) {
+		      in.close();
+		    }
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+		
+		friendListObject = (FriendListObject) object;
+		
+		if(friendListObject != null){
+			return friendListObject;
 		} else {
 			return null;
 		}

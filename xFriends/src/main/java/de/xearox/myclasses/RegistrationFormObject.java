@@ -13,4 +13,5 @@ public class RegistrationFormObject implements Serializable {
 	public String Email;
 	public String Password;
 	public String IP;
+	public String ServerName;
 }

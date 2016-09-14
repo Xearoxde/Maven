@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import de.xearox.xfriends.XFriends;
@@ -42,13 +43,10 @@ public class DatabaseClient {
 					for(byte myByte : myByteArray){
 						out.println(myByte);
 					}
-					
 					if(in.hasNextLine()){
 						inputString = in.nextLine();
 					}
-					
 					if(inputString.contains("User updated")){	}
-					
 					
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
@@ -95,9 +93,83 @@ public class DatabaseClient {
 		
 	}
 	
+	public String checkIfUserExistsInDB(String uuid){
+		Socket server = null;
+		String returnMessage = "";
+		try{
+			server = new Socket(serverAddress, serverPort);
+			Scanner in = new Scanner(server.getInputStream());
+			PrintWriter out = new PrintWriter(server.getOutputStream(), true);
+			
+			out.println("USEREXISTS");
+			out.println("nix");
+			out.println(uuid);
+			
+			if(in.hasNextLine()){
+				returnMessage = in.nextLine();
+			}
+			
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (server != null)
+				try {
+					server.close();
+				} catch (IOException e) {
+				}
+		}
+		return returnMessage;
+		
+	}
 	
-	
-	
+	public byte[] requestFriendlist(String UUID){
+		Socket server = null;
+		byte[] bytes = null;
+		int byteLength;
+		ArrayList<Byte> myByteList;
+		try {
+			server = new Socket(serverAddress, serverPort);
+			Scanner in = new Scanner(server.getInputStream());
+			PrintWriter out = new PrintWriter(server.getOutputStream(), true);
+			out.println("FRIENDLISTREQUEST");
+			out.println("nix");
+			out.println(UUID);
+			byteLength = Integer.parseInt(in.nextLine());
+		    myByteList = new ArrayList<Byte>();
+		    int z = 0;
+		    
+		    while(in.hasNext()){
+		    	if(in.hasNextByte()){
+		    		myByteList.add(in.nextByte());
+		    		z++;
+		    		if(z == byteLength){
+		    			break;
+		    		}
+		    	}	
+		    }
+		    
+		    bytes = new byte[myByteList.size()];
+		    for(int i = 0; i < myByteList.size(); i++){
+		    	bytes[i] = myByteList.get(i);
+		    }
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (server != null)
+				try {
+					server.close();
+					return bytes;
+				} catch (IOException e) {
+				}
+		}
+		return null;
+	}
 	
 	
 	

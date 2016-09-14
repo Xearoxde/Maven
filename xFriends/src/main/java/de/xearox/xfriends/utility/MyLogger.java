@@ -8,10 +8,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.google.common.io.Files;
-
 import de.xearox.xfriends.XFriends;
-import de.xearox.xfriends.server.XFriendsServer;
 
 public class MyLogger {
 	
@@ -25,10 +22,6 @@ public class MyLogger {
 	public MyLogger(XFriends plugin) {
 		this.plugin = plugin;
 		this.logFilePath = plugin.getDataFolder()+File.separator+"/log/";
-	}
-	
-	public MyLogger(XFriendsServer mainClass) {
-		this.logFilePath = mainClass.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 	}
 
 	public void createLogFile(LogLevel logLevel, String input){

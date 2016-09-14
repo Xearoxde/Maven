@@ -1,8 +1,13 @@
 package de.xearox.xfriends.listeners;
 
+import java.io.IOException;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.xearox.myclasses.MyPlayerObject;
@@ -39,11 +44,17 @@ public class MyExecutor implements CommandExecutor{
 							return true;
 						}
 						Player player = (Player) sender;
-						String UUID = player.getUniqueId().toString();
-						String PlayerName = player.getDisplayName();
+						String UUID = "";
+						if(!XFriends.onlineMode){
+							UUID = utility.getYamlUUIDList().getString(player.getUniqueId().toString()+".onlineUUID");
+						} else {
+							UUID = player.getUniqueId().toString();
+						}
+						String PlayerName = player.getName();
 						String Password = args[1];
 						String Email = args[2];
-						String IP = player.getAddress().getAddress().toString();
+						String IP = player.getAddress().getHostName();
+						String ServerName = plugin.getServer().getServerName();
 						if(Password.contains("@")){
 							player.sendMessage("Make sure that the password doesn't contains an @ !");
 							return false;
@@ -58,21 +69,53 @@ public class MyExecutor implements CommandExecutor{
 						registrationFormObject.Email = Email;
 						registrationFormObject.Password = Password;
 						registrationFormObject.IP = IP;
+						registrationFormObject.ServerName = ServerName;
 						
 						myClient.sendToServer("adduser", "commandLine", utility.getBytesFromObject(registrationFormObject));
+						
 						
 						return true;
 					}
 				}
 				if(args[0].equalsIgnoreCase("test")){
-					MyPlayerObject myPlayerObject = new MyPlayerObject();
+					if(sender instanceof Player){
+//						Player player = (Player) sender;
+//						player.sendMessage(player.getUniqueId().toString());
+						if(XFriends.socket != null){
+							try {
+								XFriends.socket.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						XFriends.startChatClientsTask.cancel();
+						plugin.startTasks();
+						return true;
+					}
+					
+					/*YamlConfiguration yamlFile = utility.getYamlUUIDList();
+					String uuid = "";
+                	Set<String> setString = yamlFile.getKeys(true);
+                	for(String string : setString){
+                		System.out.println(string);
+                		if(yamlFile.getString(string).contains("1dc3a9dc-b24e-445d-b4a6-e3ad5cccd997")){
+                			System.out.println("blaaa");
+                			uuid = string.substring(0 , string.indexOf("."));
+                		}
+                	}
+                	System.out.println("##############");
+                	System.out.println(uuid);
+                	System.out.println("##############");*/
+					
+					/*MyPlayerObject myPlayerObject = new MyPlayerObject();
 					
 					myPlayerObject.playerName = "Christopher asdasdasdasdasd";
 					myPlayerObject.UUID = "Ich";
 					myPlayerObject.IP = "Hallo";
 					myPlayerObject.ServerName = plugin.getServer().getIp();
 					
-					myClient.sendToServer("updateuser", "commandline", utility.getBytesFromObject(myPlayerObject));
+					myClient.sendToServer("updateuser", "commandline", utility.getBytesFromObject(myPlayerObject));*/
 				}
 				if(args[0].equalsIgnoreCase("send")){
 					if(args.length > 2){

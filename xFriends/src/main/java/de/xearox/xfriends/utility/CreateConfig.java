@@ -23,11 +23,17 @@ public class CreateConfig {
 		File configFile = utility.getFile("config", "config", "yml");
 		YamlConfiguration yamlConfigFile = utility.yamlCon(configFile);
 		
-		yamlConfigFile.addDefault("Database.dbHost", "127.0.0.1");
-		yamlConfigFile.addDefault("Database.dbPort", "3306");
-		yamlConfigFile.addDefault("Database.dbName", "DBName");
-		yamlConfigFile.addDefault("Database.dbUser", "Username");
-		yamlConfigFile.addDefault("Database.dbPassword", "Password");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.URL", "http://www.google.de");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.Msg", "Click here to read the server rules");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.HoverText", "Server Rules");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.Color", "DARK_GREEN");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.Bold", false);
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.Italic", false);
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.Underline", false);
+		
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.playermessage.firstLine", "First Line");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.playermessage.secondLine", "Second Line");
+		yamlConfigFile.addDefault("Message.notRegisteredMessage.playermessage.thirdLine", "Third Line");
 		
 		yamlConfigFile.options().copyDefaults(true);
 		

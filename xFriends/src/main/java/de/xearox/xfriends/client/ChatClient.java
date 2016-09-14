@@ -4,18 +4,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.xearox.xfriends.XFriends;
+import de.xearox.xfriends.utility.Utility;
 import net.md_5.bungee.api.ChatColor;
 
 public class ChatClient {
 	
 	private XFriends plugin;
 	private DatabaseClient databaseClient;
+	private Utility utility;
 	
     static BufferedReader chatIn;
     static PrintWriter chatOut;
@@ -23,6 +27,7 @@ public class ChatClient {
     public ChatClient(XFriends plugin) {
     	this.plugin = plugin;
     	this.databaseClient = plugin.getDatabaseClient();
+    	this.utility = plugin.getUtility();
 	}
     	
     public static void sendMessageToMasterChatServer(String message){
@@ -60,8 +65,22 @@ public class ChatClient {
             		String sender = line.substring(line.indexOf("SENDER:")+7, line.indexOf("MESSAGE:")-1).replace("PCClient", "").replace("MCClient", "");
                 	sender = sender.replace(" ", "");
                 	String message = line.substring(line.indexOf("MESSAGE:")+8, line.length());
+                	YamlConfiguration yamlFile = utility.getYamlUUIDList();
+                	String toUUID = databaseClient.getPlayerUUID(to);
+                	UUID uuid = null;
                 	
-                	UUID uuid = UUID.fromString(databaseClient.getPlayerUUID(to));
+                	Set<String> setString = yamlFile.getKeys(true);
+                	if(!XFriends.onlineMode){
+                		for(String string : setString){
+                    		if(yamlFile.getString(string).contains(toUUID)){
+                    			uuid = UUID.fromString(string.substring(0 , string.indexOf(".")));
+                    		}
+                    	}
+                	} else {
+                		uuid = UUID.fromString(databaseClient.getPlayerUUID(to));
+                	}
+                	
+                	
                 	OfflinePlayer offPlayer = plugin.getServer().getOfflinePlayer(uuid);
                 	Player player = offPlayer.getPlayer();
                 	if(player == null){
