@@ -5,9 +5,12 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TimerTask;
 
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -15,6 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 import de.xearox.myclasses.ServerObject;
 import de.xearox.xfriends.client.ChatClient;
 import de.xearox.xfriends.client.DatabaseClient;
+import de.xearox.xfriends.client.PlayerChatClient;
 import de.xearox.xfriends.listeners.MyExecutor;
 import de.xearox.xfriends.listeners.PlayerJoinListener;
 import de.xearox.xfriends.listeners.PlayerQuitListener;
@@ -41,6 +45,9 @@ public class XFriends extends JavaPlugin{
 	public static boolean databaseClientRunning = false;
 	public static boolean onlineMode = false;
 	public static BukkitTask startChatClientsTask;
+	public static HashMap<Player, PlayerChatClient> chatClientMap = new HashMap<Player, PlayerChatClient>();
+	public static HashMap<Player, BukkitTask> bukkitTaskMap = new HashMap<Player, BukkitTask>();
+	public static HashMap<Player, ArrayList<String>> lastMessages = new HashMap<Player, ArrayList<String>>();
 	private static int databaseServerCheckTries = 0;
 	private static int masterChatServerCheckTries = 0;
 	
@@ -148,8 +155,6 @@ public class XFriends extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		if(!this.getServer().getOnlineMode()){
-//			this.getPluginLoader().disablePlugin(this);
-//			return;
 			onlineMode = false;
 		} else {
 			onlineMode = true;
@@ -157,13 +162,12 @@ public class XFriends extends JavaPlugin{
 		
 		this.utility = new Utility(this);
 		this.createConfig = new CreateConfig(this);
+		this.createConfig.createConfig();
 		
-		//this.createConfig.createConfig();
 		this.myClient = new DatabaseClient(this);
 		this.chatClient = new ChatClient(this);
 		
 		this.registerListener();
-		this.createConfig.createConfig();
 		this.createCommands();
 		
 		startTasks();

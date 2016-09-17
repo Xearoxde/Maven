@@ -9,10 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import de.xearox.myclasses.MyPlayerObject;
 import de.xearox.xfriends.XFriends;
+import de.xearox.xfriends.client.ChatClient;
 import de.xearox.xfriends.client.DatabaseClient;
+import de.xearox.xfriends.client.PlayerChatClient;
 import de.xearox.xfriends.utility.MyLogger;
 import de.xearox.xfriends.utility.Utility;
 import net.md_5.bungee.api.ChatColor;
@@ -28,6 +31,7 @@ public class PlayerJoinListener implements Listener{
 	private Utility utility;
 	private MyLogger myLogger;
 	private TCompos tCompos;
+	private BukkitTask bukkitTask;
 	
 	public PlayerJoinListener(XFriends plugin) {
 		this.plugin = plugin;
@@ -52,27 +56,26 @@ public class PlayerJoinListener implements Listener{
 			uuid = utility.getYamlUUIDList().getString(uuid+".onlineUUID");
 		}
 		final String checkUUIDString = uuid;
+		File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
+		YamlConfiguration yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
+		
 		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				File configFile = new File(plugin.getDataFolder()+File.separator+"/config/config.yml");
-				YamlConfiguration yamlConfigFile = YamlConfiguration.loadConfiguration(configFile);
-				
-				tCompos = new TCompos();
-				tCompos.xFriendsMessage.setBold(yamlConfigFile.getBoolean("Message.notRegisteredMessage.Bold"));
-				tCompos.xFriendsMessage.setItalic(yamlConfigFile.getBoolean("Message.notRegisteredMessage.Italic"));
-				tCompos.xFriendsMessage.setUnderlined(yamlConfigFile.getBoolean("Message.notRegisteredMessage.Underline"));
-				tCompos.xFriendsMessage.setColor(ChatColor.valueOf(yamlConfigFile.getString("Message.notRegisteredMessage.Color")));
-				tCompos.xFriendsMessage.setText(yamlConfigFile.getString("Message.notRegisteredMessage.Msg"));
-				tCompos.xFriendsMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-						new ComponentBuilder(yamlConfigFile.getString("Message.notRegisteredMessage.HoverText")).create()));
-				
-				tCompos.xFriendsMessage.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, yamlConfigFile.getString("Message.notRegisteredMessage.URL")));
-				
 				String serverResponse = myClient.checkIfUserExistsInDB(checkUUIDString);
 				if(serverResponse.equalsIgnoreCase("USERNOTEXISTS")){
+					tCompos = new TCompos();
+					tCompos.xFriendsMessage.setBold(yamlConfigFile.getBoolean("Message.notRegisteredMessage.Bold"));
+					tCompos.xFriendsMessage.setItalic(yamlConfigFile.getBoolean("Message.notRegisteredMessage.Italic"));
+					tCompos.xFriendsMessage.setUnderlined(yamlConfigFile.getBoolean("Message.notRegisteredMessage.Underline"));
+					tCompos.xFriendsMessage.setColor(ChatColor.valueOf(yamlConfigFile.getString("Message.notRegisteredMessage.Color")));
+					tCompos.xFriendsMessage.setText(yamlConfigFile.getString("Message.notRegisteredMessage.Msg"));
+					tCompos.xFriendsMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
+							new ComponentBuilder(yamlConfigFile.getString("Message.notRegisteredMessage.HoverText")).create()));
+					
+					tCompos.xFriendsMessage.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, yamlConfigFile.getString("Message.notRegisteredMessage.URL")));
+					
 					player.sendMessage(ChatColor.DARK_RED+"Hello "+ChatColor.YELLOW+player.getName()+ChatColor.DARK_RED+" it seems to be that you are not registered in the xFriends plugin");
 					player.sendMessage(ChatColor.DARK_RED+"To use this plugin, you need to run the command"+ChatColor.YELLOW+" /friends register YourPassword YourEmailAddress");
 					player.sendMessage(ChatColor.DARK_RED+"For more information about this plugin, please visit our website.");
@@ -80,11 +83,23 @@ public class PlayerJoinListener implements Listener{
 				}
 			}
 		}, 10L*20L, 10L*60L*20L);
-		myPlayerObject.UUID = uuid;
-		myPlayerObject.IP = player.getAddress().getHostName();
-		myPlayerObject.ServerName = plugin.getServer().getServerName();
-		
-		myClient.sendToServer("updateuser", "LoggedIn", utility.getBytesFromObject(myPlayerObject));
+		bukkitTask = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+			
+			@Override
+			public void run() {
+					String serverResponse = myClient.checkIfUserExistsInDB(checkUUIDString);
+					if(serverResponse.equalsIgnoreCase("USEREXISTS")){
+						myPlayerObject.UUID = checkUUIDString;
+						myPlayerObject.IP = player.getAddress().getHostName();
+						myPlayerObject.ServerName = plugin.getServer().getServerName();
+						myClient.sendToServer("updateuser", "LoggedIn", utility.getBytesFromObject(myPlayerObject));
+						XFriends.chatClientMap.put(player, new PlayerChatClient(plugin, player));
+						player.sendMessage(ChatColor.AQUA+"Your are now online in the xFriends Network!");
+						player.sendMessage(ChatColor.AQUA+"Use "+ChatColor.YELLOW+"/friends send UserName Message "+ChatColor.AQUA+"To send messages to someone!");
+						bukkitTask.cancel();
+					}
+				}
+		}, 20L, 5L*20L);
 	}
 	
 	public void addPlayerToUUIDList(Player player){

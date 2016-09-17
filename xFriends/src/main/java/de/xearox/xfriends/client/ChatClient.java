@@ -86,8 +86,8 @@ public class ChatClient {
                 	if(player == null){
                 		System.out.println("player == null");
                 	}
-                	player.sendMessage(ChatColor.DARK_PURPLE+"["+ChatColor.YELLOW+sender+ChatColor.DARK_PURPLE+">"+ChatColor.YELLOW+to+ChatColor.DARK_PURPLE+"]"
-                	+ChatColor.DARK_AQUA+message);
+                	//player.sendMessage(ChatColor.DARK_PURPLE+"["+ChatColor.YELLOW+sender+ChatColor.DARK_PURPLE+">"+ChatColor.YELLOW+to+ChatColor.DARK_PURPLE+"]"
+                	//+ChatColor.DARK_AQUA+message);
                 	
             	} catch (Exception e){
             		e.printStackTrace();

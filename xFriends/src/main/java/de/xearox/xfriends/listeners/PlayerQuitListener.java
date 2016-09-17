@@ -1,5 +1,7 @@
 package de.xearox.xfriends.listeners;
 
+import java.io.IOException;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,5 +40,19 @@ public class PlayerQuitListener implements Listener{
 		myPlayerObject.ServerName = "";
 		
 		myClient.sendToServer("updateuser", "loggedOff", utility.getBytesFromObject(myPlayerObject));
+		if(XFriends.bukkitTaskMap.containsKey(player)){
+			XFriends.bukkitTaskMap.remove(player);
+		}
+		if(XFriends.chatClientMap.containsKey(player)){
+			if(XFriends.chatClientMap.get(player).socket.isConnected()){
+				try {
+					XFriends.chatClientMap.get(player).socket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			XFriends.chatClientMap.remove(player);
+		}
 	}
 }
