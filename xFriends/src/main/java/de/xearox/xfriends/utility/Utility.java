@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,9 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -38,10 +42,12 @@ public class Utility {
 	
 	private XFriends plugin;
 	private DatabaseClient myClient;
+	private Log4JFilter log4JFilter;
 	
 	public Utility(XFriends plugin) {
 		this.plugin = plugin;
 		this.myClient = plugin.getDatabaseClient();
+		this.log4JFilter = new Log4JFilter();
 	}
 	
 	public boolean fileExist(String fileName){
@@ -296,22 +302,21 @@ public class Utility {
 		yamlFile.save(uuidList);
 	}
 	
-	public String getMD5(String input) {
+	public String getSHA(String input) {
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(input.getBytes());
-            BigInteger number = new BigInteger(1, messageDigest);
-            String hashtext = number.toString(16);
-            // Now we need to zero pad it if you actually want the full 32 chars.
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-            return hashtext;
+        	MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        	byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+            
+            return bin2hex(hash);
         }
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
+	
+	static String bin2hex(byte[] data) {
+	    return String.format("%0" + (data.length*2) + "X", new BigInteger(1, data));
+	}
 	
 	public String getExternalIP() {
 		URL whatismyip;
@@ -405,6 +410,29 @@ public class Utility {
 			return null;
 		}
 	}
+	
+	public void setupConsoleFilter(java.util.logging.Logger logger) {
+        // Try to set the log4j filter
+        try {
+            Class.forName("org.apache.logging.log4j.core.filter.AbstractFilter");
+            setLog4JFilter();
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            // log4j is not available
+            plugin.getMyLogger().createLogFile(LogLevel.INFO, "You're using Minecraft 1.6.x or older, Log4J support will be disabled");
+            ConsoleFilter filter = new ConsoleFilter();
+            logger.setFilter(filter);
+            Bukkit.getLogger().setFilter(filter);
+            java.util.logging.Logger.getLogger("Minecraft").setFilter(filter);
+            e.printStackTrace();
+        }
+    }
+	
+	private static void setLog4JFilter() {
+        org.apache.logging.log4j.core.Logger logger;
+        logger = (org.apache.logging.log4j.core.Logger) LogManager.getRootLogger();
+        logger.addFilter(new Log4JFilter());
+    }
+	
 	
 	/*public void createLanguageFiles(){
 		File file = new File(plugin.getDataFolder()+File.separator+"/locate/");

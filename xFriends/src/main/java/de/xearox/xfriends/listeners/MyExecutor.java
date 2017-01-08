@@ -52,8 +52,9 @@ public class MyExecutor implements CommandExecutor{
 						}
 						String PlayerName = player.getName();
 						String Password = args[1];
+						System.out.println("password = "+Password);
 						String Email = args[2];
-						String IP = player.getAddress().getAddress().getHostAddress().toString();
+						String IP = player.getAddress().getAddress().getHostAddress();
 						String ServerName = plugin.getServer().getServerName();
 						if(Password.contains("@")){
 							player.sendMessage("Make sure that the password doesn't contains an @ !");

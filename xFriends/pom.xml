@@ -28,7 +28,7 @@
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>D:\Development\Minecraft\MCServer\plugins</outputDirectory>
-							<!--<outputDirectory>C:\Users\chahn\Desktop\MCServer\plugins</outputDirectory>-->
+							<!--<outputDirectory>C:\Users\chahn\Desktop\MCServer\plugins</outputDirectory> -->
 							<stripVersion>true</stripVersion>
 						</configuration>
 					</execution>
@@ -36,4 +36,16 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -88,26 +88,10 @@ public class PlayerChatClient {
                 	if(player == null){
                 		System.out.println("player == null");
                 	}
-                	ArrayList<String> lastMessages = new ArrayList<String>();
                 	String playerMessage = ChatColor.DARK_PURPLE+"["+ChatColor.YELLOW+sender+ChatColor.DARK_PURPLE+">"+ChatColor.YELLOW+to+ChatColor.DARK_PURPLE+"]"
                         	+ChatColor.DARK_AQUA+message;
-                	if(XFriends.lastMessages.containsKey(player)){
-                		System.out.println("[XFRIENDS] last Message = "+lastMessages.get(lastMessages.size()-1));
-            			System.out.println("[XFRIENDS] new message = "+playerMessage);
-                		lastMessages = XFriends.lastMessages.get(playerMessage);
-                		if(!lastMessages.get(lastMessages.size()-1).equalsIgnoreCase(playerMessage)){
-                			player.sendMessage(playerMessage);
-                			lastMessages.add(playerMessage);
-                			XFriends.lastMessages.replace(player, lastMessages);
-                		}
-                	} else {
-                		System.out.println("#####");
-                		System.out.println("[XFRIENDS]"+XFriends.lastMessages.containsKey(player));
-                		System.out.println("#####");
-                		player.sendMessage(playerMessage);
-            			lastMessages.add(playerMessage);
-            			XFriends.lastMessages.put(player, lastMessages);
-                	}
+                	
+                	player.sendMessage(playerMessage);
                 	
             	} catch (Exception e){
             		e.printStackTrace();

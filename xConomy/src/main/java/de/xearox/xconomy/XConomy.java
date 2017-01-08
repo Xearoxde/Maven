@@ -108,7 +108,9 @@ public class XConomy extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		try {
-			this.httpServer.getSocket().close();
+			if(this.httpServer.getSocket() != null){
+				this.httpServer.getSocket().close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("#### Can't close socket ####");
@@ -288,7 +290,7 @@ public class XConomy extends JavaPlugin{
 					}
 					return true;
 				} else {
-					player.sendMessage("Um einen Account im Webinterface anlegen zu können, musst du den folgenden Befehlt nutzen");
+					player.sendMessage("Um einen Account im Webinterface anlegen zu kï¿½nnen, musst du den folgenden Befehlt nutzen");
 					player.sendMessage("/ecweb register Username Password");
 					return true;
 				}

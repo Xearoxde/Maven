@@ -1,15 +1,11 @@
 package de.xearox.xfriends;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TimerTask;
+import java.util.Set;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,11 +16,13 @@ import de.xearox.xfriends.client.ChatClient;
 import de.xearox.xfriends.client.DatabaseClient;
 import de.xearox.xfriends.client.PlayerChatClient;
 import de.xearox.xfriends.listeners.MyExecutor;
+import de.xearox.xfriends.listeners.PlayerCommandPreprocessListener;
 import de.xearox.xfriends.listeners.PlayerJoinListener;
 import de.xearox.xfriends.listeners.PlayerQuitListener;
 import de.xearox.xfriends.utility.CreateConfig;
 import de.xearox.xfriends.utility.MyLogger;
 import de.xearox.xfriends.utility.Utility;
+import net.md_5.bungee.api.ChatColor;
 
 public class XFriends extends JavaPlugin{
 	
@@ -34,6 +32,7 @@ public class XFriends extends JavaPlugin{
 	private MyExecutor myExecutor;
 	private DatabaseClient myClient;
 	private ChatClient chatClient;
+	private XFriends instance;
 	public static Socket socket;
 	public final static boolean DEBUG = false;
 	public final static String serverAddress = "94.114.6.167";//94.114.6.167
@@ -47,7 +46,6 @@ public class XFriends extends JavaPlugin{
 	public static BukkitTask startChatClientsTask;
 	public static HashMap<Player, PlayerChatClient> chatClientMap = new HashMap<Player, PlayerChatClient>();
 	public static HashMap<Player, BukkitTask> bukkitTaskMap = new HashMap<Player, BukkitTask>();
-	public static HashMap<Player, ArrayList<String>> lastMessages = new HashMap<Player, ArrayList<String>>();
 	private static int databaseServerCheckTries = 0;
 	private static int masterChatServerCheckTries = 0;
 	
@@ -101,6 +99,7 @@ public class XFriends extends JavaPlugin{
 		//listens for the PlayerJoinListener
 		pluginManager.registerEvents(new PlayerJoinListener(this), this);
 		pluginManager.registerEvents(new PlayerQuitListener(this), this);
+		pluginManager.registerEvents(new PlayerCommandPreprocessListener(this),	this);
 	}
 	
 	public void createCommands(){
@@ -149,6 +148,7 @@ public class XFriends extends JavaPlugin{
 	
 	@Override
 	public void onLoad(){
+		System.out.println("##########################################################################");
 		this.myLogger = new MyLogger(this);
 	}
 	
@@ -170,12 +170,41 @@ public class XFriends extends JavaPlugin{
 		this.registerListener();
 		this.createCommands();
 		
+		this.utility.setupConsoleFilter(getLogger());
+		
+		instance = this;
+		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+			
+			@Override
+			public void run() {
+				startChatClientsForOnlinePlayers(instance);
+			}
+		}, 20, 20);
+		
 		startTasks();
 		
 	}
 	
 	@Override
 	public void onDisable(){
+		Set<Player> setList = XFriends.chatClientMap.keySet();
+		try{
+			for(Player player : setList){
+				if(XFriends.chatClientMap.containsKey(player)){
+					if(XFriends.chatClientMap.get(player).socket != null){
+						XFriends.chatClientMap.get(player).socket.close();
+					}
+					XFriends.chatClientMap.remove(player);
+				}
+				if(XFriends.bukkitTaskMap.containsKey(player)){
+					XFriends.bukkitTaskMap.get(player).cancel();
+					XFriends.bukkitTaskMap.remove(player);
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
 		if(XFriends.socket != null){
 			try {
 				XFriends.socket.close();
@@ -187,12 +216,20 @@ public class XFriends extends JavaPlugin{
 		if(startChatClientsTask != null){
 			this.getServer().getScheduler().cancelTask(startChatClientsTask.getTaskId());
 		}
+		instance.getServer().getScheduler().cancelAllTasks();
 	}
 	
 	public void startTasks(){
-		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new HostCheckDatabaseServerTask(), 20, 1200);
-		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new HostCheckMasterChatServerTask(), 20, 1200);
-		startChatClientsTask = this.getServer().getScheduler().runTaskTimerAsynchronously(this, new StartClients(), 60, 600);
+		try{
+			if(this.isEnabled()){
+				this.getServer().getScheduler().runTaskTimerAsynchronously(this, new HostCheckDatabaseServerTask(), 20, 1200);
+				this.getServer().getScheduler().runTaskTimerAsynchronously(this, new HostCheckMasterChatServerTask(), 20, 1200);
+				this.getServer().getScheduler().runTaskTimerAsynchronously(this, new CheckIfPlayerStillOnline(), 20, 5L*20L);
+				startChatClientsTask = this.getServer().getScheduler().runTaskTimerAsynchronously(this, new StartClients(), 60, 600);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	private class StartClients implements Runnable{
@@ -224,6 +261,16 @@ public class XFriends extends JavaPlugin{
 			}
 		}
     }
+	
+	public void startChatClientsForOnlinePlayers(XFriends plugin){
+		plugin.getServer().getOnlinePlayers().stream().forEach(player ->{
+			if(!XFriends.chatClientMap.containsKey(player)){
+				XFriends.chatClientMap.put(player, new PlayerChatClient(plugin, player));
+				player.sendMessage(ChatColor.AQUA+"Your are now online in the xFriends Network!");
+				player.sendMessage(ChatColor.AQUA+"Use "+ChatColor.YELLOW+"/friends send UserName Message "+ChatColor.AQUA+"To send messages to someone!");
+			}
+		});
+	}
 	
 	private class HostCheckDatabaseServerTask implements Runnable{
 
@@ -269,7 +316,31 @@ public class XFriends extends JavaPlugin{
 		
 	}
 	
-	
+	private class CheckIfPlayerStillOnline implements Runnable{
+
+		@Override
+		public void run() {
+			Set<Player> playerSet = XFriends.chatClientMap.keySet();
+			for(Player player : playerSet){
+				if(!player.isOnline()){
+					try {
+						XFriends.chatClientMap.get(player).socket.close();
+						XFriends.chatClientMap.remove(player);
+						if(XFriends.bukkitTaskMap.containsKey(player)){
+							XFriends.bukkitTaskMap.get(player).cancel();
+							XFriends.bukkitTaskMap.remove(player);
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e){
+						//
+					}
+				}
+			}
+		}
+		
+	}
 	
 	
 	

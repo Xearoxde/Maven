@@ -88,14 +88,18 @@ public class PlayerJoinListener implements Listener{
 			@Override
 			public void run() {
 					String serverResponse = myClient.checkIfUserExistsInDB(checkUUIDString);
-					if(serverResponse.equalsIgnoreCase("USEREXISTS")){
-						myPlayerObject.UUID = checkUUIDString;
-						myPlayerObject.IP = player.getAddress().getHostName();
-						myPlayerObject.ServerName = plugin.getServer().getServerName();
-						myClient.sendToServer("updateuser", "LoggedIn", utility.getBytesFromObject(myPlayerObject));
-						XFriends.chatClientMap.put(player, new PlayerChatClient(plugin, player));
-						player.sendMessage(ChatColor.AQUA+"Your are now online in the xFriends Network!");
-						player.sendMessage(ChatColor.AQUA+"Use "+ChatColor.YELLOW+"/friends send UserName Message "+ChatColor.AQUA+"To send messages to someone!");
+					if(!XFriends.chatClientMap.containsKey(player)){
+						if(serverResponse.equalsIgnoreCase("USEREXISTS")){
+							myPlayerObject.UUID = checkUUIDString;
+							myPlayerObject.IP = player.getAddress().getHostName();
+							myPlayerObject.ServerName = plugin.getServer().getServerName();
+							myClient.sendToServer("updateuser", "LoggedIn", utility.getBytesFromObject(myPlayerObject));
+							XFriends.chatClientMap.put(player, new PlayerChatClient(plugin, player));
+							player.sendMessage(ChatColor.AQUA+"Your are now online in the xFriends Network!");
+							player.sendMessage(ChatColor.AQUA+"Use "+ChatColor.YELLOW+"/friends send UserName Message "+ChatColor.AQUA+"To send messages to someone!");
+							bukkitTask.cancel();
+						}
+					} else if(XFriends.chatClientMap.containsKey(player)){
 						bukkitTask.cancel();
 					}
 				}
