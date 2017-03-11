@@ -1,0 +1,16 @@
+name: xFactory
+main: de.xearox.xfactory.XFactory
+version: 0.0.1
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
+
+commands:
+  factory:
+    description: Main function for the xFriends plugin
+    usage: /<command>, [test]
+  xfactory:
+    description: Main function for the xFriends plugin
+    usage: /<command>, [test]
+#  test:
+#    description: TestCommand
+#    usage: /<command>

@@ -28,6 +28,7 @@
   	<module>xEnchants</module>
   	<module>xFriends</module>
   	<module>xFriendsServer</module>
+  	<module>xCreditManagement</module>
   </modules>
   <build>
     <plugins>
@@ -66,14 +67,14 @@
     <dependency>
            <groupId>org.spigotmc</groupId>
            <artifactId>spigot-api</artifactId>
-           <version>1.10-R0.1-SNAPSHOT</version>
-           <scope>compile</scope>
+           <version>1.11.2-R0.1-SNAPSHOT</version>
+           <scope>provided</scope>
     </dependency>
     <dependency>
-           <groupId>org.bukkit</groupId>
-           <artifactId>bukkit</artifactId>
-           <version>1.10-R0.1-SNAPSHOT</version>
-           <scope>compile</scope>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
     </dependency>
     <dependency>
     	<groupId>com.google.code.findbugs</groupId>

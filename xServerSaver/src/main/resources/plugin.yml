@@ -1,0 +1,5 @@
+name: xServerSaver
+main: de.xearox.serversaver.core.Main
+version: 1.0.0
+authors: [Xearox]
+website: "http://minecraft.xearox.de"

@@ -1,0 +1,5 @@
+name: xItemAPI
+main: de.xearox.xitemsapi.XItemAPI
+version: 1.0.0
+authors: [Xearox]
+website: "http://minecraft.xearox.de"

@@ -1,0 +1,43 @@
+name: xCredit
+main: de.xearox.xcredit.XCredit
+version: 1.0.0
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
+softdepend: [Vault]
+
+commands:
+  credit:
+    description: TestCommand
+    usage: /<command>, [admin], [admin] [rewriteplayerfiles], [admin] [addVIP] (PlayerName)
+  test:
+    description: TestCommand
+    usage: /<command>  
+    
+permissions:
+  credit.*:
+    description: Access to all daily reset commands
+    children:
+      credit.admin: true
+      credit.admin.rewriteplayerfiles: true
+      credit.admin.addVIP: true
+      #daily.set.diffhome: true
+      #daily.list: true
+      #daily.del: true
+      #daily.teleport.mainhome: true
+      #daily.teleport.diffhome: true
+      #daily.update: true
+      #daily.getOPMessage: true
+      #daily.getPermissionGroups: true
+      #daily.debugCommands: true
+  credit:
+    description: Daily Configuration GUI
+    default: true
+  credit.admin:
+    description: Daily Configuration GUI
+    default: op
+  credit.admin.rewriteplayerfiles:
+    description: If you change the reward days you need to rewrite the player files
+    default: op
+  credit.admin.addVIP:
+    description: Add the player's UUID to the VIP file
+    default: op

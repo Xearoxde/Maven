@@ -1,0 +1,5 @@
+name: xPlayerDeathCounter
+main: de.xearox.deathcounter.core.Main
+version: 1.0.0
+authors: [Xearox]
+website: "http://minecraft.xearox.de"
